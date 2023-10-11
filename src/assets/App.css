@@ -1,0 +1,39 @@
+.chat .chatForm .chatFormSubmit {
+  background-color: rgb(80, 80, 80);
+  color: #fff;
+  font-size: 20px;
+  float: right;
+  width: 200px;
+  height: 100%;
+}
+
+.chat .chatMessageContainer {
+  height: 500px;
+  background-color: #eee;
+  overflow-y: scroll;
+  font-size: 12px;
+}
+
+.chat .chatForm .chatFormInput {
+  height: 100%;
+  width: calc(100% - 200px);
+  padding: 10px;
+  float: left;
+}
+
+.chat {
+  margin: 0 auto;
+  width: 600px;
+  height: 600px;
+}
+
+.chat .chatForm {
+  height: 80px;
+}
+
+.chat .chatMessageContainer .chatMessage {
+  margin: 4px 0px;
+  background-color:lightgrey;
+  padding: 4px 10px;
+  border-radius: 10px;
+}
