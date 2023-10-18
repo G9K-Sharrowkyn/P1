@@ -1,15 +1,23 @@
+import React, { useState } from "react";
+import ChatMessageContainer from "./ChatMessageContainer.js";
 import ChatForm from "./ChatForm.js";
-import ChatMessageContainer from "./ChatMessageContainer.js"
 
-export default function chat() {
-    const bla= ["str","wpl","dwdw","werty"]
+export default function Chat() {
+  const [bla, setBla] = useState(["str", "wpl", "dwdw", "werty", "dwdwdwdw"]);
 
-    return (
+  const addMessage = (message) => {
+    setBla([...bla, message]);
+  };
+
+  <body>
+  <script src="./Alert.js"></script>
+  </body>
+
+  return (
     <div className="chat">
-        <h1> ChatBot v0.1 </h1>
-        <ChatMessageContainer messages={bla} />
-        <ChatForm />
-      </div>
-    )
-  }
-  
+      <h1>ChatBot v0.1b</h1>
+      <ChatMessageContainer messages={bla} />
+      <ChatForm addMessage={addMessage} />
+    </div>
+  );
+}
