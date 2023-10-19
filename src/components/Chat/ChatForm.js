@@ -2,13 +2,19 @@ import React, { useState } from "react";
 import FontSelector from "./FontSelector.js";
 
 export default function ChatForm({ addMessage }) {
-  const [inputValue, setInputValue] = useState("");
   const [fonts, setFonts] = useState("");
+  const inputRef = React.useRef();
 
   const handleSubmit = (bla) => {
     bla.preventDefault();
-    addMessage(inputValue);
-    setInputValue("");
+    if (inputRef.current.value === '') {
+      alert ("Nie wpisano wiadomości.");
+
+      return;
+    }
+
+    addMessage(inputRef.current.value);
+    inputRef.current.value = '';
   };
 
   const handleFontChange = (selectedFont) => {
@@ -20,12 +26,11 @@ export default function ChatForm({ addMessage }) {
       <FontSelector onSelectFont={handleFontChange} />
       <form onSubmit={handleSubmit}>
         <input
+          ref={inputRef}
           type="text"
           className="chatFormInput"
           style={{ fontFamily: fonts[0] }}
           placeholder="Wpisz wiadomość..."
-          value={inputValue}
-          onChange={(bla) => setInputValue(bla.target.value)}
         />
         <button type="submit" className="chatFormSubmit">
           Wyślij wiadomość
@@ -54,3 +59,4 @@ handleFontChange to wartość przypisana do właściwości onSelectFont
 
 <form> to element formuarza html. W komponencie ChatForm używany do utworzenia formularza, który pozwala wprowadzać wiadomości.
 onSubmit={handleSubmit} atrybut onSubmit jest elementem formularza, ustawiony na funkcję handleSubmit, definiuje co się stanie gdy zostanie przesłany
+*/
