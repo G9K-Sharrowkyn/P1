@@ -4,8 +4,8 @@ const About = () => {
     return(
         <div className="page">
             <section>
-                <h1>Strona 2</h1>
-                <p>Malcador the Sigillite</p>
+                <h1>About</h1>
+                <p>About</p>
             </section>
         </div>
     )

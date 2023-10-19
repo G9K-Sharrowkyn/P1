@@ -1,11 +1,39 @@
 .nav > a {
-    font-size: 30px;
-    color: #aaa;
-    padding: 4px;
-    border-radius: 10px;
-    font-family: Arial
+    background-color: #4CAF50;
+    border: 10px;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    margin-left: 10px;
+    font-size: 20px;
 }
 
 .nav > a.chat {
+    color: black;
+}
+
+.nav > a.home {
+    color: black;
+}
+
+.nav > a.about {
+    color: black;
+}
+
+.nav > a.facebook {
+    color: black;
+}
+
+.nav > a.discord {
+    color: black;
+}
+
+.nav > a.registration {
+    color: black;
+}
+
+.nav > a.rules {
     color: black;
 }

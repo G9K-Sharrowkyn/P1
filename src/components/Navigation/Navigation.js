@@ -18,6 +18,21 @@ export default function Navigation() {
             <Link to="/home" className= {`home ${pathname === "/home" ? `selected` : ``}`} >
                 Home
             </Link>
+            <Link to="/about" className= {`about ${pathname === "/about" ? `selected` : ``}`} >
+                About
+            </Link>
+            <Link to="/facebook" className= {`facebook ${pathname === "/facebook" ? `selected` : ``}`} >
+                Facebook
+            </Link>
+            <Link to="/discord" className= {`discord ${pathname === "/discord" ? `selected` : ``}`} >
+                Discord
+            </Link>
+            <Link to="/registration" className= {`registration ${pathname === "/registration" ? `selected` : ``}`} >
+                Registration
+            </Link>
+            <Link to="/rules" className= {`rules ${pathname === "/rules" ? `selected` : ``}`} >
+                Rules
+            </Link>
         </nav>
     )
 };

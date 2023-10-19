@@ -8,7 +8,7 @@ export default function ChatForm({ addMessage }) {
   const handleSubmit = (bla) => {
     bla.preventDefault();
     if (inputRef.current.value === '') {
-      alert ("Nie wpisano wiadomości.");
+      // alert ("Nie wpisano wiadomości.");
 
       return;
     }
