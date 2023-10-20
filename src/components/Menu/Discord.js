@@ -4,7 +4,7 @@ const Discord = () => {
     return(
         <div className="page">
             <section>
-                <h1>Discord</h1>
+                <h4>Discord</h4>
                 <p>Discord</p>
             </section>
         </div>

@@ -4,7 +4,7 @@ const Rules = () => {
     return(
         <div className="page">
             <section>
-                <h1>Zasady</h1>
+                <h8>Zasady</h8>
                 <p>Zasady</p>
             </section>
         </div>

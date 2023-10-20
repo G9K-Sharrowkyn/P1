@@ -4,7 +4,7 @@ const Chat = () => {
     return(
         <div className="Chat">
             <section>
-                <h1>Chat</h1>
+                <h3>Chat</h3>
                 <p>Chat</p>
             </section>
         </div>

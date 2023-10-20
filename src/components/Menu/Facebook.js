@@ -4,7 +4,7 @@ const Facebook = () => {
     return(
         <div className="page">
             <section>
-                <h1>Facebook</h1>
+                <h5>Facebook</h5>
                 <p>Facebook</p>
             </section>
         </div>

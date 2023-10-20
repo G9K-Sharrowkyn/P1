@@ -2,8 +2,15 @@
     clear: both;
 }
 
-h1, h2, h3, h4, h5, h6 {
-    text-align: center;
+h1, h2, h3, h4, h5, h6, h7, h8, h9 {
+    background-color: rgb(0, 49, 83);
+    border-radius: 10px;
+    color: white;
+    padding: 15px 32px;
+    text-decoration: none;
+    display: inline-block;
+    margin-left: 10px;
+    font-size: 20px;
 }
 
 *, *::before, *::after {
@@ -12,25 +19,20 @@ h1, h2, h3, h4, h5, h6 {
 
 body {
     font-size: 16px;
+    text-align: center;
     font-family: Arial, Helvetica, sans-serif;
 }
 
 h1 {
-    font-size: 30px;
-    color: White;
-    margin: 4px 0px;
-    background-color:rgb(0, 49, 83);
-    padding: 4px 10px;
-    border-radius: 10px;
+    font-size: 20px;
 }
 
 h2 {
     font-size: 20px;
-     color: White;
 }
 
 h3 {
-    font-size: 30px;
+    font-size: 20px;
 }
 
 h4 {
@@ -38,9 +40,22 @@ h4 {
 }
 
 h5 {
-    font-size: 30px;
+    font-size: 20px;
 }
 
 h6 {
+    font-size: 20px;
+    
+}
+
+h7 {
+    font-size: 20px;
+}
+
+h8 {
+    font-size: 20px;
+}
+
+h9 {
     font-size: 20px;
 }

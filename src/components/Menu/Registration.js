@@ -4,7 +4,7 @@ const Registration = () => {
     return(
         <div className="page">
             <section>
-                <h1>Registration</h1>
+                <h7>Registration</h7>
                 <p>Registration</p>
             </section>
         </div>

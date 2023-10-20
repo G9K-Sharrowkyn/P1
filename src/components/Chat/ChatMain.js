@@ -1,19 +1,33 @@
 import React, { useState } from "react";
 import ChatMessageContainer from "./ChatMessageContainer.js";
 import ChatForm from "./ChatForm.js";
-import "../../assets/Chat.css"; 
+import FontSelector from "./FontSelector.js";
+import "../../assets/Chat.css";
 
 export default function ChatMain() {
   const [messages, setMessages] = useState([]);
+  const [selectedFont, setSelectedFont] = useState("Arial, sans-serif");
+
+  const [fonts, setFonts] = useState([]);
 
   const addMessage = (message) => {
     setMessages([...messages, message]);
   };
 
+  const handleFontChange = (selectedFont) => {
+    setSelectedFont(selectedFont);
+    if (!fonts.includes(selectedFont)) {
+      setFonts([...fonts, selectedFont]);
+    }
+  };
+  
   return (
     <div className="chatMain">
       <h1>Warhammer Bot v0.1c</h1>
-      <ChatMessageContainer messages={messages} />
+      <FontSelector onSelectFont={handleFontChange} />
+      <div style={{ fontFamily: selectedFont }}>
+        <ChatMessageContainer messages={messages} />
+      </div>
       <ChatForm addMessage={addMessage} />
     </div>
   );

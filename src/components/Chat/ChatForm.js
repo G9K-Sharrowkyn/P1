@@ -1,8 +1,6 @@
-import React, { useState } from "react";
-import FontSelector from "./FontSelector.js";
+import React from "react";
 
 export default function ChatForm({ addMessage }) {
-  const [fonts, setFonts] = useState("");
   const inputRef = React.useRef();
 
   const handleSubmit = (bla) => {
@@ -17,19 +15,13 @@ export default function ChatForm({ addMessage }) {
     inputRef.current.value = '';
   };
 
-  const handleFontChange = (selectedFont) => {
-    setFonts([selectedFont]);
-  };
-
   return (
     <div className="chatForm">
-      <FontSelector onSelectFont={handleFontChange} />
       <form onSubmit={handleSubmit}>
         <input
           ref={inputRef}
           type="text"
           className="chatFormInput"
-          style={{ fontFamily: fonts[0] }}
           placeholder="Wpisz wiadomość..."
         />
         <button type="submit" className="chatFormSubmit">

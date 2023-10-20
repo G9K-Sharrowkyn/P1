@@ -4,7 +4,7 @@ const Snake = () => {
     return(
         <div className="page">
             <section>
-                <h1>Snake</h1>
+                <h9>Snake</h9>
                 <p>Snake</p>
             </section>
         </div>
