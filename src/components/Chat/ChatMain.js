@@ -12,7 +12,7 @@ export default function ChatMain() {
 
   return (
     <div className="chatMain">
-      <h1>ChatBot v0.1b</h1>
+      <h1>Warhammer Bot v0.1c</h1>
       <ChatMessageContainer messages={messages} />
       <ChatForm addMessage={addMessage} />
     </div>

@@ -33,6 +33,9 @@ export default function Navigation() {
             <Link to="/rules" className= {`rules ${pathname === "/rules" ? `selected` : ``}`} >
                 Rules
             </Link>
+            <Link to="/snake" className= {`snake ${pathname === "/snake" ? `selected` : ``}`} >
+                Snake
+            </Link>
         </nav>
     )
 };

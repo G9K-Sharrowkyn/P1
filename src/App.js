@@ -6,13 +6,14 @@ import './assets/Navigation.css';
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 import ChatMain from "./components/Chat/ChatMain.js";
-import Home from "./components/Game/Home.js";
-import About from "./components/Game/About.js";
+import Home from "./components/Menu/Home.js";
+import About from "./components/Menu/About.js";
 import Navigation from "./components/Navigation/Navigation.js";
-import Facebook from './components/Game/Facebook.js';
-import Discord from './components/Game/Discord.js';
-import Registration from './components/Game/Registration.js';
-import Rules from './components/Game/Rules.js';
+import Facebook from './components/Menu/Facebook.js';
+import Discord from './components/Menu/Discord.js';
+import Registration from './components/Menu/Registration.js';
+import Rules from './components/Menu/Rules.js';
+import SnakeGame from './components/Snake/SnakeGame.jsx'
 
 function App() {
   return (
@@ -24,10 +25,11 @@ function App() {
               <Route path="/chat" element={<ChatMain />} />
               <Route path="/home" element={<Home />} />
               <Route path="/about" element={<About />} />
-              <Route path="/Facebook" element={<Facebook />} />
-              <Route path="/Discord" element={<Discord />} />
-              <Route path="/Registration" element={<Registration />} />
-              <Route path="/Rules" element={<Rules />} />
+              <Route path="/facebook" element={<Facebook />} />
+              <Route path="/discord" element={<Discord />} />
+              <Route path="/registration" element={<Registration />} />
+              <Route path="/rules" element={<Rules />} />
+              <Route path="/snake" element={<SnakeGame />} />
             </Routes> 
           </div>
         </div>

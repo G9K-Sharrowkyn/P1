@@ -1,6 +1,6 @@
 .nav > a {
-    background-color: #4CAF50;
-    border: 10px;
+    background-color: rgb(0, 49, 83);
+    border-radius: 10px;
     color: white;
     padding: 15px 32px;
     text-align: center;
@@ -11,29 +11,37 @@
 }
 
 .nav > a.chat {
-    color: black;
+    color: white;
 }
 
 .nav > a.home {
-    color: black;
+    color: white;
+    /* background-image: url('F:\Teksty\Programming\dreadwing-protocol\src\components\Pictures\Button1.png');
+    background-size: 260px 100px; */
 }
 
 .nav > a.about {
-    color: black;
+    color: white;
 }
 
 .nav > a.facebook {
-    color: black;
+    color: white;
 }
 
 .nav > a.discord {
-    color: black;
+    color: white;
 }
 
 .nav > a.registration {
-    color: black;
+    color: white;
 }
 
 .nav > a.rules {
-    color: black;
+    color: white;
+}
+
+body {
+    background-image: url('F:\Teksty\Programming\dreadwing-protocol\src\components\Pictures\Emperor.jpeg');
+    background-size: 2600px 1500px;
+    background-repeat: no-repeat;
 }
