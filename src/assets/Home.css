@@ -18,3 +18,49 @@
 .button-container .read-article-button:hover {
     background-color: #333;
 }
+
+.homeMain h1 {
+    font-size: 24px;
+    width: 300px;
+    background-image: url('F:\Teksty\Programming\dreadwing-protocol\src\components\Pictures\Astartes.jpg');
+    background-size: cover;
+    background-position-y: 360px;
+    height: 100px;
+    z-index: 1;
+    padding-top: 40px;
+}
+
+.homeMain p, q, w2 {
+    font-size: 18px;
+    margin: 20px 0;
+}
+
+.article-container {
+    border: 2px solid rgb(0, 0, 0);
+    border-radius: 10px;
+    padding: 10px;
+    width: 500px;
+    margin-top: 100px;
+    margin-bottom: 10px;
+    margin-left: 100px;
+    margin-right: 100px;
+    height: 600px;
+    background-color: #bbb;
+    position: relative;
+    z-index: 2;
+}
+
+.malcador-image {
+    background-image: url('F:\Teksty\Programming\dreadwing-protocol\src\components\Pictures\Malcador.jpg');
+    background-size: cover;
+    background-position: center;
+    border: 2px solid rgb(0, 0, 0);
+    border-radius: 10px;
+    width: 500px;
+    margin-top: -610px;
+    margin-left: 650px;
+    height: 600px;
+    background-color: #bbb;
+    position: relative;
+    z-index: 2;
+}

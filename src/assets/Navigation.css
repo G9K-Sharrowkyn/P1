@@ -25,6 +25,8 @@
     background-position: 10px center;
     background-repeat: no-repeat;
     padding-left: 40px;
+    background-color: rgb(0, 49, 83);
+    border: 2px solid black;
 }
 
 .nav > a.home {
@@ -34,6 +36,8 @@
     background-position: 10px center;
     background-repeat: no-repeat;
     padding-left: 40px;
+    background-color: rgb(0, 49, 83);
+    border: 2px solid black;
 }
 
 .nav > a.about {
@@ -43,6 +47,8 @@
     background-position: 10px center;
     background-repeat: no-repeat;
     padding-left: 40px;
+    background-color: rgb(0, 49, 83);
+    border: 2px solid black;
 }
 
 .nav > a.facebook {
@@ -52,6 +58,8 @@
     background-position: 10px center;
     background-repeat: no-repeat;
     padding-left: 40px;
+    background-color: rgb(0, 49, 83);
+    border: 2px solid black;
 }
 
 .nav > a.discord {
@@ -61,6 +69,8 @@
     background-position: 10px center;
     background-repeat: no-repeat;
     padding-left: 40px;
+    background-color: rgb(0, 49, 83);
+    border: 2px solid black;
 }
 
 .nav > a.registration {
@@ -70,6 +80,8 @@
     background-position: 10px center;
     background-repeat: no-repeat;
     padding-left: 40px;
+    background-color: rgb(0, 49, 83);
+    border: 2px solid black;
 }
 
 .nav > a.rules {
@@ -79,6 +91,8 @@
     background-position: 10px center;
     background-repeat: no-repeat;
     padding-left: 40px;
+    background-color: rgb(0, 49, 83);
+    border: 2px solid black;
 }
 
 .nav > a.snake {
@@ -88,10 +102,55 @@
     background-position: 10px center;
     background-repeat: no-repeat;
     padding-left: 40px;
+    background-color: rgb(0, 49, 83);
+    border: 2px solid black;
 }
 
 body {
     background-image: url('F:\Teksty\Programming\dreadwing-protocol\src\components\Pictures\Emperor.jpeg');
     background-size: 2600px 1500px;
     background-repeat: no-repeat;
+}
+/* 
+.nav {
+  display: inline-block;
+} */
+
+.nav > a.registration {
+    position: relative;
+    color: white;
+    background-image: url('F:\Teksty\Programming\dreadwing-protocol\src\components\Pictures\IconRegistration.png'); 
+    background-size: 30px;
+    background-position: 10px center;
+    background-repeat: no-repeat;
+    padding-left: 40px;
+    background-color: rgb(0, 49, 83);
+    border: 2px solid black;
+}
+
+.nav > a.registration .submenu {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background-color: rgb(0, 49, 83);
+    border: 2px solid black;
+    border-radius: 10px;
+    z-index: 1;
+}
+
+.nav > a.registration:hover .submenu {
+    display: flex;
+    flex-direction: column;
+}
+
+.subpage1 {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background-color: rgb(0, 49, 83);
+    border: 2px solid black;
+    border-radius: 10px;
+    z-index: 1;
 }
