@@ -5,7 +5,6 @@ const Rules = () => {
         <div className="page">
             <section>
                 <h8>Zasady</h8>
-                <p>Zasady</p>
             </section>
         </div>
     )

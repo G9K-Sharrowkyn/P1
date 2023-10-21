@@ -5,7 +5,6 @@ const Chat = () => {
         <div className="Chat">
             <section>
                 <h3>Chat</h3>
-                <p>Chat</p>
             </section>
         </div>
     )

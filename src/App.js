@@ -14,6 +14,7 @@ import Discord from './components/Menu/Discord.js';
 import Registration from './components/Menu/Registration.js';
 import Rules from './components/Menu/Rules.js';
 import SnakeGame from './components/Snake/SnakeGame.jsx'
+import HomeMain from "./components/Home/HomeMain";
 
 function App() {
   return (
@@ -30,6 +31,7 @@ function App() {
               <Route path="/registration" element={<Registration />} />
               <Route path="/rules" element={<Rules />} />
               <Route path="/snake" element={<SnakeGame />} />
+              <Route path="/home-main" element={<HomeMain />} />
             </Routes> 
           </div>
         </div>

@@ -5,7 +5,6 @@ const About = () => {
         <div className="page">
             <section>
                 <h2>About</h2>
-                <p>About</p>
             </section>
         </div>
     )

@@ -1,14 +1,20 @@
 import React from 'react';
+import '../../assets/Facebook.css';
 
 const Facebook = () => {
-    return(
+    const facebookLink = 'https://www.facebook.com/InvincibleCharlesXII';
+
+    return (
         <div className="page">
             <section>
-                <h5>Facebook</h5>
-                <p>Facebook</p>
+                <h5>
+                    <a href={facebookLink} target="_blank" rel="noopener noreferrer" className="facebook-link">
+                        Klik!
+                    </a>
+                </h5>
             </section>
         </div>
-    )
+    );
 }
 
 export default Facebook;

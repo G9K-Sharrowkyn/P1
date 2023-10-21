@@ -14,38 +14,80 @@
     margin-left: 10px;
     font-size: 20px;
     flex: 1;
-    max-width: 160px;
-    min-width: 160px;
+    max-width: 180px;
+    min-width: 180px;
 }
 
 .nav > a.chat {
     color: white;
+    background-image: url('F:\Teksty\Programming\dreadwing-protocol\src\components\Pictures\IconChat.png'); 
+    background-size: 30px;
+    background-position: 10px center;
+    background-repeat: no-repeat;
+    padding-left: 40px;
 }
 
 .nav > a.home {
     color: white;
-    /* background-image: url('F:\Teksty\Programming\dreadwing-protocol\src\components\Pictures\Button1.png');
-    background-size: 260px 100px; */
+    background-image: url('F:\Teksty\Programming\dreadwing-protocol\src\components\Pictures\IconHome.png'); 
+    background-size: 30px;
+    background-position: 10px center;
+    background-repeat: no-repeat;
+    padding-left: 40px;
 }
 
 .nav > a.about {
     color: white;
+    background-image: url('F:\Teksty\Programming\dreadwing-protocol\src\components\Pictures\IconAbout.png'); 
+    background-size: 30px;
+    background-position: 10px center;
+    background-repeat: no-repeat;
+    padding-left: 40px;
 }
 
 .nav > a.facebook {
     color: white;
+    background-image: url('F:\Teksty\Programming\dreadwing-protocol\src\components\Pictures\IconFacebook.png'); 
+    background-size: 30px;
+    background-position: 10px center;
+    background-repeat: no-repeat;
+    padding-left: 40px;
 }
 
 .nav > a.discord {
     color: white;
+    background-image: url('F:\Teksty\Programming\dreadwing-protocol\src\components\Pictures\IconDiscord.png'); 
+    background-size: 30px;
+    background-position: 10px center;
+    background-repeat: no-repeat;
+    padding-left: 40px;
 }
 
 .nav > a.registration {
     color: white;
+    background-image: url('F:\Teksty\Programming\dreadwing-protocol\src\components\Pictures\IconRegistration.png'); 
+    background-size: 30px;
+    background-position: 10px center;
+    background-repeat: no-repeat;
+    padding-left: 40px;
 }
 
 .nav > a.rules {
     color: white;
+    background-image: url('F:\Teksty\Programming\dreadwing-protocol\src\components\Pictures\IconRules.png'); 
+    background-size: 30px;
+    background-position: 10px center;
+    background-repeat: no-repeat;
+    padding-left: 40px;
+}
+
+.nav > a.snake {
+    color: white;
+    background-image: url('F:\Teksty\Programming\dreadwing-protocol\src\components\Pictures\IconSnake.png'); 
+    background-size: 30px;
+    background-position: 10px center;
+    background-repeat: no-repeat;
+    padding-left: 40px;
 }
 
 body {

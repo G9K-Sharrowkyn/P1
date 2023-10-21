@@ -6,7 +6,6 @@ h1, h2, h3, h4, h5, h6, h7, h8, h9 {
     background-color: rgb(0, 49, 83);
     border-radius: 10px;
     color: white;
-    padding: 15px 32px;
     text-decoration: none;
     display: inline-block;
     margin-left: 10px;
@@ -25,37 +24,91 @@ body {
 
 h1 {
     font-size: 20px;
+    background-color: rgb(0, 49, 83);
+    color: white;
+    border: 2px solid black;
+    border-radius: 10px;
+    text-align: center;
+    text-decoration: none;
 }
 
 h2 {
     font-size: 20px;
+    background-color: rgb(0, 49, 83);
+    color: white;
+    border: 2px solid black;
+    border-radius: 10px;
+    text-align: center;
+    text-decoration: none;
 }
 
 h3 {
     font-size: 20px;
+    background-color: rgb(0, 49, 83);
+    color: white;
+    border: 2px solid black;
+    border-radius: 10px;
+    text-align: center;
+    text-decoration: none;
 }
 
 h4 {
     font-size: 20px;
+    background-color: rgb(0, 49, 83);
+    color: white;
+    border: 2px solid black;
+    border-radius: 10px;
+    text-align: center;
+    text-decoration: none;
 }
 
 h5 {
     font-size: 20px;
+    background-color: rgb(0, 49, 83);
+    color: white;
+    border: 2px solid black;
+    border-radius: 10px;
+    text-align: center;
+    text-decoration: none;
 }
 
 h6 {
     font-size: 20px;
+    background-color: rgb(0, 49, 83);
+    color: white;
+    border: 2px solid black;
+    border-radius: 10px;
+    text-align: center;
+    text-decoration: none;
     
 }
 
 h7 {
     font-size: 20px;
+    background-color: rgb(0, 49, 83);
+    color: white;
+    border: 2px solid black;
+    border-radius: 10px;
+    text-align: center;
+    text-decoration: none;
 }
 
 h8 {
     font-size: 20px;
+    background-color: rgb(0, 49, 83);
+    color: white;
+    border: 2px solid black;
+    border-radius: 10px;
+    text-align: center;
+    text-decoration: none;
 }
 
 h9 {
     font-size: 20px;
+    background-color: rgb(0, 49, 83);
+    color: white;
+    border: 2px solid black;
+    border-radius: 10px;
+    text-align: center;
+    text-decoration: none;
 }
