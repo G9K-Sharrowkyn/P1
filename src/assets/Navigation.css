@@ -8,7 +8,6 @@
     border-radius: 10px;
     color: white;
     padding: 15px 32px;
-    text-align: center;
     text-decoration: none;
     display: inline-block;
     margin-left: 10px;
@@ -29,6 +28,18 @@
     border: 2px solid black;
 }
 
+.nav > a.chat:hover {
+color: white;
+background-image: url('F:\Teksty\Programming\dreadwing-protocol\src\components\Pictures\ChatPic.jpg'); 
+background-size: cover;
+background-position-y: -50px;
+background-position-x: -1px;
+background-repeat: no-repeat;
+padding-left: 20px;
+background-color: rgb(0, 49, 83);
+border: 2px solid black;
+}
+
 .nav > a.home {
     color: white;
     background-image: url('F:\Teksty\Programming\dreadwing-protocol\src\components\Pictures\IconHome.png'); 
@@ -36,6 +47,18 @@
     background-position: 10px center;
     background-repeat: no-repeat;
     padding-left: 40px;
+    background-color: rgb(0, 49, 83);
+    border: 2px solid black;
+}
+
+.nav > a.home:hover {
+    color: white;
+    background-image: url('F:\Teksty\Programming\dreadwing-protocol\src\components\Pictures\HomePic.jpg'); 
+    background-size: cover;
+    background-position-y: -40px;
+    background-position-x: -1px;
+    background-repeat: no-repeat;
+    padding-left: 20px;
     background-color: rgb(0, 49, 83);
     border: 2px solid black;
 }
@@ -51,6 +74,18 @@
     border: 2px solid black;
 }
 
+.nav > a.about:hover {
+    color: white;
+    background-image: url('F:\Teksty\Programming\dreadwing-protocol\src\components\Pictures\AboutPic.jpg'); 
+    background-size: cover;
+    background-position-y: -40px;
+    background-position-x: -1px;
+    background-repeat: no-repeat;
+    padding-left: 20px;
+    background-color: rgb(0, 49, 83);
+    border: 2px solid black;
+}
+
 .nav > a.facebook {
     color: white;
     background-image: url('F:\Teksty\Programming\dreadwing-protocol\src\components\Pictures\IconFacebook.png'); 
@@ -58,6 +93,18 @@
     background-position: 10px center;
     background-repeat: no-repeat;
     padding-left: 40px;
+    background-color: rgb(0, 49, 83);
+    border: 2px solid black;
+}
+
+.nav > a.facebook:hover {
+    color: white;
+    background-image: url('F:\Teksty\Programming\dreadwing-protocol\src\components\Pictures\FacebookPic.jpg'); 
+    background-size: cover;
+    background-position-y: -20px;
+    background-position-x: -1px;
+    background-repeat: no-repeat;
+    padding-left: 20px;
     background-color: rgb(0, 49, 83);
     border: 2px solid black;
 }
@@ -73,13 +120,14 @@
     border: 2px solid black;
 }
 
-.nav > a.registration {
+.nav > a.discord:hover {
     color: white;
-    background-image: url('F:\Teksty\Programming\dreadwing-protocol\src\components\Pictures\IconRegistration.png'); 
-    background-size: 30px;
-    background-position: 10px center;
+    background-image: url('F:\Teksty\Programming\dreadwing-protocol\src\components\Pictures\DiscordPic.jpg'); 
+    background-size: cover;
+    background-position-y: -35px;
+    background-position-x: -1px;
     background-repeat: no-repeat;
-    padding-left: 40px;
+    padding-left: 20px;
     background-color: rgb(0, 49, 83);
     border: 2px solid black;
 }
@@ -95,6 +143,18 @@
     border: 2px solid black;
 }
 
+.nav > a.rules:hover {
+    color: white;
+    background-image: url('F:\Teksty\Programming\dreadwing-protocol\src\components\Pictures\RulesPic.jpg'); 
+    background-size: 200%;
+    background-position-y: -40px;
+    background-position-x: -60px;
+    background-repeat: no-repeat;
+    padding-left: 20px;
+    background-color: rgb(0, 49, 83);
+    border: 2px solid black;
+}
+
 .nav > a.snake {
     color: white;
     background-image: url('F:\Teksty\Programming\dreadwing-protocol\src\components\Pictures\IconSnake.png'); 
@@ -102,6 +162,18 @@
     background-position: 10px center;
     background-repeat: no-repeat;
     padding-left: 40px;
+    background-color: rgb(0, 49, 83);
+    border: 2px solid black;
+}
+
+.nav > a.snake:hover {
+    color: white;
+    background-image: url('F:\Teksty\Programming\dreadwing-protocol\src\components\Pictures\SnakePic.jpg'); 
+    background-size: 160%;
+    background-position-y: -100px;
+    background-position-x: -70px;
+    background-repeat: no-repeat;
+    padding-left: 20px;
     background-color: rgb(0, 49, 83);
     border: 2px solid black;
 }
@@ -128,18 +200,29 @@ body {
     border: 2px solid black;
 }
 
-.nav > a.registration .submenu {
+.nav > a.registration:hover {
+    color: white;
+    background-image: url('F:\Teksty\Programming\dreadwing-protocol\src\components\Pictures\RegistrationPic.jpg'); 
+    background-size: cover;
+    background-position-y: -22px;
+    background-position-x: -1px;
+    background-repeat: no-repeat;
+    padding-left: 20px;
+    background-color: rgb(0, 49, 83);
+    border: 2px solid black;
+}
+
+.nav > a.registration .registration-submenu {
     display: none;
     position: absolute;
     top: 100%;
     left: 0;
     background-color: rgb(0, 49, 83);
     border: 2px solid black;
-    border-radius: 10px;
     z-index: 1;
 }
 
-.nav > a.registration:hover .submenu {
+.nav > a.registration:hover .registration-submenu  {
     display: flex;
     flex-direction: column;
 }

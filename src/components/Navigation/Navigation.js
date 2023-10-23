@@ -29,10 +29,19 @@ export default function Navigation() {
             </Link>
             <Link to="/registration" className= {`registration ${pathname === "/registration" ? `selected` : ``}`} >
                 Registration
-                <div class="submenu">
-                    <Link to="/subpage1">Subpage 1</Link>
-                    <Link to="/subpage2">Subpage 2</Link>
-                    <Link to="/subpage3">Subpage 3</Link>
+                <div class="registration-submenu">
+                    <Link to="/register" className= {`register ${pathname === "/register" ? `selected` : ``}`} >
+                    Register
+                    </Link>
+                    <Link to="/login" className= {`login ${pathname === "/login" ? `selected` : ``}`} >
+                    Login
+                    </Link>
+                    <Link to="/lostpassword" className= {`lostpassword ${pathname === "/lostpassword" ? `selected` : ``}`} >
+                    Lost Password
+                    </Link>
+                    <Link to="/contactform" className= {`contactform ${pathname === "/contactform" ? `selected` : ``}`} >
+                    Contact Form
+                    </Link>
                 </div>
             </Link>
             <Link to="/rules" className= {`rules ${pathname === "/rules" ? `selected` : ``}`} >

@@ -18,4 +18,13 @@
   
   .page h5 a.facebook-link:hover {
     background-color: #333;
+    padding: 13px 22px;
+    border-radius: 10px;
+    font-size: 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    flex: 1;
+    max-width: 180px;
+    min-width: 180px;
   }

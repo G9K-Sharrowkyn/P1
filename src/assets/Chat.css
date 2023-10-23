@@ -37,7 +37,10 @@
 
 .chatMessageContainer .chatMessage {
   margin: 4px 0px;
-  background-color:lightgrey;
+  background-color: lightgrey;
   padding: 4px 10px;
   border-radius: 10px;
+  max-width: 600px;
+  overflow: hidden;
+  text-align: left;
 }

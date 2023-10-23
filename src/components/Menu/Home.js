@@ -6,7 +6,7 @@ const Home = () => {
   return (
     <div className="page">
       <section>
-        <h6>Home</h6>
+        <h3>Home</h3>
         <div className="button-container">
           <Link to="/home-main" className="read-article-button">
             Przejdź do artykułu
