@@ -1,10 +1,11 @@
 import React from 'react';
+import '../../assets/Help.css'; 
 
 const About = () => {
     return(
         <div className="page">
             <section>
-                <h2>About</h2>
+                <h7>Help</h7>
             </section>
         </div>
     )
