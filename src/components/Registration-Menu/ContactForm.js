@@ -1,7 +1,7 @@
 import React from "react";
 import ContactFormForm from "../Registration-ContactForm/ContactFormForm";
-import "../../assets/ContactForm.css";
-import "../../assets/Chat.css";
+import "../../assets/css/ContactForm.css";
+import "../../assets/css/Chat.css";
 
 export default function ChatMain() {
   const addEntry = (entry) => {

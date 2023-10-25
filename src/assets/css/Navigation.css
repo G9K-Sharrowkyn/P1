@@ -19,7 +19,7 @@
 
 .nav > a.home {
     color: white;
-    background-image: url('F:\Teksty\Programming\dreadwing-protocol\src\components\Pictures\IconHome.png'); 
+    background-image: url('/src/assets/images/IconHome.png'); 
     background-size: 30px;
     background-position: 10px center;
     background-repeat: no-repeat;
@@ -30,7 +30,7 @@
 
 .nav > a.home:hover {
     color: white;
-    background-image: url('F:\Teksty\Programming\dreadwing-protocol\src\components\Pictures\HomePic.jpg'); 
+    background-image: url('/src/assets/images/HomePic.jpg'); 
     background-size: cover;
     background-position-y: -40px;
     background-position-x: 0px;
@@ -42,7 +42,7 @@
 
 .nav > a.help {
     color: white;
-    background-image: url('F:\Teksty\Programming\dreadwing-protocol\src\components\Pictures\IconAbout.png'); 
+    background-image: url('/src/assets/images/IconAbout.png'); 
     background-size: 30px;
     background-position: 10px;
     background-repeat: no-repeat;
@@ -53,7 +53,7 @@
 
 .nav > a.help:hover {
     color: white;
-    background-image: url('F:\Teksty\Programming\dreadwing-protocol\src\components\Pictures\AboutPic.jpg'); 
+    background-image: url('/src/assets/images/AboutPic.jpg'); 
     background-size: cover;
     background-position-y: -40px;
     background-position-x: 0px;
@@ -65,7 +65,7 @@
 
 .nav > a.snake {
     color: white;
-    background-image: url('F:\Teksty\Programming\dreadwing-protocol\src\components\Pictures\IconSnake.png'); 
+    background-image: url('/src/assets/images/IconSnake.png'); 
     background-size: 30px;
     background-position: 10px center;
     background-repeat: no-repeat;
@@ -76,7 +76,7 @@
 
 .nav > a.snake:hover {
     color: white;
-    background-image: url('F:\Teksty\Programming\dreadwing-protocol\src\components\Pictures\SnakePic.jpg'); 
+    background-image: url('/src/assets/images/SnakePic.jpg'); 
     background-size: 160%;
     background-position-y: -100px;
     background-position-x: -70px;
@@ -87,7 +87,7 @@
 }
 
 body {
-    background-image: url('F:\Teksty\Programming\dreadwing-protocol\src\components\Pictures\Emperor.jpeg');
+    background-image: url('/src/assets/images/Emperor.jpeg');
     background-size: 2600px 1500px;
     background-repeat: no-repeat;
 }
@@ -99,7 +99,7 @@ body {
 .nav > a.registration {
     position: relative;
     color: white;
-    background-image: url('F:\Teksty\Programming\dreadwing-protocol\src\components\Pictures\IconRegistration.png'); 
+    background-image: url('/src/assets/images/IconRegistration.png'); 
     background-size: 30px;
     background-position: 10px center;
     background-repeat: no-repeat;
@@ -110,7 +110,7 @@ body {
 
 .nav > a.registration:hover {
     color: white;
-    background-image: url('F:\Teksty\Programming\dreadwing-protocol\src\components\Pictures\RegistrationPic.jpg'); 
+    background-image: url('/src/assets/images/RegistrationPic.jpg'); 
     background-size: cover;
     background-position-y: -22px;
     background-position-x: 0px;
@@ -168,22 +168,4 @@ body {
     background-color: white;
     border-left: 1px solid gray;
     border-top: 1px solid gray;
-}
-
-#current-time {
-    color: white;
-    background-size: 30px;
-    background-position: 10px center;
-    background-repeat: no-repeat;
-    background-color: rgb(0, 49, 83);
-    border: 2px solid black;
-    border-radius: 10px;
-    padding: 12px 32px;
-    text-decoration: none;
-    display: inline-block;
-    margin-left: 10px;
-    font-size: 25px;
-    flex: 1;
-    max-width: 180px;
-    min-width: 180px;
 }

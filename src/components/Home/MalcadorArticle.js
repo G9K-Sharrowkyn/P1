@@ -1,8 +1,8 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-import "../../assets/Chat.css"; 
-import "../../assets/Home.css"; 
+import "../../assets/css/Chat.css"; 
+import "../../assets/css/Home.css"; 
 
 const MalcadorArticle = () => {
     return (

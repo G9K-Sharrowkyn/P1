@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import ChatMessageContainer from "./ChatMessageContainer.js";
 import ChatForm from "./ChatForm.js";
 import FontSelector from "./FontSelector.js";
-import "../../assets/Chat.css"; 
+import "../../assets/css/Chat.css"; 
 
 export default function ChatMain() {
   const [messages, setMessages] = useState([]);

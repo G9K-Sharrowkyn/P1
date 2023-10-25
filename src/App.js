@@ -1,11 +1,11 @@
-import './assets/Reset.css';
-import './assets/General.css';
-import './assets/Chat.css';
-import './assets/Navigation.css'; 
-import './assets/ContactForm.css'; 
-import './assets/Facebook.css'; 
-import './assets/Home.css'; 
-import './assets/Registration.css'; 
+import './assets/css/Reset.css';
+import './assets/css/General.css';
+import './assets/css/Chat.css';
+import './assets/css/Navigation.css'; 
+import './assets/css/ContactForm.css'; 
+import './assets/css/Facebook.css'; 
+import './assets/css/Home.css'; 
+import './assets/css/Registration.css'; 
 
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
@@ -24,11 +24,13 @@ import Login from "./components/Registration-Menu/Login.js"
 import Register from './components/Registration-Menu/Register';
 import LostPassword from './components/Registration-Menu/LostPassword';
 import ContactForm from './components/Registration-Menu/ContactForm';
+import Header from './components/Header/Header';
 
 function App() {
   return (
     <Router>
       <div className="layout">  
+      <Header/>
         <Navigation/>
           <div className="main">
             <Routes>

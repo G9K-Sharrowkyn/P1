@@ -1,29 +1,18 @@
 import React, { useState, useEffect } from "react";
 import DropDownHelpMenu from "./DropDownHelp";
 import { Link, useLocation } from "react-router-dom";
-import updateClock from "./Clock";
 import DarkToLight from "../DarkMode/DarkToLight";
 
-import '../../assets/Navigation.css'; 
+import '../../assets/css/Navigation.css'; 
 
 export default function Navigation() {
     let location = useLocation();
     const [pathname, setPathname] = useState("/");
     const [openProfile, setOpenProfile] = useState(false);
 
-    React.useEffect(() => {
+    useEffect(() => {
         setPathname(location.pathname)
-      }, [location.pathname]);
-
-      useEffect(() => {
-        updateClock();
-        
-        const intervalId = setInterval(updateClock, 1000);
-
-        return () => {
-            clearInterval(intervalId);
-        };
-    }, []);
+    }, [location.pathname]);
 
     return (
         <nav style={{ margin:10 }} className = "nav">
@@ -56,7 +45,6 @@ export default function Navigation() {
             <Link to="/snake" className= {`snake ${pathname === "/snake" ? `selected` : ``}`} >
                 Snake
             </Link>
-            <div id="current-time"></div>
             <DarkToLight/>
         </nav>
     )

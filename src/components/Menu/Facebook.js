@@ -1,5 +1,5 @@
 import React from 'react';
-import '../../assets/Facebook.css';
+import '../../assets/css/Facebook.css';
 
 const Facebook = () => {
     const facebookLink = 'https://www.facebook.com/InvincibleCharlesXII';
