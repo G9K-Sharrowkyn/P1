@@ -1,36 +1,40 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import DropDownHelpMenu from "./DropDownHelp";
 import { Link, useLocation } from "react-router-dom";
-import '../../assets/Navigation.css'; 
+import updateClock from "./Clock";
+import DarkToLight from "../DarkMode/DarkToLight";
 
+import '../../assets/Navigation.css'; 
 
 export default function Navigation() {
     let location = useLocation();
     const [pathname, setPathname] = useState("/");
+    const [openProfile, setOpenProfile] = useState(false);
+
     React.useEffect(() => {
         setPathname(location.pathname)
       }, [location.pathname]);
+
+      useEffect(() => {
+        updateClock();
+        
+        const intervalId = setInterval(updateClock, 1000);
+
+        return () => {
+            clearInterval(intervalId);
+        };
+    }, []);
 
     return (
         <nav style={{ margin:10 }} className = "nav">
             <Link to="/home" className= {`home ${pathname === "/home" ? `selected` : ``}`} >
                 Home
             </Link>
-            <Link to="/help" className= {`help ${pathname === "/help" ? `selected` : ``}`} >
+            <Link to="/help" className= {`help ${pathname === "/help" ? `selected` : ``}`} onClick={() => setOpenProfile ((prev) => !prev)}> 
                 Help
-                <div class="help-submenu">
-                <Link to="/chat" className= {`chat ${pathname === "/chat" ? `selected` : ``}`} >
-                Chat
-                </Link>
-                <Link to="/facebook" className= {`facebook ${pathname === "/facebook" ? `selected` : ``}`} >
-                Facebook
-                </Link>
-                <Link to="/discord" className= {`discord ${pathname === "/discord" ? `selected` : ``}`} >
-                Discord
-                </Link>
-                <Link to="/rules" className= {`rules ${pathname === "/rules" ? `selected` : ``}`} >
-                Rules
-                </Link>
-                </div>
+                {
+                    openProfile && <DropDownHelpMenu />
+                }
             </Link>
             <Link to="/registration" className= {`registration ${pathname === "/registration" ? `selected` : ``}`} >
                 Registration
@@ -52,6 +56,8 @@ export default function Navigation() {
             <Link to="/snake" className= {`snake ${pathname === "/snake" ? `selected` : ``}`} >
                 Snake
             </Link>
+            <div id="current-time"></div>
+            <DarkToLight/>
         </nav>
     )
 };

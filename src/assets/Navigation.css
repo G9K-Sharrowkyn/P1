@@ -145,3 +145,45 @@ body {
     border-radius: 10px;
     z-index: 1;
 }
+
+.dropDownProfile {
+    position: absolute;
+    top: 4.5rem;
+    right: 1.5rem;
+    width: 120px;
+    padding: 15px;
+    border-radius: 15px;
+    background-color: white;
+    border: 1px solid gray;
+}
+
+.dropDownProfile::before {
+    content: "";
+    position: absolute;
+    top: 0,7rem;
+    right: 1.2rem;
+    width: 20px;
+    height: 20px;
+    transform: rotate(45deg);
+    background-color: white;
+    border-left: 1px solid gray;
+    border-top: 1px solid gray;
+}
+
+#current-time {
+    color: white;
+    background-size: 30px;
+    background-position: 10px center;
+    background-repeat: no-repeat;
+    background-color: rgb(0, 49, 83);
+    border: 2px solid black;
+    border-radius: 10px;
+    padding: 12px 32px;
+    text-decoration: none;
+    display: inline-block;
+    margin-left: 10px;
+    font-size: 25px;
+    flex: 1;
+    max-width: 180px;
+    min-width: 180px;
+}
