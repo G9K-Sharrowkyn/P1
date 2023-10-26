@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import DropDownHelpMenu from "./DropDownHelp";
 import { Link, useLocation } from "react-router-dom";
 import DarkToLight from "../DarkMode/DarkToLight";
+import { defaultRoutes } from '../../Routes';
 
 import '../../assets/css/Navigation.css'; 
 
@@ -16,33 +17,33 @@ export default function Navigation() {
 
     return (
         <nav style={{ margin:10 }} className = "nav">
-            <Link to="/home" className= {`home ${pathname === "/home" ? `selected` : ``}`} >
+            <Link to={defaultRoutes.chat} className= {`home ${pathname === "/home" ? `selected` : ``}`} >
                 Home
             </Link>
-            <Link to="/help" className= {`help ${pathname === "/help" ? `selected` : ``}`} onClick={() => setOpenProfile ((prev) => !prev)}> 
+            <Link to={defaultRoutes.help} className= {`help ${pathname === "/help" ? `selected` : ``}`} onClick={() => setOpenProfile ((prev) => !prev)}> 
                 Help
                 {
                     openProfile && <DropDownHelpMenu />
                 }
             </Link>
-            <Link to="/registration" className= {`registration ${pathname === "/registration" ? `selected` : ``}`} >
+            <Link className= {`registration ${pathname === "/registration" ? `selected` : ``}`} >
                 Registration
                 <div class="registration-submenu">
-                    <Link to="/register" className= {`register ${pathname === "/register" ? `selected` : ``}`} >
+                    <Link to={defaultRoutes.register} className= {`register ${pathname === "/register" ? `selected` : ``}`} >
                     Register
                     </Link>
-                    <Link to="/login" className= {`login ${pathname === "/login" ? `selected` : ``}`} >
+                    <Link to={defaultRoutes.login} className= {`login ${pathname === "/login" ? `selected` : ``}`} >
                     Login
                     </Link>
-                    <Link to="/lostpassword" className= {`lostpassword ${pathname === "/lostpassword" ? `selected` : ``}`} >
+                    <Link to={defaultRoutes.lostpassword} className= {`lostpassword ${pathname === "/lostpassword" ? `selected` : ``}`} >
                     Lost Password
                     </Link>
-                    <Link to="/contactform" className= {`contactform ${pathname === "/contactform" ? `selected` : ``}`} >
+                    <Link to={defaultRoutes.contactform} className= {`contactform ${pathname === "/contactform" ? `selected` : ``}`} >
                     Contact Form
                     </Link>
                 </div>
             </Link>
-            <Link to="/snake" className= {`snake ${pathname === "/snake" ? `selected` : ``}`} >
+            <Link to={defaultRoutes.snake} className= {`snake ${pathname === "/snake" ? `selected` : ``}`} >
                 Snake
             </Link>
             <DarkToLight/>

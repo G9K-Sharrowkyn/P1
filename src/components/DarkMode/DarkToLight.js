@@ -15,9 +15,7 @@ function DarkToLight(){
         })
 
     return(
-        <div>
             <button onClick={handleClick}>{theme?"Light":"Dark"}</button>
-        </div>
     );
 }
 

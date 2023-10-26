@@ -22,7 +22,7 @@ const Clock = () => {
     const seconds = date.getSeconds().toString().padStart(2, '0'); 
 
     return (
-        <div ref={clockRef}> {`${hours}:${minutes}:${seconds}`} </div>
+        <div className = "clockContainer" ref={clockRef}> {`${hours}:${minutes}:${seconds}`} </div>
     )
 }
 

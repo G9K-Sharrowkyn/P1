@@ -1,6 +1,6 @@
 import React, { useRef } from "react";
 
-export default function ContactFormForm({ addEntry }) {
+export default function ContactFormForm({ sendMessage }) {
   const nameRef = useRef();
   const lastNameRef = useRef();
   const emailRef = useRef();
@@ -15,7 +15,7 @@ export default function ContactFormForm({ addEntry }) {
     const phone = phoneRef.current.value;
     const problem = problemRef.current.value;
 
-    addEntry({
+    sendMessage({
       name,
       lastName,
       email,
