@@ -1,20 +1,3 @@
-/* h11, h12, h13, h14 {
-  display: inline-block;
-  padding: 10px 20px;
-  background-color: rgb(0, 49, 83);
-  color: white;
-  border: 2px solid black;
-  border-radius: 10px;
-  font-size: 20px;
-  text-align: center;
-  text-decoration: none;
-  margin-top: 10px;
-  margin: 0 auto;
-  width: 600px;
-  height: 400px;
-}
- */
-
 .contactFormMain {
   margin: 0 auto;
   width: 600px;

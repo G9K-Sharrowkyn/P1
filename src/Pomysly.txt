@@ -1,0 +1,6 @@
+1. Możliwość robienia konta
+2. Statystki do zwiększania
+3. Okręgi
+4. Miarka po bokach pokazująca pozycje
+5. Aplikacja do notatek.
+6. Rysowanie na ekranie.

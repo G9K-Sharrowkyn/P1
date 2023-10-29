@@ -1,4 +1,10 @@
-#GameBoard {
+#GameBoard.dark {
+	position: relative;
+	margin: auto;
+	border-style: solid;
+}
+
+#GameBoard:not(.dark) {
 	position: relative;
 	margin: auto;
 	border-style: solid;

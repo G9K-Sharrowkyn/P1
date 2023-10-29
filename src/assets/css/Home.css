@@ -188,3 +188,33 @@
     width: 80%;
     max-width: 1200px;
 }
+
+.rotating-circle {
+    animation: rotate 30s linear infinite;
+    transform-origin: center center;
+    opacity: 0.5;
+  }
+  
+  @keyframes rotate {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+
+  .rotating-circle2 {
+    animation: rotate 30s linear infinite;
+    transform-origin: center center;
+    opacity: 0.5;
+  }
+  
+  @keyframes rotate {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }

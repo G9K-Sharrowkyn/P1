@@ -1,6 +1,5 @@
 import ChatMain from "./components/Chat/ChatMain.js";
 import Home from "./components/Menu/Home.js";
-import Help from "./components/Menu/Help.js";
 import Facebook from './components/Menu/Facebook.js';
 import Discord from './components/Menu/Discord.js';
 import Rules from './components/Menu/Rules.js';
@@ -11,11 +10,11 @@ import Login from "./components/Registration-Menu/Login.js"
 import Register from './components/Registration-Menu/Register';
 import LostPassword from './components/Registration-Menu/LostPassword';
 import ContactForm from './components/Registration-Menu/ContactForm';
+import Articles from "./components/Menu/Articles.js";
 
 export const defaultRoutes = {
     CHAT: "/chat",
     HOME: "/home",
-    HELP: "/help",
     FACEBOOK: "/facebook",
     DISCORD: "/discord",
     RULES: "/rules",
@@ -25,7 +24,8 @@ export const defaultRoutes = {
     REGISTER: "/register",
     LOGIN: "/login",
     LOSTPASSWORD: "/lostpassword",
-    CONTACTFORM: "/contactform"
+    CONTACTFORM: "/contactform",
+    ARTICLES: "/articles"
 }
 
 export const routes = [
@@ -36,10 +36,6 @@ export const routes = [
     {
        "route": "/home",
        "element": <Home />
-    },
-    {
-       "route": "/help",
-       "element": <Help />
     },
     {
        "route": "/facebook",
@@ -80,5 +76,9 @@ export const routes = [
     {
         "route": "/contactform",
         "element": <ContactForm/>
+    },
+    {
+        "route": "/articles",
+        "element": <Articles/>
     },
 ];

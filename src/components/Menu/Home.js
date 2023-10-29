@@ -1,25 +1,25 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState } from "react";
+import { Link } from "react-router-dom";
+import { defaultRoutes } from '../../Routes';
+import CircleSVG from '../Navigation/CircleSVG';
 import '../../assets/css/Home.css';
 
-const Home = () => {
-  return (
-    <div className="home-page">
-      <section>
-        <h3>Artykuły</h3>
-          <div className="button-container">
-            {/* <b className="malcadorarticle-text">Malcador Pieczętnik - Bohater Imperium</b> */}
-          <Link to="/malcadorarticle" className="malcador-article-button">
-            Malcador Pieczętnik
-          </Link>
-            {/* <b className="imperatorarticle-text">Bóg Imperator Ludzkości</b> */}
-          <Link to="/imperatorarticle" className="imperator-article-button">
-            Imperator
-          </Link>
-        </div>
-      </section>
-    </div>
-  );
-}
+function Home() {
+  const [pathname] = useState("/");
 
-  export default Home;
+  return (
+    <div className="page">
+            <div className="circle-container">
+              <CircleSVG />
+            </div>
+            <nav style={{ margin:10 }} className = "nav">
+            <Link to={defaultRoutes.ARTICLES} className= {`articles ${pathname === "/articles" ? `selected` : ``}`} >
+                Articles
+            </Link>
+            </nav>
+</div>
+
+  )
+};
+
+export default Home;

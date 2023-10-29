@@ -6,11 +6,14 @@ import './assets/css/ContactForm.css';
 import './assets/css/Facebook.css'; 
 import './assets/css/Home.css'; 
 import './assets/css/Registration.css'; 
+import './assets/css/MouseTracker.css';
 
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 import Header from './components/Header/Header';
 import Navigation from "./components/Navigation/Navigation.js";
+import MouseTracker from './components/MouseChase/MouseTracker';
+// import WelcomeScreen from './components/Navigation/WelcomeScreen';
 import { routes as mainRoutes } from './Routes';
 
 function App() {
@@ -18,8 +21,10 @@ function App() {
     <Router>
       <div className="layout">  
         <Header/>
+        <MouseTracker/>
         <Navigation/>
           <div className="main">
+          {/* <WelcomeScreen /> */}
             <Routes>
               {mainRoutes.map((route) => (
                 (<Route path= {route.route} element={route.element} />)

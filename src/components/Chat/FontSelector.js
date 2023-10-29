@@ -7,9 +7,9 @@ const FontSelector = ({ onSelectFont }) => {
 
   return (
     <div>
-      <button onClick={() => handleFontClick('Arial, sans-serif')}>Arial</button>
-      <button onClick={() => handleFontClick('Courier New, monospace')}>Courier</button>
-      <button onClick={() => handleFontClick('Times New Roman, serif')}>Times New Roman</button>
+      <button className="fontButton" onClick={() => handleFontClick('Arial, sans-serif')}>Arial</button>
+      <button className="fontButton" onClick={() => handleFontClick('Courier New, monospace')}>Courier</button>
+      <button className="fontButton" onClick={() => handleFontClick('Times New Roman, serif')}>Times New Roman</button>
     </div>
   );
 };
