@@ -189,7 +189,7 @@
     max-width: 1200px;
 }
 
-.rotating-circle {
+/* .rotating-circle {
     animation: rotate 30s linear infinite;
     transform-origin: center center;
     opacity: 0.5;
@@ -217,4 +217,4 @@
     100% {
       transform: rotate(360deg);
     }
-  }
+  } */

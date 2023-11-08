@@ -13,6 +13,8 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Header from './components/Header/Header';
 import Navigation from "./components/Navigation/Navigation.js";
 import MouseTracker from './components/MouseChase/MouseTracker';
+import ClickCounter from './components/MouseChase/ClickCounter.js';
+import AudioPlayer from './components/Menu/AudioPlayer.js';
 // import WelcomeScreen from './components/Navigation/WelcomeScreen';
 import { routes as mainRoutes } from './Routes';
 
@@ -21,8 +23,10 @@ function App() {
     <Router>
       <div className="layout">  
         <Header/>
+        <ClickCounter />
         <MouseTracker/>
         <Navigation/>
+        <AudioPlayer src="src/assets/music/The Four Seasons - Summer - Presto.mp3" />
           <div className="main">
           {/* <WelcomeScreen /> */}
             <Routes>

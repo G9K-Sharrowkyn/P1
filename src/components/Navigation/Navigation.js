@@ -31,8 +31,8 @@ export default function Navigation() {
                     <Link to={defaultRoutes.REGISTER} className= {`register ${pathname === "/register" ? `selected` : ``}`} >
                     Register
                     </Link>
-                    <Link to={defaultRoutes.LOGIN} className= {`login ${pathname === "/login" ? `selected` : ``}`} >
-                    Login
+                    <Link to={defaultRoutes.DOSPAGE} className= {`dospage ${pathname === "/dospage" ? `selected` : ``}`} >
+                    Dos
                     </Link>
                     <Link to={defaultRoutes.LOSTPASSWORD} className= {`lostpassword ${pathname === "/lostpassword" ? `selected` : ``}`} >
                     Lost Password

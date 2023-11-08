@@ -6,7 +6,7 @@ import Rules from './components/Menu/Rules.js';
 import SnakeGame from './components/Snake/SnakeGame.jsx';
 import MalcadorArticle from "./components/Home/MalcadorArticle.js";
 import ImperatorArticle from './components/Home/ImperatorArticle';
-import Login from "./components/Registration-Menu/Login.js"
+import DosPage from "./components/Dos/DosPage.js";
 import Register from './components/Registration-Menu/Register';
 import LostPassword from './components/Registration-Menu/LostPassword';
 import ContactForm from './components/Registration-Menu/ContactForm';
@@ -22,10 +22,10 @@ export const defaultRoutes = {
     MALCADORARTICLE: "/malcadorarticle",
     IMPERATORARTICLE: "/imperatorarticle",
     REGISTER: "/register",
-    LOGIN: "/login",
+    DOSPAGE: "/dospage",
     LOSTPASSWORD: "/lostpassword",
     CONTACTFORM: "/contactform",
-    ARTICLES: "/articles"
+    ARTICLES: "/articles",
 }
 
 export const routes = [
@@ -66,8 +66,8 @@ export const routes = [
         "element": <Register/>
     },
     {
-        "route": "/login",
-        "element": <Login/>
+        "route": "/dospage",
+        "element": <DosPage commandLine="COMMAND.COM" />
     },
     {
         "route": "/lostpassword",
