@@ -29,11 +29,11 @@ function App() {
         <AudioPlayer src="src/assets/music/The Four Seasons - Summer - Presto.mp3" />
           <div className="main">
           {/* <WelcomeScreen /> */}
-            <Routes>
-              {mainRoutes.map((route) => (
-                (<Route path= {route.route} element={route.element} />)
+          <Routes>
+            {mainRoutes.map((route) => (
+              <Route key={route.route} path={route.route} element={route.element} />
               ))}
-            </Routes> 
+              </Routes>
           </div>
         </div>
       </Router>

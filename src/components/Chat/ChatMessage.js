@@ -1,7 +1,9 @@
-export default function ChatMessage({content}) {
+function ChatMessage({ content }) {
     return (
-        <div className={"chatMessage"}>
-        <span> {content} </span>
-        </div>
-    )
-}
+      <div className={`chatMessage ${content.role}`}>
+        <span>{content.content}</span>
+      </div>
+    );
+  }
+  
+  export default ChatMessage;

@@ -1,64 +1,71 @@
-import React, { useState, useRef, useEffect } from 'react';
-import "./NewMenu.css";
+import React, { useState, useRef } from 'react';
+import '../../assets/css/NewMenu.css';
 
-const NewMenu = () => {
-  const [isDragging, setIsDragging] = useState(false);
-  const [startX, setStartX] = useState(0);
-  const [prevPercentage, setPrevPercentage] = useState(0);
+const ImageTrack = () => {
   const trackRef = useRef(null);
+  const [mouseDownAt, setMouseDownAt] = useState(0);
+  const [prevPercentage, setPrevPercentage] = useState(0);
+  const [percentage, setPercentage] = useState(0);
 
-  const handleMouseDown = (e) => {
-    setIsDragging(true);
-    setStartX(e.clientX);
+  const images = [
+    'https://images.unsplash.com/photo-1524781289445-ddf8f5695861?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWge',
+    'https://images.unsplash.com/photo-1610194352361-4c81a6a8967e?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1674&q=80',
+    'https://images.unsplash.com/photo-1618202133208-2907bebba9e1?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80',
+    'https://images.unsplash.com/photo-1495805442109-bf1cf975750b?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80',
+    'https://images.unsplash.com/photo-1548021682-1720ed403a5b?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80',
+  ];
+
+  const handleOnDown = (e) => {
+    const clientX = e.type.includes('touch') ? e.touches[0].clientX : e.clientX;
+    setMouseDownAt(clientX);
   };
 
-  const handleMouseUp = () => {
-    if (isDragging) {
-      setIsDragging(false);
-      setPrevPercentage(parseFloat(trackRef.current.style.transform.replace('translate(', '').replace('%, -50%)', '')) || 0);
-    }
+  const handleOnUp = () => {
+    setMouseDownAt(0);
+    setPrevPercentage(percentage);
   };
 
-  const handleMouseMove = (e) => {
-    if (!isDragging) return;
-    if (!trackRef.current) return;
+  const handleOnMove = (e) => {
+    if (mouseDownAt === 0) return;
 
-    const mouseDelta = startX - e.clientX;
+    const clientX = e.type.includes('touch') ? e.touches[0].clientX : e.clientX;
+    const mouseDelta = mouseDownAt - clientX;
     const maxDelta = window.innerWidth / 2;
-    const percentage = (mouseDelta / maxDelta) * -100;
-    let nextPercentageUnconstrained = prevPercentage + percentage;
-    let nextPercentage = Math.max(Math.min(nextPercentageUnconstrained, 0), -100);
+    const newPercentage = (mouseDelta / maxDelta) * -100;
+    const nextPercentageUnconstrained = prevPercentage + newPercentage;
+    const nextPercentage = Math.max(Math.min(nextPercentageUnconstrained, 0), -100);
+
+    setPercentage(nextPercentage);
 
     trackRef.current.style.transform = `translate(${nextPercentage}%, -50%)`;
-    const images = trackRef.current.getElementsByClassName('image');
-    for (const image of images) {
+
+    for (const image of trackRef.current.children) {
       image.style.objectPosition = `${100 + nextPercentage}% center`;
     }
   };
 
-//https://www.youtube.com/watch?v=PkADl0HubMY
-
-  useEffect(() => {
-    const trackElement = trackRef.current;
-
-    return () => {
-    };
-  }, []); 
-
   return (
     <div
       id="image-track"
-      onMouseDown={handleMouseDown}
-      onMouseUp={handleMouseUp}
-      onMouseMove={handleMouseMove}
-      onMouseLeave={handleMouseUp}
+      className="image-track"
       ref={trackRef}
-      style={{
-        cursor: isDragging ? 'grabbing' : 'grab',
-      }}
+      onMouseDown={handleOnDown}
+      onTouchStart={handleOnDown}
+      onMouseUp={handleOnUp}
+      onTouchEnd={handleOnUp}
+      onMouseMove={handleOnMove}
+      onTouchMove={handleOnMove}
     >
+      {images.map((src, index) => (
+        <img
+          key={index}
+          className="image"
+          src={src}
+          alt={`View ${index}`}
+        />
+      ))}
     </div>
   );
 };
 
-export default NewMenu;
+export default ImageTrack;

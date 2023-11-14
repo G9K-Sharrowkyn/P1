@@ -19,7 +19,7 @@ export default function Navigation() {
             <Link to={defaultRoutes.HOME} className= {`home ${pathname === "/home" ? `selected` : ``}`} >
                 Home
             </Link>
-            <Link to={defaultRoutes.help} className= {`help ${pathname === "/help" ? `selected` : ``}`} onClick={() => setOpenProfile ((prev) => !prev)}> 
+            <Link to={defaultRoutes.HELP} className= {`help ${pathname === "/help" ? `selected` : ``}`} onClick={() => setOpenProfile ((prev) => !prev)}> 
                 Help
                 {
                     openProfile && <DropDownHelpMenu />
