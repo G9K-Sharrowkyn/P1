@@ -6,6 +6,7 @@ export default function ContactFormForm({ sendMessage }) {
   const emailRef = useRef();
   const phoneRef = useRef();
   const problemRef = useRef();
+  const mailtoLinkRef = useRef();
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -14,15 +15,14 @@ export default function ContactFormForm({ sendMessage }) {
     const email = emailRef.current.value;
     const phone = phoneRef.current.value;
     const problem = problemRef.current.value;
-
-    sendMessage({
-      name,
-      lastName,
-      email,
-      phone,
-      problem,
-    });
-
+  
+    const subject = encodeURIComponent(`Zapytanie od ${name} ${lastName}`);
+    const body = encodeURIComponent(`Telefon: ${phone}\nProblem: ${problem}`);
+  
+    const mailtoLink = `mailto:${email}?subject=${subject}&body=${body}`;
+    mailtoLinkRef.current.href = mailtoLink;
+    mailtoLinkRef.current.click();
+  
     nameRef.current.value = '';
     lastNameRef.current.value = '';
     emailRef.current.value = '';
@@ -87,6 +87,7 @@ export default function ContactFormForm({ sendMessage }) {
         </button>
       </form>
       <div className="clearf9x" />
+      <a ref={mailtoLinkRef} href="/" style={{ display: 'none' }}>Send Email</a>
     </div>
   );
 }

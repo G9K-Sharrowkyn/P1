@@ -1,4 +1,5 @@
 import React from 'react';
+import Translator from '../Translator/Translator';
 
 const Register = () => {
     return(
@@ -6,6 +7,7 @@ const Register = () => {
             <section>
                 <h13>Register</h13>
             </section>
+            <Translator />
         </div>
     )
 }
