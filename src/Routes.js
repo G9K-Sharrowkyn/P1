@@ -11,6 +11,7 @@ import Register from './components/Registration-Menu/Register';
 import LostPassword from './components/Registration-Menu/LostPassword';
 import ContactForm from './components/Registration-Menu/ContactForm';
 import Articles from "./components/Menu/Articles.js";
+import LearnMore from "./components/Navigation/LearnMore.js";
 
 export const defaultRoutes = {
     CHAT: "/chat",
@@ -26,6 +27,7 @@ export const defaultRoutes = {
     LOSTPASSWORD: "/lostpassword",
     CONTACTFORM: "/contactform",
     ARTICLES: "/articles",
+    LEARNMORE: "/learnmore"
 }
 
 export const routes = [
@@ -80,5 +82,9 @@ export const routes = [
     {
         "route": "/articles",
         "element": <Articles/>
+    },
+    {
+        "route": "/learnmore",
+        "element": <LearnMore/>
     },
 ];

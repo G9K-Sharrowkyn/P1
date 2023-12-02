@@ -9,192 +9,31 @@
 }
 
 body {
-    font-size: 16px;
-    text-align: center;
     font-family: Arial, Helvetica, sans-serif;
-}
-
-h1 {
-    display: inline-block;
-    padding: 10px 20px;
-    background-color: rgb(0, 49, 83);
-    color: white;
-    border: 2px solid black;
-    border-radius: 10px;
     font-size: 20px;
-    text-align: center;
-    text-decoration: none;
-    margin-top: 10px;
-}
-
-h2 {
-    display: inline-block;
-    padding: 10px 20px;
-    background-color: rgb(0, 49, 83);
     color: white;
-    border: 2px solid black;
-    border-radius: 10px;
-    font-size: 20px;
-    text-align: center;
-    text-decoration: none;
-    margin-top: 10px;
-}
-
-h3 {
-    display: inline-block;
-    padding: 10px 20px;
-    background-color: rgb(0, 49, 83);
-    color: white;
-    border: 2px solid black;
-    border-radius: 10px;
-    font-size: 20px;
-    text-align: center;
-    text-decoration: none;
-    margin-top: 10px;
-}
-
-h4 {
-    display: inline-block;
-    padding: 10px 20px;
-    background-color: rgb(0, 49, 83);
-    color: white;
-    border: 2px solid black;
-    border-radius: 10px;
-    font-size: 20px;
-    text-align: center;
-    text-decoration: none;
-    margin-top: 10px;
-}
-
-h5 {
-    display: inline-block;
-    background-color: rgb(0, 49, 83);
-    color: white;
-    border: 2px solid black;
-    border-radius: 10px;
-    font-size: 20px;
-    text-align: center;
-    text-decoration: none;
-    margin-top: 10px;
-}
-
-h6 {
-    display: inline-block;
-    padding: 10px 20px;
-    background-color: rgb(0, 49, 83);
-    color: white;
-    border: 2px solid black;
-    border-radius: 10px;
-    font-size: 20px;
-    text-align: center;
-    text-decoration: none;
-    margin-top: 10px;
-    margin-left: 160px;
-}
-
-h7 {
-    display: inline-block;
-    padding: 10px 20px;
-    background-color: rgb(0, 49, 83);
-    color: white;
-    border: 2px solid black;
-    border-radius: 10px;
-    font-size: 20px;
-    text-align: center;
-    text-decoration: none;
-    margin-top: 10px;
-}
-
-h8 {
-    display: inline-block;
-    padding: 10px 20px;
-    background-color: rgb(0, 49, 83);
-    color: white;
-    border: 2px solid black;
-    border-radius: 10px;
-    font-size: 20px;
-    text-align: center;
-    text-decoration: none;
-    margin-top: 10px;
-}
-
-h9 {
-    display: inline-block;
-    padding: 10px 20px;
-    background-color: rgb(0, 49, 83);
-    color: white;
-    border: 2px solid black;
-    border-radius: 10px;
-    font-size: 20px;
-    text-align: center;
-    text-decoration: none;
-    margin-top: 10px;
 }
 
 .task-container {
-    color: white;
-    border-radius: 10px;
     padding: 15px 32px;
-    text-decoration: none;
-    display: inline-block;
-    background-repeat: no-repeat;
-    margin-left: 10px;
-    font-size: 20px;
-    flex: 1;
-    max-width: 180px;
-    min-width: 180px;
+    width: 300px;
     overflow-y: auto;
     position: relative;
     word-wrap: break-word;
-    overflow-wrap: break-word;
-    margin-bottom: 30px;
-
-  }
+    width: 180px;
+}
 
   .todo-container {
     background-color: rgb(0, 49, 83);
     border: 2px solid black;
-    color: white;
     border-radius: 10px;
-    font-size: 20px;
     width: 300px;
   }
 
   .input-container {
-    background-color: rgb(0, 49, 83);
     width: 140px;
-    color: white;
-    font-size: 20px;
-    text-align: center;
-    text-decoration: none;
-  }
-  
-  .button-container {
-    background-color: rgb(0, 49, 83);
-    color: white;
-    border-radius: 10px;
-    font-size: 20px;
-    text-align: center;
-    text-decoration: none;
   }
 
   .task-item {
-    background-color: rgb(0, 49, 83);
-    color: white;
-    border-radius: 10px;
-    font-size: 20px;
     text-align: center;
-    text-decoration: none;
-  }
-  
-  .button4 {
-    background-color: #4CAF50;
-    color: white;
-    padding: 15px 32px;
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
-    font-size: 16px;
-    margin: 4px 2px;
-    cursor: pointer;
   }

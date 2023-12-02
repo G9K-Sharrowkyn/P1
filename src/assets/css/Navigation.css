@@ -158,10 +158,6 @@ body {
     position: relative;
 }
 
-.btn:hover {
-    transform: translateY(-10px);
-}
-
 .article-button {
     background-color: black;
     color: white;

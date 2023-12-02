@@ -45,7 +45,9 @@ export default function Navigation() {
             <Link to={defaultRoutes.SNAKE} className= {`snake ${pathname === "/snake" ? `selected` : ``}`} >
                 Snake
             </Link>
-            <button class="btn">learn more</button>
+            <Link to={defaultRoutes.LEARNMORE} className= {`learnmore ${pathname === "/learnmore" ? `selected` : ``}`} >
+                Learn More
+            </Link>
         </nav>
     )
 };
