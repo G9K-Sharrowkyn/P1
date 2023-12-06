@@ -17,11 +17,25 @@
     color: gold;
 }
 
+.read-article-button {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 20px;
+}
+
 .malcadorarticle {
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
-  gap: 20px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 20px;
+}
+
+@media screen and (max-width: 768px) {
+    .malcadorarticle {
+        flex-direction: column;
+    }
 }
 
 .malcador-article-container {

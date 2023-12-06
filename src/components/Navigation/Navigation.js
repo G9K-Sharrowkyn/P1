@@ -14,12 +14,16 @@ export default function Navigation() {
         setPathname(location.pathname)
     }, [location.pathname]);
 
+    const handleClick = () => {
+        setOpenProfile ((prev) => !prev);
+    }
+
     return (
         <nav style={{ margin:10 }} className = "nav">
             <Link to={defaultRoutes.HOME} className= {`home ${pathname === "/home" ? `selected` : ``}`} >
                 Home
             </Link>
-            <Link to={defaultRoutes.HELP} className= {`help ${pathname === "/help" ? `selected` : ``}`} onClick={() => setOpenProfile ((prev) => !prev)}> 
+            <Link to={defaultRoutes.HELP} className= {`help ${pathname === "/help" ? `selected` : ``}`} onClick={handleClick}> 
                 Help
                 {
                     openProfile && <DropDownHelpMenu />
@@ -29,13 +33,13 @@ export default function Navigation() {
                 Registration
                 <div class="registration-submenu">
                     <Link to={defaultRoutes.REGISTER} className= {`register ${pathname === "/register" ? `selected` : ``}`} >
-                    Register
+                    Translator
                     </Link>
                     <Link to={defaultRoutes.DOSPAGE} className= {`dospage ${pathname === "/dospage" ? `selected` : ``}`} >
                     Dos
                     </Link>
                     <Link to={defaultRoutes.LOSTPASSWORD} className= {`lostpassword ${pathname === "/lostpassword" ? `selected` : ``}`} >
-                    Lost Password
+                    Image Canvas
                     </Link>
                     <Link to={defaultRoutes.CONTACTFORM} className= {`contactform ${pathname === "/contactform" ? `selected` : ``}`} >
                     Contact Form
@@ -46,7 +50,7 @@ export default function Navigation() {
                 Snake
             </Link>
             <Link to={defaultRoutes.LEARNMORE} className= {`learnmore ${pathname === "/learnmore" ? `selected` : ``}`} >
-                Learn More
+                Star Wars
             </Link>
         </nav>
     )

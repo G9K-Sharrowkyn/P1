@@ -25,26 +25,26 @@ class MouseTracker extends Component {
     const { mouseX, mouseY } = this.state;
 
     const lineHorizontalStyle = {
-      bottom: '20px', // Stała odległość od dolnej krawędzi ekranu
+      bottom: '20px',
       left: '0',
       right: '0',
       border: '1px solid #000',
     };
 
     const lineVerticalStyle = {
-      left: '20px', // Stała odległość od lewej krawędzi ekranu
+      left: '20px',
       top: '0',
       bottom: '0',
       border: '1px solid #000',
     };
 
     const markerHorizontalStyle = {
-      bottom: '-20px', // Stała odległość od dolnej krawędzi ekranu
+      bottom: '-20px',
       left: mouseX + 'px',
     };
 
     const markerVerticalStyle = {
-      left: '-10px', // Stała odległość od lewej krawędzi ekranu
+      left: '-10px',
       top: mouseY + 'px',
     };
 

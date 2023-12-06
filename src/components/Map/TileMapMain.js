@@ -1,6 +1,5 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 import TileMap from './TileMap';
-import styles from './TileMap.css';
 
 const directions = {
   up: 'up',
@@ -17,21 +16,25 @@ const keys = {
 };
 
 const TileMapMain = () => {
-  const [position, setPosition] = useState({ x: -190, y: 34 });
+  const [position, setPosition] = useState({ x: 5, y: 3 });
   const [direction, setDirection] = useState('down');
   const [isWalking, setIsWalking] = useState(false);
+  const [isOnDoors, setIsOnDoors] = useState(false);
   const gridSize = 66;
 
-  const handleDpadPress = useCallback((newDirection) => {
+  const handleDpadPress = (newDirection) => {
     setDirection(newDirection);
     setIsWalking(true);
-  }, []);
+  }
 
-  const handleDpadRelease = useCallback(() => {
+  const handleDpadRelease = () => {
     setIsWalking(false);
-  }, []);
+  }
 
-  const mapStyle = {
+  const [currentMap, setCurrentMap] = useState('map1');
+
+
+  const mapStyle1 = {
     imageRendering: 'pixelated',
     backgroundImage: 'url(https://assets.codepen.io/21542/CameraDemoMap.png)',
     backgroundSize: '100%',
@@ -39,27 +42,49 @@ const TileMapMain = () => {
     height: `${10 * gridSize}px`,
     position: 'absolute',
   };
-  
-const handleKeyDown = useCallback((event) => {
-  const dir = keys[event.keyCode];
-  if (dir) {
+
+  const mapStyle2 = {
+    imageRendering: 'pixelated',
+    backgroundImage: 'url(https://st3.depositphotos.com/1340907/17689/v/1600/depositphotos_176890584-stock-illustration-pixel-art-neighborhood.jpg)',
+    backgroundSize: '100%',
+    width: `${13 * gridSize}px`,
+    height: `${10 * gridSize}px`,
+    position: 'absolute',
+  };
+
+  const doorsPosition = { x: 0, y: 0 };
+  const doorsStyle = {
+    width: `${3 * gridSize}px`,
+    height: `${3 * gridSize}px`,
+    position: 'absolute',
+    backgroundImage: `url(https://art.pixilart.com/0fc84f0c3d4c39f.png)`,
+    backgroundSize: '100%',
+  };
+
+  const handleKeyDown = (event) => {
+    const dir = keys[event.keyCode];
+    if (!dir) {
+      return;
+    }
     setDirection(dir);
     setIsWalking(true);
   }
-}, []);
 
-const handleKeyUp = useCallback((event) => {
-  if (keys[event.keyCode]) {
+  const handleKeyUp = (event) => {
+    if (!keys[event.keyCode]) {
+      return;
+    }
     setIsWalking(false);
   }
-}, []);
 
-  const placeCharacter = useCallback(() => {
-    if (!isWalking) return;
+  const placeCharacter = () => {
+    if (!isWalking) {
+      return;
+    }
   
     let newX = position.x;
     let newY = position.y;
-    const speed = 0.5;
+    const speed = 0.2;
   
     switch (direction) {
       case 'right':
@@ -85,9 +110,22 @@ const handleKeyUp = useCallback((event) => {
 
     newX = Math.max(leftLimit, Math.min(newX, rightLimit));
     newY = Math.max(topLimit, Math.min(newY, bottomLimit));
-  
+
     setPosition({ x: newX, y: newY });
-  }, [position, direction, isWalking]);
+
+    if (Math.round(newX) === doorsPosition.x && Math.round(newY) === doorsPosition.y) {
+      setIsOnDoors(true);
+    } else {
+      setIsOnDoors(false);
+    }
+  };
+
+  const teleportCharacter = () => {
+    setCurrentMap(currentMap === 'map1' ? 'map2' : 'map1');
+    const newMapStartPosition = { x: 1, y: 1 };
+    setPosition(newMapStartPosition);
+    setIsOnDoors(false);
+  };
 
   const characterStyle = {
     transform: `translate3d(${position.x * gridSize}px, ${position.y * gridSize}px, 0)`,
@@ -95,6 +133,7 @@ const handleKeyUp = useCallback((event) => {
     height: `${2 * gridSize}px`,
     position: 'absolute',
     overflow: 'hidden',
+    zIndex: 3,
   };
 
   const characterSpritesheetStyle = {
@@ -130,28 +169,44 @@ const handleKeyUp = useCallback((event) => {
       window.removeEventListener('keydown', handleKeyDown);
       window.removeEventListener('keyup', handleKeyUp);
     };
-  }, [handleKeyDown, handleKeyUp, placeCharacter]);
+  }, [position, direction, isWalking]);
+
+  const handleSomething = (e) => {
+    const direction = e.currentTarget.dataset.direction;
+    handleDpadPress(direction);
+  }
 
   return (
-    <div className={styles.frame}>
-      <div className={styles.camera} style={mapStyle}>
-        <div className={`${styles.character} ${styles[direction]} ${isWalking ? styles.walking : ''}`} style={characterStyle}>
-          <div style={shadowStyle}>
-          </div>
-          <div style={characterSpritesheetStyle}> 
-          </div>
+    <div>
+      <div style={currentMap === 'map1' ? mapStyle1 : mapStyle2}>
+        <div style={characterStyle}>
+          <div style={shadowStyle}></div>
+          <div style={characterSpritesheetStyle}></div>
         </div>
+        <div style={doorsStyle}></div>
         <TileMap />
-
-        <div className={styles.dpad}>
-          <button onMouseDown={() => handleDpadPress('up')} onMouseUp={handleDpadRelease}>Up</button>
-          <button onMouseDown={() => handleDpadPress('down')} onMouseUp={handleDpadRelease}>Down</button>
-          <button onMouseDown={() => handleDpadPress('left')} onMouseUp={handleDpadRelease}>Left</button>
-          <button onMouseDown={() => handleDpadPress('right')} onMouseUp={handleDpadRelease}>Right</button>
+  
+        <div style={{ position: 'absolute', bottom: '630px' }}>
+          <div className="flex flex-col items-center justify-center space-y-4">
+            <div>
+              <button className="w-44 h-12 bg-white dark:bg-slate-950 text-black dark:text-white rounded ring-slate-950 shadow-lg ring-4 text-2xl" data-direction="up" onMouseDown={handleSomething} onMouseUp={handleDpadRelease}>Up</button>
+            </div>
+            <div className="flex justify-center space-x-4">
+              <button className="w-44 h-12 bg-white dark:bg-slate-950 text-black dark:text-white rounded ring-slate-950 shadow-lg ring-4 text-2xl" data-direction="left" onMouseDown={handleSomething} onMouseUp={handleDpadRelease}>Left</button>
+              <button className="w-44 h-12 bg-white dark:bg-slate-950 text-black dark:text-white rounded ring-slate-950 shadow-lg ring-4 text-2xl" data-direction="down" onMouseDown={handleSomething} onMouseUp={handleDpadRelease}>Down</button>
+              <button className="w-44 h-12 bg-white dark:bg-slate-950 text-black dark:text-white rounded ring-slate-950 shadow-lg ring-4 text-2xl" data-direction="right" onMouseDown={handleSomething} onMouseUp={handleDpadRelease}>Right</button>
+            </div>
+          </div>
+  
+          {isOnDoors && (
+            <div className="mt-4 flex justify-center">
+              <button className="w-44 h-12 bg-white dark:bg-slate-950 text-black dark:text-white rounded ring-slate-950 shadow-lg ring-4 text-2xl" onClick={teleportCharacter}>Teleport to New Map</button>
+            </div>
+          )}
         </div>
       </div>
     </div>
   );
-};
+        }
 
 export default TileMapMain;

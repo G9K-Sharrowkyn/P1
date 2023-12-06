@@ -6,10 +6,13 @@ import "../../assets/css/Home.css";
 
 const MalcadorArticle = () => {
     return (
-        <div className="malcadorarticle">
+        <div>
+        <div className='gobackhomebtn'>
                 <Link to="/home" className="read-article-button">
                 Wróć do strony domowej
                 </Link>
+        </div>
+        <div className="malcadorarticle">
             <div className="button-container">
             </div>
                 <div className="malcador-article-container">
@@ -19,6 +22,7 @@ const MalcadorArticle = () => {
             </div>
             <div className="malcador-image">
             </div>
+        </div>
         </div>
     );
 }

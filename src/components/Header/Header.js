@@ -2,15 +2,17 @@ import React from 'react';
 import Clock from './Clock';
 import DarkToLight from "./DarkToLight";
 
-import '../../assets/css/Header.css';
-
-
 const Header = () => {
-
     return (
-        <div className="headerBanner clearfix">
-            <Clock/>
-            <DarkToLight/>
+        <div className="bg-black p-4 shadow-lg border border-gray-300">
+            <div className="flex justify-end items-center">
+                <div className="mr-4">
+                    <DarkToLight />
+                </div>
+                <div>
+                    <Clock/>
+                </div>
+            </div>
         </div>
     );
 }

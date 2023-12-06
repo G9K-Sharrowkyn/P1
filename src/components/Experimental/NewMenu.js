@@ -31,13 +31,16 @@ const ImageTrack = () => {
     const clientX = e.type.includes('touch') ? e.touches[0].clientX : e.clientX;
     const mouseDelta = mouseDownAt - clientX;
     const maxDelta = window.innerWidth / 2;
-    const newPercentage = (mouseDelta / maxDelta) * -100;
+    const newPercentage = (mouseDelta / maxDelta) * -220;
     const nextPercentageUnconstrained = prevPercentage + newPercentage;
     const nextPercentage = Math.max(Math.min(nextPercentageUnconstrained, 0), -100);
 
+    if(nextPercentage > 30){
+      nextPercentage = 30;
+    }
     setPercentage(nextPercentage);
 
-    trackRef.current.style.transform = `translate(${nextPercentage}%, -50%)`;
+    trackRef.current.style.transform = `translateX(${nextPercentage}%)`;
 
     for (const image of trackRef.current.children) {
       image.style.objectPosition = `${100 + nextPercentage}% center`;
@@ -46,7 +49,6 @@ const ImageTrack = () => {
 
   return (
     <div
-      id="image-track"
       className="image-track"
       ref={trackRef}
       onMouseDown={handleOnDown}

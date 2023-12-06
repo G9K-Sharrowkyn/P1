@@ -1,9 +1,33 @@
 .luke-skywalker {
     background-image: url('../../assets/swimages/tyogqds4au851.jpg');
     background-size: cover;
+    max-width: 70vmin;
+    min-width: 30vmin;
+    min-height: 50vmin;
+    max-height: 70vmin;
+    display: inline-block;
+    margin: 20px 20px;
 }
 
 .darth-caedus {
     background-image: url('../../assets/swimages/Caedus_EA.jpg');
     background-size: cover;
+    max-width: 70vmin;
+    min-width: 30vmin;
+    min-height: 50vmin;
+    max-height: 70vmin;
+    display: inline-block;
+    margin: 20px 20px;
+}
+
+.darth-sidious {
+    background-image: url('../../assets/swimages/Darth_Sidious.webp');
+    background-size: cover;
+    background-position: -70px;
+    max-width: 70vmin;
+    min-width: 30vmin;
+    min-height: 50vmin;
+    max-height: 70vmin;  
+    display: inline-block;
+    margin: 20px 20px;
 }

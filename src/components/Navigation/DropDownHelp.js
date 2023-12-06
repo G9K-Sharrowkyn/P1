@@ -24,10 +24,10 @@ export default function DropDownHelpMenu() {
                 Facebook
             </Link>
             <Link to={defaultRoutes.DISCORD} className= {`discord ${pathname === "/discord" ? `selected` : ``}`} >
-                Discord
+                ImagePopUp
             </Link>
             <Link to={defaultRoutes.RULES} className= {`rules ${pathname === "/rules" ? `selected` : ``}`} >
-                Rules
+                Map
             </Link>
                 </div>
             </ul>

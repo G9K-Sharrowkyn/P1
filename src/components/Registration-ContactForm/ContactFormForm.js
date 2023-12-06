@@ -1,12 +1,12 @@
 import React, { useRef } from "react";
 
-export default function ContactFormForm({ sendMessage }) {
+export default function ContactFormForm() {
   const nameRef = useRef();
   const lastNameRef = useRef();
   const emailRef = useRef();
   const phoneRef = useRef();
   const problemRef = useRef();
-  const mailtoLinkRef = useRef();
+  // const mailtoLinkRef = useRef();
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -20,8 +20,8 @@ export default function ContactFormForm({ sendMessage }) {
     const body = encodeURIComponent(`Telefon: ${phone}\nProblem: ${problem}`);
   
     const mailtoLink = `mailto:${email}?subject=${subject}&body=${body}`;
-    mailtoLinkRef.current.href = mailtoLink;
-    mailtoLinkRef.current.click();
+
+    window.open(mailtoLink);
   
     nameRef.current.value = '';
     lastNameRef.current.value = '';
@@ -87,7 +87,6 @@ export default function ContactFormForm({ sendMessage }) {
         </button>
       </form>
       <div className="clearf9x" />
-      <a ref={mailtoLinkRef} href="/" style={{ display: 'none' }}>Send Email</a>
     </div>
   );
 }

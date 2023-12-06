@@ -4,7 +4,6 @@ import Vivaldi from "../../assets/music/Vivaldi.mp3";
 
 function AudioPlayer() {
   const [isPlaying, setIsPlaying] = useState(false);
-  
   const audioRef = useRef(null);
 
   useEffect(() => {
@@ -31,12 +30,14 @@ function AudioPlayer() {
   };
 
   return (
-    <div>
-      <audio ref={audioRef} src={Vivaldi} preload="auto" />
-      <button onClick={togglePlay}>
-        {isPlaying ? 'Pauza' : 'Odtwórz'}
-      </button>
-    </div>
+      <div>
+        <audio ref={audioRef} src={Vivaldi} preload="auto" />
+        <button 
+          onClick={togglePlay} 
+          className="w-44 h-12 bg-white dark:bg-slate-950 text-black dark:text-white rounded ring-slate-950 shadow-lg ring-4 text-2xl">
+          {isPlaying ? 'Pause' : 'Play'}
+        </button>
+      </div>
   );
 }
 

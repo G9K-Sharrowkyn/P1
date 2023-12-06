@@ -1,11 +1,11 @@
 import './assets/css/Reset.css';
 import './assets/css/General.css';
 import './assets/css/Chat.css';
-import './assets/css/Navigation.css'; 
-import './assets/css/ContactForm.css'; 
-import './assets/css/Facebook.css'; 
-import './assets/css/Home.css'; 
-import './assets/css/Registration.css'; 
+import './assets/css/Navigation.css';
+import './assets/css/ContactForm.css';
+import './assets/css/Facebook.css';
+import './assets/css/Home.css';
+import './assets/css/Registration.css';
 import './assets/css/MouseTracker.css';
 
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
@@ -21,23 +21,27 @@ import { routes as mainRoutes } from './Routes';
 function App() {
   return (
     <Router>
-      <div className="layout">  
-        <Header/>
-        <ClickCounter />
-        <MouseTracker/>
-        <Navigation/>
-        <AudioPlayer src="src/assets/music/The Four Seasons - Summer - Presto.mp3" />
-          <div className="main">
+      <div className="layout">
+        <Header />
+        <Navigation />
+        <div className="flex justify-end">
+          <div className="flex flex-col space-y-2 mr-4 mt-[-60px]">
+            <ClickCounter />
+            <MouseTracker />
+            <AudioPlayer src="src/assets/music/The Four Seasons - Summer - Presto.mp3" />
+          </div>
+        </div>
+        <div className="main">
           {/* <WelcomeScreen /> */}
           <Routes>
             {mainRoutes.map((route) => (
               <Route key={route.route} path={route.route} element={route.element} />
-              ))}
-              </Routes>
-          </div>
+            ))}
+          </Routes>
         </div>
-      </Router>
-    );
-  }
+      </div>
+    </Router>
+  );
+}
 
 export default App;
