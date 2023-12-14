@@ -1,8 +1,14 @@
 import React from 'react';
-import getTopTenPeople from './topTen';
 import '../../assets/css/topTen.css'; 
+import peopleData from './peopleData.js';
 
 const TopTenList = () => {
+    const getTopTenPeople = (names) => {
+        return names.map(name => {
+            return peopleData.find(p => p.name === name);
+        }).filter(p => p != null);
+    };
+
     const topTenNames = ["Luke Skywalker", "Darth Caedus", "Darth Sidious"];
     const topTenPeople = getTopTenPeople(topTenNames);
 

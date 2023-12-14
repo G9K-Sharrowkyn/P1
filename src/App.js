@@ -7,6 +7,7 @@ import './assets/css/Facebook.css';
 import './assets/css/Home.css';
 import './assets/css/Registration.css';
 import './assets/css/MouseTracker.css';
+import './assets/scss/Form.scss';
 
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
@@ -17,8 +18,23 @@ import ClickCounter from './components/MouseChase/ClickCounter.js';
 import AudioPlayer from './components/Menu/AudioPlayer.js';
 // import WelcomeScreen from './components/Navigation/WelcomeScreen';
 import { routes as mainRoutes } from './Routes';
+import React, { useEffect } from "react";
 
-function App() {
+import { connect } from 'react-redux';
+import { incrementCounter } from './actions/counter.actions.js'
+
+
+function App({ incrementCounter }) {
+
+  useEffect(() => {
+    document.addEventListener('click', e => {
+      if(e.target.localName === 'a' || e.target.localName === 'button'){
+        //btn was clicked
+        incrementCounter(1);
+      }
+    })
+  }, []);
+
   return (
     <Router>
       <div className="layout">
@@ -44,4 +60,7 @@ function App() {
   );
 }
 
-export default App;
+export default connect(null, {
+  incrementCounter
+})(App)
+

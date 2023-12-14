@@ -14,9 +14,12 @@ function DarkToLight(){
     }
 
     return (
-        <button className="w-44 h-12 bg-white dark:bg-slate-950 text-black dark:text-white rounded ring-slate-950 shadow-lg ring-4 text-2xl" onClick={handleClick}>
+        <div>
+        <button className="btn btn-xl ring-slate-950" onClick={handleClick}>
             {theme === 'dark' ? "Light" : "Dark"}
         </button>
+        <button type="button" class="text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2">Blue</button>
+        </div>
     );
 }
     
