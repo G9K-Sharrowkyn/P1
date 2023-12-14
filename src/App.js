@@ -10,6 +10,8 @@ import './assets/css/MouseTracker.css';
 import './assets/scss/Form.scss';
 
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { routes as mainRoutes } from './Routes';
+import React, { useEffect } from "react";
 
 import Header from './components/Header/Header';
 import Navigation from "./components/Navigation/Navigation.js";
@@ -17,23 +19,27 @@ import MouseTracker from './components/MouseChase/MouseTracker';
 import ClickCounter from './components/MouseChase/ClickCounter.js';
 import AudioPlayer from './components/Menu/AudioPlayer.js';
 // import WelcomeScreen from './components/Navigation/WelcomeScreen';
-import { routes as mainRoutes } from './Routes';
-import React, { useEffect } from "react";
+// import CardInfo from './components/Cards/CardInfo.js';
 
 import { connect } from 'react-redux';
 import { incrementCounter } from './actions/counter.actions.js'
 
-
 function App({ incrementCounter }) {
 
   useEffect(() => {
-    document.addEventListener('click', e => {
+    const clickHandler = e => {
       if(e.target.localName === 'a' || e.target.localName === 'button'){
         //btn was clicked
         incrementCounter(1);
       }
-    })
-  }, []);
+    };
+
+    document.addEventListener('click', clickHandler);
+
+    return () => {
+      document.removeEventListener('click', clickHandler);
+    };
+  }, [incrementCounter]);
 
   return (
     <Router>
@@ -45,6 +51,7 @@ function App({ incrementCounter }) {
             <ClickCounter />
             <MouseTracker />
             <AudioPlayer src="src/assets/music/The Four Seasons - Summer - Presto.mp3" />
+            {/* <CardInfo></CardInfo> */}
           </div>
         </div>
         <div className="main">
@@ -63,4 +70,3 @@ function App({ incrementCounter }) {
 export default connect(null, {
   incrementCounter
 })(App)
-

@@ -34,11 +34,14 @@ const ImageTrack = () => {
     const newPercentage = (mouseDelta / maxDelta) * -220;
     const nextPercentageUnconstrained = prevPercentage + newPercentage;
     const nextPercentage = Math.max(Math.min(nextPercentageUnconstrained, 0), -100);
-
-    if(nextPercentage > 30){
-      nextPercentage = 30;
+    
+    let adjustedPercentage = nextPercentage;
+    
+    if (adjustedPercentage > 30) {
+      adjustedPercentage = 30;
     }
-    setPercentage(nextPercentage);
+    
+    setPercentage(adjustedPercentage);
 
     trackRef.current.style.transform = `translateX(${nextPercentage}%)`;
 

@@ -157,19 +157,19 @@ const TileMapMain = () => {
   useEffect(() => {
     window.addEventListener('keydown', handleKeyDown);
     window.addEventListener('keyup', handleKeyUp);
-  
+
     const step = () => {
       placeCharacter();
       requestAnimationFrame(step);
     };
     const animationFrameId = requestAnimationFrame(step);
-  
+
     return () => {
       cancelAnimationFrame(animationFrameId);
       window.removeEventListener('keydown', handleKeyDown);
       window.removeEventListener('keyup', handleKeyUp);
     };
-  }, [placeCharacter]);
+  }, [position, direction, isWalking]);
 
   const handleSomething = (e) => {
     const direction = e.currentTarget.dataset.direction;
@@ -207,6 +207,6 @@ const TileMapMain = () => {
       </div>
     </div>
   );
-        }
+}
 
 export default TileMapMain;

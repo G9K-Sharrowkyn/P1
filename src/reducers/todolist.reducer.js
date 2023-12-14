@@ -18,7 +18,7 @@ export default function todoList(state = TODOLIST_INITIAL_STATE, action){
         case 'TODOLIST.REMOVE_ITEM_BY_INDEX':
             return {
                 ...state,
-                list: state.list.filter((_, idx) => idx != action.index)
+                list: state.list.filter((_, idx) => idx !== action.index)
             };
         default:
             return state;

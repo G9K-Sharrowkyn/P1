@@ -1,11 +1,12 @@
-import { combineReducers } from 'redux'
+import { combineReducers } from 'redux';
 import todoList from "./todolist.reducer";
 import counter from "./counter.reducer";
-
+import cards from "./cards.reducer";
 
 const rootReducer = combineReducers({
     todoList,
-    counter
+    counter,
+    cards
 });
 
 export default rootReducer;
