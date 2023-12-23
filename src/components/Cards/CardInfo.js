@@ -1,25 +1,12 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { connect } from 'react-redux';
 import ParticleCanvas from './BoosterAnimation';
 
 import '../../assets/css/BoosterPack.css';
 
-import Arcann from '../../assets/cards/Arcann.png'
-import Caedus from '../../assets/cards/Caedus.png'
-import Jacen from '../../assets/cards/Jacen.png'
-import Krayt from '../../assets/cards/Krayt.png'
-import Luke from '../../assets/cards/Luke.png'
-import Plagueis from '../../assets/cards/Plagueis.png'
-import Revan from '../../assets/cards/Revan.png'
-import Sidious from '../../assets/cards/Sidious.png'
-import Vader from '../../assets/cards/Vader.png'
-import Vaylin from '../../assets/cards/Vaylin.png'
-import Windu from '../../assets/cards/Windu.png'
-import Yoda from  '../../assets/cards/Yoda.png'
+import BoosterPack from '../../assets/cards/BoosterPack.png';
 
-import BoosterPack from '../../assets/cards/BoosterPack.png'
-
-const CardInfo = () => {
+const CardInfo = ({ onDeckCreated }) => {
     const [isAnimating, setIsAnimating] = useState(false);
     const [boosterPacks, setBoosterPacks] = useState(10);
     const [showBoosterPack, setShowBoosterPack] = useState(false);
@@ -27,20 +14,25 @@ const CardInfo = () => {
     const [particlesVisible, setParticlesVisible] = useState(false);
     const particleCanvasRef = useRef(null);
 
-    const cards = [
-        { name: 'Arcann', image: Arcann },
-        { name: 'Caedus', image: Caedus },
-        { name: 'Jacen', image: Jacen },
-        { name: 'Krayt', image: Krayt },
-        { name: 'Luke', image: Luke },
-        { name: 'Plagueis', image: Plagueis },
-        { name: 'Revan', image: Revan },
-        { name: 'Sidious', image: Sidious },
-        { name: 'Vader', image: Vader },
-        { name: 'Vaylin', image: Vaylin },
-        { name: 'Windu', image: Windu },
-        { name: 'Yoda', image: Yoda },
-    ];
+    const cardsContext = require.context('../../assets/cards', false, /\.png$/);
+    const cards = cardsContext.keys()
+                    .filter(fileName => fileName !== './BoosterPack.png')
+                    .map((fileName) => {
+                        const cardName = fileName.replace('./', '').replace('.png', '');
+                        return {
+                            name: cardName,
+                            image: cardsContext(fileName),
+                        };
+                    });
+
+        useEffect(() => {
+        const newDeck = createDeck();
+        onDeckCreated(newDeck);
+    }, [onDeckCreated]);
+
+    const createDeck = () => {
+        return [...cards];
+    };
 
     const openBooster = () => {
         if (boosterPacks > 0) {
@@ -99,11 +91,11 @@ const CardInfo = () => {
             )}
 
             <div className="revealed-cards flex justify-center flex-wrap gap-4 mt-4">
-            {revealedCards.map((card, index) => (
-                <div key={index} className="card bg-white shadow-lg rounded overflow-hidden">
-                <img src={card.image} alt={card.name} className="w-48 h-100" />
-                </div>
-            ))}
+                {revealedCards.map((card, index) => (
+                    <div key={index} className="card bg-white shadow-lg rounded overflow-hidden">
+                        <img src={card.image} alt={card.name} className="w-48 h-100" />
+                    </div>
+                ))}
             </div>
         </div>
     );

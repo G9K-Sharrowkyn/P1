@@ -56,14 +56,6 @@
     background-position-x: -70px;
 }
 
-body {
-    background-image: url('/src/assets/images/Emperor.jpeg');
-    background-size: cover;
-    background-attachment: fixed;
-    background-position: center center;
-
-}
-
 .nav > a.registration {
     background-image: url('/src/assets/images/IconRegistration.png'); 
     background-size: 30px;

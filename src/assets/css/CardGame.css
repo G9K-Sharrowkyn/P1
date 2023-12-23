@@ -1,0 +1,90 @@
+@keyframes goldenLine {
+    0% {
+        box-shadow: 0 0 5px 5px gold;
+    }
+    100% {
+        box-shadow: 0 0 0 0 gold;
+    }
+}
+
+.animate-golden-line {
+    animation: goldenLine 1s ease-in-out infinite alternate;
+}
+
+.animate-selected {
+    transform: scale(2);
+    position: relative;
+    z-index: 10;
+    transform-origin: bottom center;
+    animation: goldenLine 1s ease-in-out infinite alternate;
+}
+
+@keyframes animateTop {
+    0% { left: -100%; }
+    50%, 100% { left: 100%; }
+  }
+  
+  @keyframes animateRight {
+    0% { top: -100%; }
+    50%, 100% { top: 100%; }
+  }
+  
+  @keyframes animateBottom {
+    0% { right: -100%; }
+    50%, 100% { right: 100%; }
+  }
+  
+  @keyframes animateLeft {
+    0% { bottom: -100%; }
+    50%, 100% { bottom: 100%; }
+  }
+  
+  .main-container {
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .main-container::before,
+  .main-container::after,
+  .main-container:nth-child(2)::after,
+  .main-container:nth-child(3)::after {
+    content: '';
+    position: absolute;
+    background: linear-gradient(90deg, transparent, red);
+    box-shadow: 0 0 5px red, 0 0 25px red, 0 0 50px red, 0 0 200px red;
+  }
+  
+  .main-container::before {
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    animation: animateTop 6s linear infinite;
+  }
+  
+  .main-container::after {
+    right: 0;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    animation: animateRight 6s linear infinite;
+    animation-delay: 1.5s;
+  }
+  
+  .main-container:nth-child(2)::after {
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    animation: animateBottom 6s linear infinite;
+    animation-delay: 3s;
+  }
+  
+  .main-container:nth-child(3)::after {
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    animation: animateLeft 6s linear infinite;
+    animation-delay: 4.5s;
+  }

@@ -8,6 +8,7 @@ import './assets/css/Home.css';
 import './assets/css/Registration.css';
 import './assets/css/MouseTracker.css';
 import './assets/scss/Form.scss';
+import './assets/css/CardGame.css';
 
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { routes as mainRoutes } from './Routes';
@@ -15,8 +16,6 @@ import React, { useEffect } from "react";
 
 import Header from './components/Header/Header';
 import Navigation from "./components/Navigation/Navigation.js";
-import MouseTracker from './components/MouseChase/MouseTracker';
-import ClickCounter from './components/MouseChase/ClickCounter.js';
 import AudioPlayer from './components/Menu/AudioPlayer.js';
 // import WelcomeScreen from './components/Navigation/WelcomeScreen';
 // import CardInfo from './components/Cards/CardInfo.js';
@@ -43,13 +42,12 @@ function App({ incrementCounter }) {
 
   return (
     <Router>
-      <div className="layout">
+      <div className="main-container bg-black">
         <Header />
         <Navigation />
         <div className="flex justify-end">
           <div className="flex flex-col space-y-2 mr-4 mt-[-60px]">
-            <ClickCounter />
-            <MouseTracker />
+
             <AudioPlayer src="src/assets/music/The Four Seasons - Summer - Presto.mp3" />
             {/* <CardInfo></CardInfo> */}
           </div>
