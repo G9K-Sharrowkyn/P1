@@ -5,7 +5,7 @@ const cardsSpecifics = [
     blueCounters: 0,
     attack: 0,
     defense: 0,
-    commandPoints: 0,
+    commandCost: 0,
     unitMembers: 0,
     type: ["Shipyard"],
     specialAbility: "Description of special ability."
@@ -16,7 +16,7 @@ const cardsSpecifics = [
     blueCounters: 0,
     attack: 0,
     defense: 0,
-    commandPoints: 0,
+    commandCost: 0,
     unitMembers: 0,
     type: ["Shipyard"],
     specialAbility: "Description of special ability."
@@ -27,7 +27,7 @@ const cardsSpecifics = [
     blueCounters: 0,
     attack: 0,
     defense: 0,
-    commandPoints: 0,
+    commandCost: 0,
     unitMembers: 0,
     type: ["Shipyard"],
     specialAbility: "Description of special ability."
@@ -38,7 +38,7 @@ const cardsSpecifics = [
     blueCounters: 0,
     attack: 0,
     defense: 0,
-    commandPoints: 0,
+    commandCost: 0,
     unitMembers: 0,
     type: ["Shipyard"],
     specialAbility: "Description of special ability."
@@ -49,7 +49,7 @@ const cardsSpecifics = [
     blueCounters: 0,
     attack: 0,
     defense: 0,
-    commandPoints: 0,
+    commandCost: 0,
     unitMembers: 0,
     type: ["Shipyard"],
     specialAbility: "Description of special ability."
@@ -60,7 +60,7 @@ const cardsSpecifics = [
     blueCounters: 0,
     attack: 0,
     defense: 0,
-    commandPoints: 0,
+    commandCost: 0,
     unitMembers: 0,
     type: ["Shipyard"],
     specialAbility: "Description of special ability."
@@ -71,7 +71,7 @@ const cardsSpecifics = [
     blueCounters: 0,
     attack: 0,
     defense: 0,
-    commandPoints: 0,
+    commandCost: 0,
     unitMembers: 0,
     type: ["Shipyard"],
     specialAbility: "Description of special ability."
@@ -82,7 +82,7 @@ const cardsSpecifics = [
     blueCounters: 0,
     attack: 0,
     defense: 0,
-    commandPoints: 0,
+    commandCost: 0,
     unitMembers: 0,
     type: ["Shipyard"],
     specialAbility: "Description of special ability."
@@ -93,7 +93,7 @@ const cardsSpecifics = [
     blueCounters: 0,
     attack: 0,
     defense: 0,
-    commandPoints: 0,
+    commandCost: 0,
     unitMembers: 0,
     type: ["Shipyard"],
     specialAbility: "Description of special ability."
@@ -104,7 +104,7 @@ const cardsSpecifics = [
     blueCounters: 0,
     attack: 0,
     defense: 0,
-    commandPoints: 0,
+    commandCost: 0,
     unitMembers: 0,
     type: ["Shipyard"],
     specialAbility: "Description of special ability."
@@ -115,7 +115,7 @@ const cardsSpecifics = [
     blueCounters: 0,
     attack: 0,
     defense: 0,
-    commandPoints: 0,
+    commandCost: 0,
     unitMembers: 0,
     type: ["Shipyard"],
     specialAbility: "Description of special ability."
@@ -126,7 +126,7 @@ const cardsSpecifics = [
     blueCounters: 0,
     attack: 0,
     defense: 0,
-    commandPoints: 0,
+    commandCost: 0,
     unitMembers: 0,
     type: ["Shipyard"],
     specialAbility: "Description of special ability."
@@ -137,7 +137,7 @@ const cardsSpecifics = [
     blueCounters: 0,
     attack: 0,
     defense: 0,
-    commandPoints: 0,
+    commandCost: 0,
     unitMembers: 0,
     type: ["Shipyard"],
     specialAbility: "Description of special ability."
@@ -148,7 +148,7 @@ const cardsSpecifics = [
     blueCounters: 0,
     attack: 0,
     defense: 0,
-    commandPoints: 0,
+    commandCost: 0,
     unitMembers: 0,
     type: ["Shipyard"],
     specialAbility: "Description of special ability."
@@ -159,7 +159,7 @@ const cardsSpecifics = [
     blueCounters: 0,
     attack: 0,
     defense: 0,
-    commandPoints: 0,
+    commandCost: 0,
     unitMembers: 0,
     type: ["Shipyard"],
     specialAbility: "Description of special ability."
@@ -170,7 +170,7 @@ const cardsSpecifics = [
     blueCounters: 2,
     attack: 2,
     defense: 2,
-    commandPoints: 2,
+    commandCost: 2,
     unitMembers: 2,
     type: ["BloodThirsty","Biological"],
     specialAbility: "Merciless Strike"
@@ -181,7 +181,7 @@ const cardsSpecifics = [
     blueCounters: 3,
     attack: 3,
     defense: 2,
-    commandPoints: 6,
+    commandCost: 6,
     unitMembers: 3,
     type: ['Mech Quad', 'Machine'],
     specialAbility: "Kill With Fire"
@@ -192,7 +192,7 @@ const cardsSpecifics = [
     blueCounters: 0,
     attack: 0,
     defense: 2,
-    commandPoints: 2,
+    commandCost: 2,
     unitMembers: 1,
     type: ["Harmless","Machine"],
     specialAbility: "Wastelander"
@@ -203,7 +203,7 @@ const cardsSpecifics = [
     blueCounters: 0,
     attack: 6,
     defense: 4,
-    commandPoints: 8,
+    commandCost: 8,
     unitMembers: 1,
     type: ["Dread","Tactitian","Biological"],
     specialAbility: "Glorious Death"
@@ -214,7 +214,7 @@ const cardsSpecifics = [
     blueCounters: 0,
     attack: 7,
     defense: 3,
-    commandPoints: 7,
+    commandCost: 7,
     unitMembers: 1,
     type: ["Dread","Reach","Machine"],
     specialAbility: "The Big Gun"
@@ -225,7 +225,7 @@ const cardsSpecifics = [
     blueCounters: 0,
     attack: 0,
     defense: 5,
-    commandPoints: 3,
+    commandCost: 3,
     unitMembers: 1,
     type: ["Blocker","Machine"],
     specialAbility: "Despair Defense"
@@ -236,7 +236,7 @@ const cardsSpecifics = [
     blueCounters: 0,
     attack: 3,
     defense: 3,
-    commandPoints: 4,
+    commandCost: 4,
     unitMembers: 1,
     type: ["Flying","Biological"],
     specialAbility: "Wisdom of Centuries"
@@ -247,7 +247,7 @@ const cardsSpecifics = [
     blueCounters: 3,
     attack: 2,
     defense: 1,
-    commandPoints: 3,
+    commandCost: 3,
     unitMembers: 3,
     type: ["Clones","Biological"],
     specialAbility: "Fast Growth"
@@ -258,7 +258,7 @@ const cardsSpecifics = [
     blueCounters: 0,
     attack: 4,
     defense: 2,
-    commandPoints: 4,
+    commandCost: 4,
     unitMembers: 1,
     type: ["Killer","Biological"],
     specialAbility: "Better With Each Kill"
@@ -269,7 +269,7 @@ const cardsSpecifics = [
     blueCounters: 3,
     attack: 2,
     defense: 1,
-    commandPoints: 2,
+    commandCost: 2,
     unitMembers: 3,
     type: ["Biological"],
     specialAbility: "Cold Blooded"
@@ -280,7 +280,7 @@ const cardsSpecifics = [
     blueCounters: 3,
     attack: 3,
     defense: 3,
-    commandPoints: 5,
+    commandCost: 5,
     unitMembers: 3,
     type: ["Biological"],
     specialAbility: "SAGR Training"
@@ -291,7 +291,7 @@ const cardsSpecifics = [
     blueCounters: 0,
     attack: 4,
     defense: 4,
-    commandPoints: 7,
+    commandCost: 7,
     unitMembers: 1,
     type: ["Psionic","Biological"],
     specialAbility: "All Knowing"
@@ -302,7 +302,7 @@ const cardsSpecifics = [
     blueCounters: 3,
     attack: 4,
     defense: 4,
-    commandPoints: 7,
+    commandCost: 7,
     unitMembers: 3,
     type: ["Machine"],
     specialAbility: "No Negotiations"
@@ -313,7 +313,7 @@ const cardsSpecifics = [
     blueCounters: 0,
     attack: 2,
     defense: 2,
-    commandPoints: 2,
+    commandCost: 2,
     unitMembers: 1,
     type: ["Bleed","Biological"],
     specialAbility: "Plasma Blade"
@@ -324,7 +324,7 @@ const cardsSpecifics = [
     blueCounters: 0,
     attack: 4,
     defense: 4,
-    commandPoints: 6,
+    commandCost: 6,
     unitMembers: 1,
     type: ["Machine"],
     specialAbility: "Peace At All Cost"
@@ -335,7 +335,7 @@ const cardsSpecifics = [
     blueCounters: 3,
     attack: 2,
     defense: 2,
-    commandPoints: 2,
+    commandCost: 2,
     unitMembers: 3,
     type: ["Machine"],
     specialAbility: "Expendable Force"
@@ -346,7 +346,7 @@ const cardsSpecifics = [
     blueCounters: 0,
     attack: 2,
     defense: 2,
-    commandPoints: 0,
+    commandCost: 0,
     unitMembers: 0,
     type: ["Tactician","Biological"],
     specialAbility: "Fight As Legion"
@@ -357,7 +357,7 @@ const cardsSpecifics = [
     blueCounters: 0,
     attack: 2,
     defense: 2,
-    commandPoints: 3,
+    commandCost: 3,
     unitMembers: 1,
     type: ["Man Of Law","Biological"],
     specialAbility: "Justice Served"
@@ -368,7 +368,7 @@ const cardsSpecifics = [
     blueCounters: 0,
     attack: 1,
     defense: 1,
-    commandPoints: 1,
+    commandCost: 1,
     unitMembers: 1,
     type: ["Man Of Law","Biological"],
     specialAbility: "All Quiet"
@@ -379,7 +379,7 @@ const cardsSpecifics = [
     blueCounters: 3,
     attack: 1,
     defense: 1,
-    commandPoints: 4,
+    commandCost: 4,
     unitMembers: 3,
     type: ["Biological"],
     specialAbility: "Last Communion"
@@ -390,7 +390,7 @@ const cardsSpecifics = [
     blueCounters: 2,
     attack: 2,
     defense: 2,
-    commandPoints: 2,
+    commandCost: 2,
     unitMembers: 2,
     type: ["BloodThirsty","Biological"],
     specialAbility: "Merciless Strike"
@@ -401,7 +401,7 @@ const cardsSpecifics = [
     blueCounters: 3,
     attack: 3,
     defense: 2,
-    commandPoints: 6,
+    commandCost: 6,
     unitMembers: 3,
     type: ['Mech Quad', 'Machine'],
     specialAbility: "Kill With Fire"
@@ -412,7 +412,7 @@ const cardsSpecifics = [
     blueCounters: 0,
     attack: 0,
     defense: 2,
-    commandPoints: 2,
+    commandCost: 2,
     unitMembers: 1,
     type: ["Harmless","Machine"],
     specialAbility: "Wastelander"
@@ -423,7 +423,7 @@ const cardsSpecifics = [
     blueCounters: 0,
     attack: 6,
     defense: 4,
-    commandPoints: 8,
+    commandCost: 8,
     unitMembers: 1,
     type: ["Dread","Tactitian","Biological"],
     specialAbility: "Glorious Death"
@@ -434,7 +434,7 @@ const cardsSpecifics = [
     blueCounters: 0,
     attack: 7,
     defense: 3,
-    commandPoints: 7,
+    commandCost: 7,
     unitMembers: 1,
     type: ["Dread","Reach","Machine"],
     specialAbility: "The Big Gun"
@@ -445,7 +445,7 @@ const cardsSpecifics = [
     blueCounters: 0,
     attack: 0,
     defense: 5,
-    commandPoints: 3,
+    commandCost: 3,
     unitMembers: 1,
     type: ["Blocker","Machine"],
     specialAbility: "Despair Defense"
@@ -456,7 +456,7 @@ const cardsSpecifics = [
     blueCounters: 0,
     attack: 3,
     defense: 3,
-    commandPoints: 4,
+    commandCost: 4,
     unitMembers: 1,
     type: ["Flying","Biological"],
     specialAbility: "Wisdom of Centuries"
@@ -467,7 +467,7 @@ const cardsSpecifics = [
     blueCounters: 3,
     attack: 2,
     defense: 1,
-    commandPoints: 3,
+    commandCost: 3,
     unitMembers: 3,
     type: ["Clones","Biological"],
     specialAbility: "Fast Growth"
@@ -478,7 +478,7 @@ const cardsSpecifics = [
     blueCounters: 0,
     attack: 4,
     defense: 2,
-    commandPoints: 4,
+    commandCost: 4,
     unitMembers: 1,
     type: ["Killer","Biological"],
     specialAbility: "Better With Each Kill"
@@ -489,7 +489,7 @@ const cardsSpecifics = [
     blueCounters: 3,
     attack: 2,
     defense: 1,
-    commandPoints: 2,
+    commandCost: 2,
     unitMembers: 3,
     type: ["Biological"],
     specialAbility: "Cold Blooded"
@@ -500,7 +500,7 @@ const cardsSpecifics = [
     blueCounters: 3,
     attack: 3,
     defense: 3,
-    commandPoints: 5,
+    commandCost: 5,
     unitMembers: 3,
     type: ["Biological"],
     specialAbility: "SAGR Training"
@@ -511,7 +511,7 @@ const cardsSpecifics = [
     blueCounters: 0,
     attack: 4,
     defense: 4,
-    commandPoints: 7,
+    commandCost: 7,
     unitMembers: 1,
     type: ["Psionic","Biological"],
     specialAbility: "All Knowing"
@@ -522,7 +522,7 @@ const cardsSpecifics = [
     blueCounters: 3,
     attack: 4,
     defense: 4,
-    commandPoints: 7,
+    commandCost: 7,
     unitMembers: 3,
     type: ["Machine"],
     specialAbility: "No Negotiations"
@@ -533,7 +533,7 @@ const cardsSpecifics = [
     blueCounters: 0,
     attack: 2,
     defense: 2,
-    commandPoints: 2,
+    commandCost: 2,
     unitMembers: 1,
     type: ["Bleed","Biological"],
     specialAbility: "Plasma Blade"
@@ -544,7 +544,7 @@ const cardsSpecifics = [
     blueCounters: 0,
     attack: 4,
     defense: 4,
-    commandPoints: 6,
+    commandCost: 6,
     unitMembers: 1,
     type: ["Machine"],
     specialAbility: "Peace At All Cost"
@@ -555,7 +555,7 @@ const cardsSpecifics = [
     blueCounters: 3,
     attack: 2,
     defense: 2,
-    commandPoints: 2,
+    commandCost: 2,
     unitMembers: 3,
     type: ["Machine"],
     specialAbility: "Expendable Force"
@@ -566,7 +566,7 @@ const cardsSpecifics = [
     blueCounters: 0,
     attack: 2,
     defense: 2,
-    commandPoints: 0,
+    commandCost: 0,
     unitMembers: 0,
     type: ["Tactician","Biological"],
     specialAbility: "Fight As Legion"
@@ -577,7 +577,7 @@ const cardsSpecifics = [
     blueCounters: 0,
     attack: 2,
     defense: 2,
-    commandPoints: 3,
+    commandCost: 3,
     unitMembers: 1,
     type: ["Man Of Law","Biological"],
     specialAbility: "Justice Served"
@@ -588,7 +588,7 @@ const cardsSpecifics = [
     blueCounters: 0,
     attack: 1,
     defense: 1,
-    commandPoints: 1,
+    commandCost: 1,
     unitMembers: 1,
     type: ["Man Of Law","Biological"],
     specialAbility: "All Quiet"
@@ -599,7 +599,7 @@ const cardsSpecifics = [
     blueCounters: 3,
     attack: 1,
     defense: 1,
-    commandPoints: 4,
+    commandCost: 4,
     unitMembers: 3,
     type: ["Biological"],
     specialAbility: "Last Communion"
@@ -610,7 +610,7 @@ const cardsSpecifics = [
     blueCounters: 0,
     attack: 1,
     defense: 1,
-    commandPoints: 1,
+    commandCost: 1,
     unitMembers: 1,
     type: ["Biological"],
     specialAbility: "Just A Trainee"
@@ -621,7 +621,7 @@ const cardsSpecifics = [
     blueCounters: 0,
     attack: 3,
     defense: 3,
-    commandPoints: 4,
+    commandCost: 4,
     unitMembers: 1,
     type: ['Spaceship', 'Machine','Crew-3'],
     specialAbility: "Fast Response"
@@ -632,7 +632,7 @@ const cardsSpecifics = [
     blueCounters: 0,
     attack: 3,
     defense: 1,
-    commandPoints: 2,
+    commandCost: 2,
     unitMembers: 1,
     type: ["Biological","Tactitian"],
     specialAbility: "Kept At Range"
@@ -643,7 +643,7 @@ const cardsSpecifics = [
     blueCounters: 0,
     attack: 3,
     defense: 2,
-    commandPoints: 4,
+    commandCost: 4,
     unitMembers: 3,
     type: ["Tactitian","Biological"],
     specialAbility: "Black Watch Finest"
@@ -654,7 +654,7 @@ const cardsSpecifics = [
     blueCounters: 0,
     attack: 2,
     defense: 2,
-    commandPoints: 3,
+    commandCost: 3,
     unitMembers: 3,
     type: ["Tactitian","Biological"],
     specialAbility: "Corporation Officer"
@@ -665,7 +665,7 @@ const cardsSpecifics = [
     blueCounters: 0,
     attack: 5,
     defense: 4,
-    commandPoints: 5,
+    commandCost: 5,
     unitMembers: 1,
     type: ["Biological","Psionic"],
     specialAbility: "Ekken Physiology"
@@ -676,7 +676,7 @@ const cardsSpecifics = [
     blueCounters: 0,
     attack: 1,
     defense: 1,
-    commandPoints: 2,
+    commandCost: 2,
     unitMembers: 1,
     type: ["Enigma","Biological"],
     specialAbility: "Exploring The Unknown"
@@ -687,7 +687,7 @@ const cardsSpecifics = [
     blueCounters: 0,
     attack: 4,
     defense: 3,
-    commandPoints: 4,
+    commandCost: 4,
     unitMembers: 1,
     type: ["Machine"],
     specialAbility: "Next-Gen Warfare"
@@ -698,7 +698,7 @@ const cardsSpecifics = [
     blueCounters: 0,
     attack: 3,
     defense: 3,
-    commandPoints: 5,
+    commandCost: 5,
     unitMembers: 1,
     type: ["Machine"],
     specialAbility: "Vesinar Legacy"
@@ -709,7 +709,7 @@ const cardsSpecifics = [
     blueCounters: 0,
     attack: 2,
     defense: 2,
-    commandPoints: 3,
+    commandCost: 3,
     unitMembers: 3,
     type: ["Machine","AI"],
     specialAbility: "Purge The Degeneracy"
@@ -720,7 +720,7 @@ const cardsSpecifics = [
     blueCounters: 0,
     attack: 6,
     defense: 5,
-    commandPoints: 9,
+    commandCost: 9,
     unitMembers: 1,
     type: ["Biological","Killer"],
     specialAbility: "One Last Stand"
@@ -731,7 +731,7 @@ const cardsSpecifics = [
     blueCounters: 0,
     attack: 2,
     defense: 2,
-    commandPoints: 3,
+    commandCost: 3,
     unitMembers: 3,
     type: ["Biological"],
     specialAbility: "Can't Run Now"
@@ -742,7 +742,7 @@ const cardsSpecifics = [
     blueCounters: 0,
     attack: 1,
     defense: 2,
-    commandPoints: 3,
+    commandCost: 3,
     unitMembers: 3,
     type: ["Biological","Blind Faith"],
     specialAbility: "Pride of Hozon Raakri"
@@ -753,7 +753,7 @@ const cardsSpecifics = [
     blueCounters: 0,
     attack: 4,
     defense: 3,
-    commandPoints: 5,
+    commandCost: 5,
     unitMembers: 1,
     type: ["Bleed","Biological"],
     specialAbility: "Natural Hitman"
@@ -764,7 +764,7 @@ const cardsSpecifics = [
     blueCounters: 0,
     attack: 3,
     defense: 3,
-    commandPoints: 4,
+    commandCost: 4,
     unitMembers: 3,
     type: ["Machine"],
     specialAbility: "All Terrain Combat"
@@ -775,7 +775,7 @@ const cardsSpecifics = [
     blueCounters: 0,
     attack: 1,
     defense: 1,
-    commandPoints: 6,
+    commandCost: 6,
     unitMembers: 1,
     type: ["Biological"],
     specialAbility: "Fix'em All"
@@ -786,7 +786,7 @@ const cardsSpecifics = [
     blueCounters: 0,
     attack: 6,
     defense: 6,
-    commandPoints: 8,
+    commandCost: 8,
     unitMembers: 1,
     type: ["Machine","Psionic"],
     specialAbility: "All Shall Be Mine"
@@ -797,7 +797,7 @@ const cardsSpecifics = [
     blueCounters: 0,
     attack: 4,
     defense: 2,
-    commandPoints: 8,
+    commandCost: 8,
     unitMembers: 1,
     type: ["Biological"],
     specialAbility: "One Last Job"
@@ -808,7 +808,7 @@ const cardsSpecifics = [
     blueCounters: 0,
     attack: 5,
     defense: 5,
-    commandPoints: 7,
+    commandCost: 7,
     unitMembers: 1,
     type: ["Bleed","Biological"],
     specialAbility: "Tachion Wrist Blade"
@@ -819,7 +819,7 @@ const cardsSpecifics = [
     blueCounters: 0,
     attack: 2,
     defense: 2,
-    commandPoints: 2,
+    commandCost: 2,
     unitMembers: 1,
     type: ["Biological","Bloodthirsty"],
     specialAbility: "Terrible Fate"
@@ -830,7 +830,7 @@ const cardsSpecifics = [
     blueCounters: 0,
     attack: 5,
     defense: 5,
-    commandPoints: 7,
+    commandCost: 7,
     unitMembers: 1,
     type: ["Machine"],
     specialAbility: "The Real Threat"
@@ -841,7 +841,7 @@ const cardsSpecifics = [
     blueCounters: 0,
     attack: 5,
     defense: 5,
-    commandPoints: 7,
+    commandCost: 7,
     unitMembers: 1,
     type: ["Machine"],
     specialAbility: "New Minotaur"
@@ -852,7 +852,7 @@ const cardsSpecifics = [
     blueCounters: 0,
     attack: 1,
     defense: 1,
-    commandPoints: 1,
+    commandCost: 1,
     unitMembers: 4,
     type: ["Biological"],
     specialAbility: "I Do My Part"
@@ -863,7 +863,7 @@ const cardsSpecifics = [
     blueCounters: 0,
     attack: 3,
     defense: 2,
-    commandPoints: 3,
+    commandCost: 3,
     unitMembers: 1,
     type: ["Tactical","Biological"],
     specialAbility: "One Shot Man"
@@ -874,7 +874,7 @@ const cardsSpecifics = [
     blueCounters: 0,
     attack: 3,
     defense: 2,
-    commandPoints: 2,
+    commandCost: 2,
     unitMembers: 1,
     type: ["Biological"],
     specialAbility: "Wernano Finest"

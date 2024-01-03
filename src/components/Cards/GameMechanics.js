@@ -50,9 +50,9 @@ class GameMechanics {
         }
 
         if (card.type.includes("Shipyard")) {
-            return zone === "player-command";
+            return zone === "player-command-zone";
         } else {
-            return zone === "player-units" || zone === "player-command";
+            return zone === "player-unit-zone" || zone === "player-command-zone";
         }
     }
 

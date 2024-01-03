@@ -23,7 +23,6 @@ const DosPage = () => {
         return (
             <div className="game-interface">
                 <GameInterface deck={deck} setDeck={setDeck} />
-                {/* ... */}
             </div>
         );
     }

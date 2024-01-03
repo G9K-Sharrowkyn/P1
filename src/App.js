@@ -17,6 +17,7 @@ import React, { useEffect } from "react";
 import Header from './components/Header/Header';
 import Navigation from "./components/Navigation/Navigation.js";
 import AudioPlayer from './components/Menu/AudioPlayer.js';
+import StarBackground from './components/Background/StarBackground.js';
 // import WelcomeScreen from './components/Navigation/WelcomeScreen';
 // import CardInfo from './components/Cards/CardInfo.js';
 
@@ -61,6 +62,7 @@ function App({ incrementCounter }) {
           </Routes>
         </div>
       </div>
+      <StarBackground/>
     </Router>
   );
 }
