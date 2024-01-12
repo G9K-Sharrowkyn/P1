@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { defaultRoutes } from '../../Routes';
 import CircleSVG from '../Navigation/CircleSVG';
+import Header from "../Header/Header.js";
+import Navigation from "../Navigation/Navigation.js";
 import MouseTracker from '../../components/MouseChase/MouseTracker';
 import ClickCounter from '../../components/MouseChase/ClickCounter.js';
 import '../../assets/css/Home.css';
@@ -12,7 +14,9 @@ function Home() {
   return (
     <div className="page">
             <div className="circle-container">
-              <CircleSVG />
+            <Header />
+            <Navigation />
+            <CircleSVG />
             <ClickCounter />
             {/* <MouseTracker /> */}
             </div>

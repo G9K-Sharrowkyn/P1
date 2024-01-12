@@ -10,12 +10,11 @@ import './assets/css/MouseTracker.css';
 import './assets/scss/Form.scss';
 import './assets/css/CardGame.css';
 
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, Link  } from "react-router-dom";
 import { routes as mainRoutes } from './Routes';
 import React, { useEffect } from "react";
+import { defaultRoutes } from './Routes';
 
-import Header from './components/Header/Header';
-import Navigation from "./components/Navigation/Navigation.js";
 import AudioPlayer from './components/Menu/AudioPlayer.js';
 import StarBackground from './components/Background/StarBackground.js';
 // import WelcomeScreen from './components/Navigation/WelcomeScreen';
@@ -44,12 +43,9 @@ function App({ incrementCounter }) {
   return (
     <Router>
       <div className="main-container bg-black">
-        <Header />
-        <Navigation />
         <div className="flex justify-end">
           <div className="flex flex-col space-y-2 mr-4 mt-[-60px]">
-
-            <AudioPlayer src="src/assets/music/The Four Seasons - Summer - Presto.mp3" />
+            {/* <AudioPlayer src="src/assets/music/The Four Seasons - Summer - Presto.mp3" /> */}
             {/* <CardInfo></CardInfo> */}
           </div>
         </div>
@@ -63,6 +59,11 @@ function App({ incrementCounter }) {
         </div>
       </div>
       <StarBackground/>
+      <div className="fixed top-4 right-4">
+        <Link to={defaultRoutes.HOME} className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded block text-center no-underline">
+          Go to Home
+        </Link>
+      </div>
     </Router>
   );
 }

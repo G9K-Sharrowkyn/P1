@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import cardsSpecifics, { applyCardTraits } from './CardsSpecifics';
 import GameMechanics, { Phases } from './GameMechanics';
 import '../../assets/css/CardGame.css';
- 
+
 const GameInterface = ({ deck, setDeck }) => {
     const [graveyard, setGraveyard] = useState([]);
     const [hand, setHand] = useState([]);
@@ -17,16 +17,16 @@ const GameInterface = ({ deck, setDeck }) => {
     const [hasPlayedCommandCard, setHasPlayedCommandCard] = useState(false);
     const [hasDrawnCard, setHasDrawnCard] = useState(false);
     const [shouldAnimateDeckButton, setShouldAnimateDeckButton] = useState(false);
-    
+    const [opponentDeck, setOpponentDeck] = useState([]);
+    const [opponentHand, setOpponentHand] = useState([]);
+
+    useEffect(() => {
+        console.log("hasPlayedCommandCard updated to:", hasPlayedCommandCard);
+    }, [hasPlayedCommandCard]);
+
     useEffect(() => {
         drawInitialHand();
     }, [deck]);
-
-    useEffect(() => {
-        if (currentPhase === Phases.COMMAND) {
-            setHasPlayedCommandCard(false);
-        }
-    }, [currentPhase]);
 
     useEffect(() => {
         if (currentPhase === Phases.COMMAND && !hasDrawnCard) {
@@ -38,18 +38,47 @@ const GameInterface = ({ deck, setDeck }) => {
 
     useEffect(() => {
         if (currentPhase === Phases.COMMAND) {
-            setHasDrawnCard(false);
             setHasPlayedCommandCard(false);
+            setHasDrawnCard(false);
         }
     }, [currentPhase]);
 
     useEffect(() => {
         if (currentPhase === Phases.COMMAND) {
-            setHasPlayedCommandCard(false);
-            setHasDrawnCard(false);
             setCommandPoints(calculateTotalCommandPoints());
         }
-    }, [currentPhase, playerCommands]);
+    }, [playerCommands]);
+
+    const [opponentHealth, setOpponentHealth] = useState(100);
+    const [opponentGraveyard, setOpponentGraveyard] = useState([]);
+
+    useEffect(() => {
+        drawInitialHand();
+        drawInitialOpponentHand();
+    }, [deck]);
+
+    const drawInitialOpponentHand = () => {
+        if (deck.length > 0 && opponentHand.length === 0) {
+            let newOpponentHand = [];
+            let newDeck = [...deck];
+
+            let cardsToDraw = Math.min(7, newDeck.length);
+            let drawnCards = 0;
+
+            while (drawnCards < cardsToDraw) {
+                let cardIndex = Math.floor(Math.random() * newDeck.length);
+                let selectedCard = newDeck.splice(cardIndex, 1)[0];
+
+                if (selectedCard && selectedCard.image) {
+                    newOpponentHand.push(selectedCard);
+                    drawnCards++;
+                }
+            }
+
+            setOpponentHand(newOpponentHand);
+            setDeck(newDeck);
+        }
+    };
 
     const calculateTotalCommandPoints = () => {
         return playerCommands.reduce((total, card) => {
@@ -57,6 +86,14 @@ const GameInterface = ({ deck, setDeck }) => {
             return total + (cardDetails.type.includes("Shipyard") ? 2 : 1);
         }, 0);
     };
+
+    const handleCardClick = (card) => {
+        if (selectedCard === card) {
+            setSelectedCard(null);
+        } else {
+            setSelectedCard(card);
+        }
+    };    
 
     const drawCardFromDeck = () => {
         if (currentPhase !== Phases.COMMAND || hasDrawnCard || deck.length === 0) {
@@ -131,7 +168,7 @@ const GameInterface = ({ deck, setDeck }) => {
         }
         
         const cardDetails = cardsSpecifics.find(card => card.name === selectedCard.name);
-    if (!cardDetails) {
+        if (!cardDetails) {
         console.error("Card details not found");
         return;
     }
@@ -160,8 +197,9 @@ const GameInterface = ({ deck, setDeck }) => {
                 setPlayerUnits([...playerUnits, selectedCard]);
                 setCommandPoints(current => Math.max(0, current - cardDetails.commandCost));
                 setHand(hand.filter(item => item !== selectedCard));
-            } else {
-                console.error("In the Deployment phase, you can only play cards to the unit zone");
+                setSelectedCard(null);
+            } else if (zone === "player-command-zone") {
+                setSelectedCard(null);
             }
             return;
         }
@@ -177,10 +215,11 @@ const GameInterface = ({ deck, setDeck }) => {
         }
     
         if (gameMechanics.getCurrentPhase() === Phases.COMMAND) {
-            if (zone !== "player-command-zone") {
-                console.error("During the Command Phase, cards can only be played in the command zone");
-                return;
-            }
+            if (zone === "player-command-zone") {
+                if (hasPlayedCommandCard) {
+                    console.error("Can only play one card in the Command Phase into the command zone");
+                    return;
+                }
     
             if (hasPlayedCommandCard) {
                 console.error("Can only play one card in the Command Phase");
@@ -193,7 +232,11 @@ const GameInterface = ({ deck, setDeck }) => {
             setShouldAnimateButton(true);
             setHasPlayedCommandCard(true);
             setHand(hand.filter(item => item !== selectedCard));
+            setSelectedCard(null);
+        } else {
+            console.error("During the Command Phase, cards can only be played in the command zone");
             return;
+        }
         }
         
         setHand(hand.filter(item => item !== selectedCard));
@@ -208,10 +251,39 @@ const GameInterface = ({ deck, setDeck }) => {
 
     return (
         <div className="flex flex-col h-screen justify-between">
+                        <div className="hand absolute top-0 flex justify-center items-start flex-wrap gap-4 mt-4 w-full">
+                {opponentHand.map((card, index) => (
+                    <div key={index} className="card bg-white shadow-lg rounded overflow-hidden" style={{ maxWidth: '10%' }}>
+                        <img src={card.image} alt={card.name} className="w-full h-auto" />
+                    </div>
+                ))}
+            </div>
+
+            <div className="absolute top-0 left-0 p-4">
+                <div className="mb-4">
+                    <button className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded block w-full">
+                        Opponent HP: {opponentHealth}
+                    </button>
+                </div>
+                <div className="mb-4">
+                    <button 
+                        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded block w-full"
+                        onClick={() => {}}
+                    >
+                        Opponent Deck ({opponentDeck.length})
+                    </button>
+                </div>
+                <div>
+                    <button className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded block w-full">
+                        Opponent Graveyard ({opponentGraveyard.length})
+                    </button>
+                </div>
+            </div>
+
         <div className="zones-container flex-grow flex justify-center items-center">
-    <button 
-        className="bg-gray-200 hover:bg-gray-300 text-black font-bold py-2 px-4 rounded w-[300px]"
-        disabled
+            <button 
+             className="bg-gray-200 hover:bg-gray-300 text-black font-bold py-2 px-4 rounded w-[300px]"
+             disabled
                 >
                 Current Phase: {gameMechanics.getCurrentPhase()}
                 </button>
@@ -222,36 +294,36 @@ const GameInterface = ({ deck, setDeck }) => {
                     {currentPhase === Phases.BATTLE ? 'End Turn' : 'End Phase'}
                 </button>
                 <button 
-                    className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
-                    disabled
-                    >
-                    HP: {playerHP}
-                </button>
-                <button 
                     className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
                 >
                     Command Points: {commandPoints}
                 </button>
             </div>
             <div className="opponent-zones flex-grow">
-                <div className="opponent-units bg-gray-100 p-4 m-2 rounded">
+                <div className="opponent-unit-zone bg-blue-100 p-4 m-2 rounded cursor-pointer min-h-[14rem]">
                 </div>
-                <div className="opponent-commands bg-gray-200 p-4 m-2 rounded">
+                <div className="opponent-command-zone bg-green-100 p-4 m-2 rounded cursor-pointer min-h-[14rem]">
                 </div>
             </div>
             <div className="player-zones flex-grow">
-                <div className="player-unit-zone bg-blue-100 p-4 m-2 rounded cursor-pointer min-h-[10rem]"
-                     onClick={() => deployCardToPlayerZone("player-unit-zone")}>
+                <div className="player-unit-zone bg-blue-100 p-4 m-2 rounded cursor-pointer min-h-[14rem]"
+                    onClick={() => deployCardToPlayerZone("player-unit-zone")}>
                     {playerUnits.map((card, index) => (
-                        <div key={index} className="inline-block mx-2" style={{ maxWidth: '10%' }}>
-                            <img src={card.image} alt={card.name} className="w-full h-auto" />
-                        </div>
-                    ))}
+                <div key={index} 
+                    className={`inline-block mx-2 relative ${selectedCard === card ? 'scale-200 z-10' : ''}`} 
+                    onClick={(e) => { e.stopPropagation(); handleCardClick(card); }}
+                    style={{ maxWidth: '10%' }}>
+                    <img src={card.image} alt={card.name} className="w-full h-auto" />
                 </div>
-                <div className="player-command-zone bg-green-100 p-4 m-2 rounded cursor-pointer min-h-[10rem]"
+                ))}
+                </div>
+                <div className="player-command-zone bg-green-100 p-4 m-2 rounded cursor-pointer min-h-[14rem]"
                      onClick={() => deployCardToPlayerZone("player-command-zone")}>
                     {playerCommands.map((card, index) => (
-                        <div key={index} className="inline-block mx-2" style={{ maxWidth: '10%' }}>
+                            <div key={index} 
+                            className={`inline-block mx-2 ${selectedCard === card ? 'scale-200 z-10' : ''}`} 
+                            onClick={(e) => { e.stopPropagation(); handleCardClick(card); }}
+                            style={{ maxWidth: '10%' }}>
                             <img src={card.image} alt={card.name} className="w-full h-auto" />
                         </div>
                     ))}
@@ -267,21 +339,28 @@ const GameInterface = ({ deck, setDeck }) => {
                     </div>
                 ))}
             </div>
-            <div className="deck-and-graveyard absolute bottom-0 w-full flex justify-between px-4">
-            <div className="deck">
-                    <button 
-                    className={`bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded ${shouldAnimateDeckButton ? 'animate-golden-line' : ''}`}
-                    onClick={drawCardFromDeck}
-                    >
-                    Deck ({deck.length})
-                    </button>
-                    </div>
-                <div className="graveyard">
-                    <button className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
-                        Graveyard ({graveyard.length})
-                    </button>
-                </div>
-            </div>
+            <div className="absolute bottom-0 left-0 p-4">
+    <div className="mb-4">
+        <button className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded block w-full">
+            HP: {playerHP}
+        </button>
+    </div>
+    <div className="mb-4">
+        <button 
+            className={`bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded block w-full ${shouldAnimateDeckButton ? 'animate-golden-line' : ''}`}
+            onClick={drawCardFromDeck}
+        >
+            Deck ({deck.length})
+        </button>
+    </div>
+    <div>
+        <button className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded block w-full">
+            Graveyard ({graveyard.length})
+        </button>
+    </div>
+</div>
+
+
         </div>
     );
 };

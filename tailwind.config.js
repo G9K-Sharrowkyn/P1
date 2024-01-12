@@ -5,6 +5,8 @@ module.exports = {
   ],
   theme: {
     extend: {
+      scale: {
+        '200': '2'},
       keyframes: {
         moveNeonLight: {
           '0%, 100%': { transform: 'translateX(0%) translateY(0%)' },

@@ -28,7 +28,7 @@ const CardInfo = ({ onDeckCreated }) => {
         useEffect(() => {
         const newDeck = createDeck();
         onDeckCreated(newDeck);
-    }, [onDeckCreated]);
+    });
 
     const createDeck = () => {
         return [...cards];
