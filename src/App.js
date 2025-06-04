@@ -1,13 +1,6 @@
-import './assets/css/Reset.css';
+
 import './assets/css/General.css';
-import './assets/css/Chat.css';
-import './assets/css/Navigation.css';
-import './assets/css/ContactForm.css';
-import './assets/css/Facebook.css';
-import './assets/css/Home.css';
 import './assets/css/Registration.css';
-import './assets/css/MouseTracker.css';
-import './assets/scss/Form.scss';
 import './assets/css/CardGame.css';
 
 import { BrowserRouter as Router, Routes, Route, Link  } from "react-router-dom";
@@ -15,7 +8,6 @@ import { routes as mainRoutes } from './Routes';
 import React, { useEffect } from "react";
 import { defaultRoutes } from './Routes';
 
-import AudioPlayer from './components/Menu/AudioPlayer.js';
 import StarBackground from './components/Background/StarBackground.js';
 // import WelcomeScreen from './components/Navigation/WelcomeScreen';
 // import CardInfo from './components/Cards/CardInfo.js';

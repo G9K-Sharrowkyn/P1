@@ -5,7 +5,6 @@ import ExplosiveButtonComponent from '../Cards/BoosterAnimation';
 import GameInterface from '../Cards/GameInterface';
 
 import '../../assets/css/DosComponent.css';
-import '../../assets/css/Registration.css';
 
 const DosPage = () => {
     const [isGameStarted, setIsGameStarted] = useState(false);
