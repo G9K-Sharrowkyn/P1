@@ -108,6 +108,16 @@ const GameInterface = ({ deck, setDeck }) => {
         setHasDrawnCard(true);
     };
 
+    const shuffleDeck = () => {
+        if (deck.length <= 1) return;
+        const newDeck = [...deck];
+        for (let i = newDeck.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [newDeck[i], newDeck[j]] = [newDeck[j], newDeck[i]];
+        }
+        setDeck(newDeck);
+    };
+
     const drawInitialHand = () => {
         if (deck.length > 0 && hand.length === 0) {
             let newHand = [];
@@ -346,11 +356,19 @@ const GameInterface = ({ deck, setDeck }) => {
         </button>
     </div>
     <div className="mb-4">
-        <button 
+        <button
             className={`bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded block w-full ${shouldAnimateDeckButton ? 'animate-golden-line' : ''}`}
             onClick={drawCardFromDeck}
         >
             Deck ({deck.length})
+        </button>
+    </div>
+    <div className="mb-4">
+        <button
+            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded block w-full"
+            onClick={shuffleDeck}
+        >
+            Shuffle Deck
         </button>
     </div>
     <div>
