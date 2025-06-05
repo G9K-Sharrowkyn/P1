@@ -1,12 +1,13 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { connect } from 'react-redux';
+import { addCardsToCollection } from '../../actions/auth.actions';
 import ParticleCanvas from './BoosterAnimation';
 
 import '../../assets/css/BoosterPack.css';
 
 import BoosterPack from '../../assets/cards/BoosterPack.png';
 
-const CardInfo = ({ onDeckCreated }) => {
+const CardInfo = ({ onDeckCreated = () => {}, addCardsToCollection, user }) => {
     const [isAnimating, setIsAnimating] = useState(false);
     const [boosterPacks, setBoosterPacks] = useState(10);
     const [showBoosterPack, setShowBoosterPack] = useState(false);
@@ -25,10 +26,12 @@ const CardInfo = ({ onDeckCreated }) => {
                         };
                     });
 
-        useEffect(() => {
+    useEffect(() => {
         const newDeck = createDeck();
-        onDeckCreated(newDeck);
-    });
+        if (typeof onDeckCreated === 'function') {
+            onDeckCreated(newDeck);
+        }
+    }, [onDeckCreated]);
 
     const createDeck = () => {
         return [...cards];
@@ -62,6 +65,9 @@ const CardInfo = ({ onDeckCreated }) => {
             setRevealedCards(randomCards);
             setShowBoosterPack(false);
             setIsAnimating(false);
+            if (user) {
+                addCardsToCollection(randomCards);
+            }
         }, 1000);
     };
 
@@ -101,7 +107,11 @@ const CardInfo = ({ onDeckCreated }) => {
     );
 };
 
-export default connect(state => ({
-    boosterPacks: state.cards.boosterPacks,
-    revealedCards: state.cards.revealedCards
-}))(CardInfo);
+export default connect(
+    state => ({
+        boosterPacks: state.cards.boosterPacks,
+        revealedCards: state.cards.revealedCards,
+        user: state.auth.user,
+    }),
+    { addCardsToCollection }
+)(CardInfo);
