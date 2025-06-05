@@ -271,40 +271,40 @@ const GameInterface = ({ deck, setDeck }) => {
 
             <div className="absolute top-0 left-0 p-4">
                 <div className="mb-4">
-                    <button className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded block w-full">
+                    <button className="btn-primary bg-red-600 hover:bg-red-700 block w-full">
                         Opponent HP: {opponentHealth}
                     </button>
                 </div>
                 <div className="mb-4">
-                    <button 
-                        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded block w-full"
+                    <button
+                        className="btn-primary block w-full"
                         onClick={() => {}}
                     >
                         Opponent Deck ({opponentDeck.length})
                     </button>
                 </div>
                 <div>
-                    <button className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded block w-full">
+                    <button className="btn-primary bg-red-600 hover:bg-red-700 block w-full">
                         Opponent Graveyard ({opponentGraveyard.length})
                     </button>
                 </div>
             </div>
 
         <div className="zones-container flex-grow flex justify-center items-center gap-4 py-2">
-            <button 
+            <button
              className="bg-gray-200 hover:bg-gray-300 text-black font-bold py-2 px-4 rounded w-[300px]"
              disabled
                 >
                 Current Phase: {gameMechanics.getCurrentPhase()}
                 </button>
-                <button 
-                    className={`bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded ${shouldAnimateButton ? 'animate-golden-line' : ''}`}
+                <button
+                    className={`btn-primary ${shouldAnimateButton ? 'animate-golden-line' : ''}`}
                     onClick={handleEndPhase}
                     >
                     {currentPhase === Phases.BATTLE ? 'End Turn' : 'End Phase'}
                 </button>
-                <button 
-                    className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
+                <button
+                    className="btn-primary bg-green-600 hover:bg-green-700"
                 >
                     Command Points: {commandPoints}
                 </button>
@@ -317,10 +317,10 @@ const GameInterface = ({ deck, setDeck }) => {
         </div>
         <div className="player-zones flex flex-col sm:flex-row justify-center items-center flex-grow gap-2">
             <div className="player-unit-zone zone m-2 cursor-pointer"
-                    onClick={() => deployCardToPlayerZone("player-unit-zone")}>
+                    onClick={() => deployCardToPlayerZone("player-unit-zone")}> 
                     {playerUnits.map((card, index) => (
-                <div key={index} 
-                    className={`inline-block mx-2 relative ${selectedCard === card ? 'scale-200 z-10' : ''}`} 
+                <div key={index}
+                    className={`inline-block mx-2 relative card ${selectedCard === card ? 'scale-200 z-10' : ''}`}
                     onClick={(e) => { e.stopPropagation(); handleCardClick(card); }}
                     style={{ maxWidth: '10%' }}>
                     <img src={card.image} alt={card.name} className="w-full h-auto" />
@@ -330,8 +330,8 @@ const GameInterface = ({ deck, setDeck }) => {
             <div className="player-command-zone zone m-2 cursor-pointer"
                      onClick={() => deployCardToPlayerZone("player-command-zone")}>
                     {playerCommands.map((card, index) => (
-                            <div key={index} 
-                            className={`inline-block mx-2 ${selectedCard === card ? 'scale-200 z-10' : ''}`} 
+                            <div key={index}
+                            className={`inline-block mx-2 card ${selectedCard === card ? 'scale-200 z-10' : ''}`}
                             onClick={(e) => { e.stopPropagation(); handleCardClick(card); }}
                             style={{ maxWidth: '10%' }}>
                             <img src={card.image} alt={card.name} className="w-full h-auto" />
@@ -351,13 +351,13 @@ const GameInterface = ({ deck, setDeck }) => {
             </div>
             <div className="absolute bottom-0 left-0 p-4">
     <div className="mb-4">
-        <button className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded block w-full">
+        <button className="btn-primary bg-red-600 hover:bg-red-700 block w-full">
             HP: {playerHP}
         </button>
     </div>
     <div className="mb-4">
         <button
-            className={`bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded block w-full ${shouldAnimateDeckButton ? 'animate-golden-line' : ''}`}
+            className={`btn-primary block w-full ${shouldAnimateDeckButton ? 'animate-golden-line' : ''}`}
             onClick={drawCardFromDeck}
         >
             Deck ({deck.length})
@@ -365,14 +365,14 @@ const GameInterface = ({ deck, setDeck }) => {
     </div>
     <div className="mb-4">
         <button
-            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded block w-full"
+            className="btn-primary block w-full"
             onClick={shuffleDeck}
         >
             Shuffle Deck
         </button>
     </div>
     <div>
-        <button className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded block w-full">
+        <button className="btn-primary bg-red-600 hover:bg-red-700 block w-full">
             Graveyard ({graveyard.length})
         </button>
     </div>
