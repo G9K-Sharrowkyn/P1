@@ -6,7 +6,7 @@ import '../../assets/css/BoosterPack.css';
 
 import BoosterPack from '../../assets/cards/BoosterPack.png';
 
-const CardInfo = ({ onDeckCreated }) => {
+const CardInfo = ({ onDeckCreated = () => {} }) => {
     const [isAnimating, setIsAnimating] = useState(false);
     const [boosterPacks, setBoosterPacks] = useState(10);
     const [showBoosterPack, setShowBoosterPack] = useState(false);
@@ -25,10 +25,12 @@ const CardInfo = ({ onDeckCreated }) => {
                         };
                     });
 
-        useEffect(() => {
+    useEffect(() => {
         const newDeck = createDeck();
-        onDeckCreated(newDeck);
-    });
+        if (typeof onDeckCreated === 'function') {
+            onDeckCreated(newDeck);
+        }
+    }, [onDeckCreated]);
 
     const createDeck = () => {
         return [...cards];
