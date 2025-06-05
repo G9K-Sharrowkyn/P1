@@ -27,14 +27,14 @@ function App({ incrementCounter }) {
   return (
     <Router>
       <div className="main-container bg-black min-h-screen text-white">
-        <nav className="p-4 flex space-x-4 bg-gray-800">
-          <Link to={defaultRoutes.HOME}>Home</Link>
-          <Link to={defaultRoutes.GAME}>Game</Link>
-          <Link to={defaultRoutes.LOGIN}>Login</Link>
-          <Link to={defaultRoutes.REGISTER}>Register</Link>
-          <Link to={defaultRoutes.PROFILE}>Profile</Link>
-          <Link to={defaultRoutes.COLLECTION}>Collection</Link>
-          <Link to={defaultRoutes.DOSPAGE}>DOS</Link>
+        <nav className="p-4 flex flex-wrap justify-center gap-4 bg-gradient-to-r from-gray-800 to-gray-900 border-b border-gray-700">
+          <Link className="hover:text-yellow-300" to={defaultRoutes.HOME}>Home</Link>
+          <Link className="hover:text-yellow-300" to={defaultRoutes.GAME}>Game</Link>
+          <Link className="hover:text-yellow-300" to={defaultRoutes.LOGIN}>Login</Link>
+          <Link className="hover:text-yellow-300" to={defaultRoutes.REGISTER}>Register</Link>
+          <Link className="hover:text-yellow-300" to={defaultRoutes.PROFILE}>Profile</Link>
+          <Link className="hover:text-yellow-300" to={defaultRoutes.COLLECTION}>Collection</Link>
+          <Link className="hover:text-yellow-300" to={defaultRoutes.DOSPAGE}>DOS</Link>
         </nav>
         <div className="main p-4">
           <Routes>

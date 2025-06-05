@@ -260,7 +260,7 @@ const GameInterface = ({ deck, setDeck }) => {
     };
 
     return (
-        <div className="flex flex-col h-screen justify-between board">
+        <div className="flex flex-col h-screen justify-between items-center board text-gray-200">
                         <div className="hand absolute top-0 flex justify-center items-start flex-wrap gap-4 mt-4 w-full">
                 {opponentHand.map((card, index) => (
                     <div key={index} className="card bg-white shadow-lg rounded overflow-hidden" style={{ maxWidth: '10%' }}>
@@ -290,7 +290,7 @@ const GameInterface = ({ deck, setDeck }) => {
                 </div>
             </div>
 
-        <div className="zones-container flex-grow flex justify-center items-center">
+        <div className="zones-container flex-grow flex justify-center items-center gap-4 py-2">
             <button 
              className="bg-gray-200 hover:bg-gray-300 text-black font-bold py-2 px-4 rounded w-[300px]"
              disabled
@@ -309,14 +309,14 @@ const GameInterface = ({ deck, setDeck }) => {
                     Command Points: {commandPoints}
                 </button>
             </div>
-            <div className="opponent-zones flex-grow">
-                <div className="opponent-unit-zone bg-blue-100 p-4 m-2 rounded cursor-pointer min-h-[14rem]">
-                </div>
-                <div className="opponent-command-zone bg-green-100 p-4 m-2 rounded cursor-pointer min-h-[14rem]">
-                </div>
+        <div className="opponent-zones flex flex-col sm:flex-row justify-center items-center flex-grow gap-2">
+            <div className="opponent-unit-zone zone m-2">
             </div>
-            <div className="player-zones flex-grow">
-                <div className="player-unit-zone bg-blue-100 p-4 m-2 rounded cursor-pointer min-h-[14rem]"
+            <div className="opponent-command-zone zone m-2">
+            </div>
+        </div>
+        <div className="player-zones flex flex-col sm:flex-row justify-center items-center flex-grow gap-2">
+            <div className="player-unit-zone zone m-2 cursor-pointer"
                     onClick={() => deployCardToPlayerZone("player-unit-zone")}>
                     {playerUnits.map((card, index) => (
                 <div key={index} 
@@ -327,7 +327,7 @@ const GameInterface = ({ deck, setDeck }) => {
                 </div>
                 ))}
                 </div>
-                <div className="player-command-zone bg-green-100 p-4 m-2 rounded cursor-pointer min-h-[14rem]"
+            <div className="player-command-zone zone m-2 cursor-pointer"
                      onClick={() => deployCardToPlayerZone("player-command-zone")}>
                     {playerCommands.map((card, index) => (
                             <div key={index} 
