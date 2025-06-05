@@ -35,6 +35,13 @@ function App({ incrementCounter }) {
           <Link className="hover:text-yellow-300" to={defaultRoutes.PROFILE}>Profile</Link>
           <Link className="hover:text-yellow-300" to={defaultRoutes.COLLECTION}>Collection</Link>
           <Link className="hover:text-yellow-300" to={defaultRoutes.DOSPAGE}>DOS</Link>
+        <nav className="p-4 flex space-x-4 bg-gray-800">
+          <Link to={defaultRoutes.HOME}>Home</Link>
+          <Link to={defaultRoutes.GAME}>Game</Link>
+          <Link to={defaultRoutes.LOGIN}>Login</Link>
+          <Link to={defaultRoutes.REGISTER}>Register</Link>
+          <Link to={defaultRoutes.PROFILE}>Profile</Link>
+          <Link to={defaultRoutes.DOSPAGE}>DOS</Link>
         </nav>
         <div className="main p-4">
           <Routes>

@@ -26,7 +26,6 @@ export const logout = () => async dispatch => {
     }
     dispatch({ type: 'AUTH.LOGOUT' });
 };
-
 export const addCardsToCollection = (cards) => async dispatch => {
     try {
         const { data } = await axios.post('/api/collection', { cards }, { withCredentials: true });
