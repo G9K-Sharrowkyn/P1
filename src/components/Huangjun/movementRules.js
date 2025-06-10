@@ -58,19 +58,14 @@ export function isValidMove(board, from, to, currentTurn) {
           return isPathClear(board, from, to);
       }
       return false;
-    }
-
-    /*  ŁUCZNIK:
-        – porusza się tak jak dotąd (max 2 do przodu lub po skosie do przodu),
-        – NIE WOLNO mu wchodzić na pole z przeciwnikiem (atak tylko z dystansu). */
-    case "archer": {
+    }    case "archer": {
       if (dest) return false; // cannot move onto a piece
-      // Archer can move 1, 2, or 3 squares in any direction, but not backwards
       const absDx = Math.abs(dx);
       const absDy = Math.abs(dy);
-      if ((absDx === absDy || dx === 0 || dy === 0) && (absDx <= 3 && absDy <= 3) && (absDx > 0 || absDy > 0)) {
-        // No moving backwards: white cannot move to lower y, black cannot move to higher y
-        if ((piece.team === "white" && dy < 0) || (piece.team === "black" && dy > 0)) return false;
+      // Archer can move 1-3 squares in straight lines (orthogonal or diagonal)
+      if ((dx === 0 || dy === 0 || absDx === absDy) && // Must move in straight line
+          Math.max(absDx, absDy) <= 3 && // Up to 3 squares
+          (absDx !== 0 || absDy !== 0)) { // Must move at least 1 square
         return isPathClear(board, from, to);
       }
       return false;

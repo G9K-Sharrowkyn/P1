@@ -1,9 +1,9 @@
 // GameStateContext.js
 import React, { createContext, useState, useCallback, useEffect, useContext } from 'react';
 import { createInitialBoard } from './initialBoard';
-import { isValidMove, isWithinBounds } from './movementRules';
+import { isValidMove, isWithinBounds, isPathClear } from './movementRules';
 import { archerCanSee, findArcherTargets, isArcherAlreadyTargeting } from './archerLogic';
-import { TYPE_LETTER, RANK_NAMES } from './constants';
+import { TYPE_LETTER, RANK_NAMES, DIRS_8 } from './constants';
 
 const GameStateContext = createContext();
 
@@ -39,118 +39,49 @@ export const GameStateProvider = ({ children }) => {
 
   // ======= HANDLE CLICK =======
   const handleClick = useCallback((xRaw, yRaw) => {
-    const x = flipped ? 8 - xRaw : xRaw;
-    const y = flipped ? 8 - yRaw : yRaw;
-
-    if (winner || moveIndex !== moveHistory.length - 1) return;
+    const x = xRaw, y = yRaw;
     const piece = board[y][x];
 
-    // Always allow switching selection to another piece of the current turn
-    if (piece && piece.team === currentTurn) {
-      // If already selected this piece, deselect
-      if (selected && selected.x === x && selected.y === y) {
-        clearSelection();
-        return;
-      }
-      setSelected({ x, y });
-      const moves = [];
-      const captures = [];
-      const isArcher = piece.type === 'archer';
-      // For archers, show both possible moves (green) and possible attacks (red) if ready
-      if (isArcher) {
-        // Always show possible moves
-        for (let dy = -2; dy <= 2; dy++) {
-          for (let dx = -2; dx <= 2; dx++) {
-            const tx = x + dx, ty = y + dy;
-            if (isWithinBounds(tx, ty) && isValidMove(board, { x, y }, { x: tx, y: ty }, currentTurn)) {
-              moves.push({ x: tx, y: ty });
-            }
-          }
-        }
-        // Show possible attacks (red) if ready
-        const archerReadyTargets = archerTargets.filter(t =>
-          t.from.x === x && t.from.y === y &&
-          t.team === currentTurn &&
-          t.readyIn <= 0
-        );
-        const validTargets = archerReadyTargets
-          .map(t => ({ x: t.to.x, y: t.to.y }))
-          .filter(t => {
-            const target = board[t.y][t.x];
-            return target && target.team !== currentTurn;
-          });
-        setHighlighted(moves);
-        setCaptureTargets(validTargets);
-        return;
-      }
-      // General: highlight all 9-square reach (like emperor, but not limited to 1-square)
-      if (piece.type === 'general') {
-        for (let dy = -8; dy <= 8; dy++) {
-          for (let dx = -8; dx <= 8; dx++) {
-            if (dx === 0 && dy === 0) continue;
-            const tx = x + dx, ty = y + dy;
-            if (isWithinBounds(tx, ty) && isValidMove(board, { x, y }, { x: tx, y: ty }, currentTurn)) {
-              const targetSquare = board[ty][tx];
-              if (targetSquare && targetSquare.team !== currentTurn) {
-                captures.push({ x: tx, y: ty });
-              } else if (!targetSquare) {
-                moves.push({ x: tx, y: ty });
-              }
-            }
-          }
-        }
-        setHighlighted(moves);
-        setCaptureTargets(captures);
-        return;
-      }
-      // Other pieces: highlight valid moves/captures
-      for (let dy = -3; dy <= 3; dy++) {
-        for (let dx = -3; dx <= 3; dx++) {
-          const tx = x + dx, ty = y + dy;
-          if (isWithinBounds(tx, ty) && isValidMove(board, { x, y }, { x: tx, y: ty }, currentTurn)) {
-            const targetSquare = board[ty][tx];
-            if (targetSquare && targetSquare.team !== currentTurn) {
-              captures.push({ x: tx, y: ty });
-            } else if (!targetSquare) {
-              moves.push({ x: tx, y: ty });
-            }
-          }
-        }
-      }
-      setHighlighted(moves);
-      setCaptureTargets(captures);
-      return;
-    }
+    // 1. Compute all valid archer attack targets for the current turn (global, for red highlight)
+    const globalArcherAttackTargets = archerTargets
+      .filter(t => t.team === currentTurn && t.readyIn === 0 && board[t.from.y][t.from.x]?.lastMoved !== moveHistory.length)
+      .map(t => ({ x: t.to.x, y: t.to.y }))
+      .filter(t => {
+        const target = board[t.y][t.x];
+        return target && target.team !== currentTurn;
+      });
 
-    // If a piece is already selected, try to move/capture
+    // 2. If a piece is selected, handle move/capture logic
     if (selected) {
       if (selected.x === x && selected.y === y) {
         clearSelection();
+        setHighlighted([]);
+        setCaptureTargets(globalArcherAttackTargets);
         return;
       }
       const from = selected, to = { x, y };
       const moving = board[from.y][from.x];
       const target = board[to.y][to.x];
-
-      // Check if this is an archer attack (archer already selected, clicking on a capture target)
-      const isArcherAttack = board[from.y][from.x].type === 'archer' && 
-                         captureTargets.some(t => t.x === to.x && t.y === to.y) &&
-                         archerTargets.some(t => 
-                           t.from.x === from.x && t.from.y === from.y && 
-                           t.to.x === to.x && t.to.y === to.y && 
-                           t.readyIn <= 0 && t.team === currentTurn);
-      
+      // Archer attack logic
+      const isArcherAttack = moving.type === 'archer' &&
+        globalArcherAttackTargets.some(t => t.x === to.x && t.y === to.y) &&
+        archerTargets.some(t =>
+          t.from.x === from.x && t.from.y === from.y &&
+          t.to.x === to.x && t.to.y === to.y &&
+          t.readyIn === 0 && t.team === currentTurn &&
+          board[from.y][from.x].lastMoved !== moveHistory.length &&
+          archerCanSee(from, to, board)
+        );
       if (isArcherAttack) {
         // Handle archer attack
         let newBoard = JSON.parse(JSON.stringify(board));
         // Remove the target piece
         newBoard[to.y][to.x] = null;
-        
-        // Update archer targets (remove this specific target)
+          // Update archer targets (remove this specific target)
         let archerTargetsNext = archerTargets.filter(t => 
           !(t.from.x === from.x && t.from.y === from.y && 
             t.to.x === to.x && t.to.y === to.y && 
-            t.readyIn <= 0 && t.team === currentTurn)
+            t.readyIn === 0 && t.team === currentTurn) // Must be exactly 0
         );
         
         setBoard(newBoard);
@@ -162,10 +93,16 @@ export const GameStateProvider = ({ children }) => {
         const notation = makeNotation('archer', from, to, true) + ' (strzał)';
         setMoveHistory(prev => [...prev, { board: newBoard, turn: currentTurn, notation }]);
         setMoveIndex(i => i + 1);
-      }
-      else if (isValidMove(board, from, to, currentTurn)) {
+      }      else if (isValidMove(board, from, to, currentTurn)) {
         let newBoard = JSON.parse(JSON.stringify(board));
-        let archerTargetsNext = [...archerTargets];
+        let archerTargetsNext = [...archerTargets];          // Track when pieces move by storing the current move index
+        if (board[from.y][from.x]) {
+          newBoard[from.y][from.x].lastMoved = moveHistory.length;
+          // Clear any targeting from the moved piece
+          archerTargetsNext = archerTargetsNext.filter(t => 
+            !(t.from.x === from.x && t.from.y === from.y && t.team === currentTurn)
+          );
+        }
 
         if (target?.type === 'emperor' && target.team !== currentTurn) {
           const nh = { ...emperorHits };
@@ -180,33 +117,34 @@ export const GameStateProvider = ({ children }) => {
           // PROMOCJA piechoty
           if (moving.type === 'infantry' && (to.y === 0 || to.y === 8)) {
             newBoard[from.y][from.x].type = 'general';
-          }
-          // Ruch łucznika: szukaj celów w nowym położeniu!
+          }          // Archer movement: look for targets in new position and set waiting period!
           if (moving.type === 'archer') {
             const archer = { x: to.x, y: to.y };
             const targets = findArcherTargets(archer, newBoard, currentTurn);
+            // After archer moves, add targets with 1 turn wait
             for (const targetPos of targets) {
-              // Nie dodawaj duplikatów!
+              // Don't add duplicates!
               if (!isArcherAlreadyTargeting(archerTargetsNext, archer, targetPos, currentTurn)) {
                 archerTargetsNext.push({
                   from: { ...archer },
                   to: { ...targetPos },
                   team: currentTurn,
-                  readyIn: 1, // Łucznik potrzebuje tylko 1 turę odpoczynku, po czym będzie gotowy do strzału
+                  readyIn: 1, // Must wait 1 turn after moving
                 });
               }
             }
-          }
-          // Specjalny przypadek: jeśli wróg wszedł w zasięg łucznika
+          }          // Special case: if an enemy piece moves into archer range
           if (target && target.team !== currentTurn && target.type !== 'guard' && target.type !== 'emperor') {
-            // Sprawdź czy po tym ruchu przeciwnik NIE wszedł w zasięg łuczników przeciwnika (czyli obecnego gracza!)
+            // Check if after this move the piece enters range of enemy archers
             for (let yAr = 0; yAr < 9; yAr++) {
               for (let xAr = 0; xAr < 9; xAr++) {
                 const maybeArcher = newBoard[yAr][xAr];
                 if (
                   maybeArcher &&
                   maybeArcher.type === 'archer' &&
-                  maybeArcher.team !== currentTurn
+                  maybeArcher.team !== currentTurn &&
+                  // Only consider archers that haven't moved this turn
+                  maybeArcher.lastMoved !== moveHistory.length
                 ) {
                   if (archerCanSee({ x: xAr, y: yAr }, to, newBoard)) {
                     if (!isArcherAlreadyTargeting(archerTargetsNext, { x: xAr, y: yAr }, to, maybeArcher.team)) {
@@ -214,7 +152,7 @@ export const GameStateProvider = ({ children }) => {
                         from: { x: xAr, y: yAr },
                         to: { ...to },
                         team: maybeArcher.team,
-                        readyIn: 0, // Gotowy od razu (łucznik już był na pozycji)
+                        readyIn: 1, // Must wait 1 turn when enemy moves into range
                       });
                     }
                   }
@@ -240,78 +178,68 @@ export const GameStateProvider = ({ children }) => {
         clearSelection();
       } else {
         clearSelection();
+        setHighlighted([]);
+        setCaptureTargets(globalArcherAttackTargets);
       }
-    } else {
-      if (piece && piece.team === currentTurn) {
-        // Check if this is an archer with ready targets
-        const isArcher = piece.type === 'archer';
-        const archerReadyTargets = isArcher ? 
-          archerTargets.filter(t => 
-            t.from.x === x && t.from.y === y && 
-            t.team === currentTurn && 
-            t.readyIn <= 0
-          ) : [];
-        
-        // If this is an archer with ready targets, show them for potential attack
-        if (isArcher && archerReadyTargets.length > 0) {
-          setSelected({ x, y });
-          setHighlighted([]);
-          setCaptureTargets([]);
-          
-          // Now handle the archer attack
-          const attackablePieces = archerReadyTargets.map(t => ({ x: t.to.x, y: t.to.y }));
-          
-          // Check if targets still have pieces on them
-          const validTargets = attackablePieces.filter(t => {
-            const target = board[t.y][t.x];
-            return target && target.team !== currentTurn;
-          });
-          
-          setCaptureTargets(validTargets);
-        } else {
-          // Regular piece selection logic
-          setSelected({ x, y });
-          const moves = [];
-          const captures = [];
-          
-          // For archers, we need special handling
-          const isArcher = piece.type === 'archer';
-          
-          for (let dy = -3; dy <= 3; dy++) {
-            for (let dx = -3; dx <= 3; dx++) {
-              const tx = x + dx, ty = y + dy;
-              if (isWithinBounds(tx, ty) && isValidMove(board, { x, y }, { x: tx, y: ty }, currentTurn)) {
-                const targetSquare = board[ty][tx];
-                
-                // For archers, don't highlight enemy squares (they'll need to rest first)
-                if (isArcher && targetSquare && targetSquare.team !== currentTurn) {
-                  // Don't add to either list - archer can't capture directly
-                } else if (targetSquare && targetSquare.team !== currentTurn) {
-                  // This is a capture move
-                  captures.push({ x: tx, y: ty });
-                } else if (!targetSquare) {
-                  // This is a movement-only square
-                  moves.push({ x: tx, y: ty });
-                }
+      return;
+    }
+
+    // 3. If a piece is clicked (not already selected)
+    if (piece && piece.team === currentTurn) {
+      setSelected({ x, y });
+      let moves = [];
+      let captures = [];
+      // Compute valid moves and captures for this piece
+      if (piece.type === 'archer') {
+        // Archer movement (straight lines, 1-3 squares)
+        for (const dir of DIRS_8) {
+          for (let dist = 1; dist <= 3; dist++) {
+            const tx = x + dir.dx * dist, ty = y + dir.dy * dist;
+            if (!isWithinBounds(tx, ty)) break;
+            if (!isPathClear(board, { x, y }, { x: tx, y: ty })) break;
+            if (board[ty][tx]) break;
+            moves.push({ x: tx, y: ty });
+          }
+        }
+        // Archer cannot capture by moving
+      } else {
+        // Other pieces: highlight valid moves/captures
+        for (let dy = -3; dy <= 3; dy++) {
+          for (let dx = -3; dx <= 3; dx++) {
+            const tx = x + dx, ty = y + dy;
+            if (isWithinBounds(tx, ty) && isValidMove(board, { x, y }, { x: tx, y: ty }, currentTurn)) {
+              const targetSquare = board[ty][tx];
+              if (targetSquare && targetSquare.team !== currentTurn) {
+                captures.push({ x: tx, y: ty });
+              } else if (!targetSquare) {
+                moves.push({ x: tx, y: ty });
               }
             }
           }
-          
-          setHighlighted(moves);
-          setCaptureTargets(captures);
         }
       }
+      // Merge this piece's valid captures with global archer attack targets
+      const allCaptures = [
+        ...captures,
+        ...globalArcherAttackTargets.filter(t => !captures.some(c => c.x === t.x && c.y === t.y))
+      ];
+      setHighlighted(moves);
+      setCaptureTargets(allCaptures);
+      return;
     }
+
+    // 4. If nothing is selected and empty square is clicked, just show global archer attacks
+    clearSelection();
+    setHighlighted([]);
+    setCaptureTargets(globalArcherAttackTargets);
   }, [
-    board, currentTurn, selected, emperorHits, moveHistory.length, moveIndex, winner, flipped, archerTargets
+    board, currentTurn, selected, moveHistory.length, emperorHits, archerTargets
   ]);
 
   // ==== Update archer ready status in new turn ====
   useEffect(() => {
-    // In new turn: decrease readyIn counter for all archer targets
     setArcherTargets(prev => {
       if (!prev.length) return prev;
-      // Just update readyIn counters, don't attack automatically
       return prev.map(shot => {
         if (shot.readyIn > 0) {
           return { ...shot, readyIn: shot.readyIn - 1 };
@@ -319,7 +247,6 @@ export const GameStateProvider = ({ children }) => {
         return shot;
       });
     });
-    // eslint-disable-next-line
   }, [currentTurn]);
 
   // ===== BOT =====
@@ -330,12 +257,11 @@ export const GameStateProvider = ({ children }) => {
       for (let y = 0; y < 9; y++) {
         for (let x = 0; x < 9; x++) {
           const p = board[y][x];
-          if (p?.team === 'black' && p?.type === 'archer') {
-            // Check if this archer has any ready targets
+          if (p?.team === 'black' && p?.type === 'archer') {            // Check if this archer has any ready targets            
             const archerReadyTargets = archerTargets.filter(t => 
               t.from.x === x && t.from.y === y && 
               t.team === 'black' && 
-              t.readyIn <= 0
+              t.readyIn === 0 // Must be exactly 0
             );
             
             if (archerReadyTargets.length > 0) {
