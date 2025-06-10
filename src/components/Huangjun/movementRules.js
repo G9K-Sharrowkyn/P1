@@ -1,0 +1,96 @@
+// movementRules.js
+// ────────────────
+export const isWithinBounds = (x, y) =>
+  x >= 0 && x < 9 && y >= 0 && y < 9;
+
+// Sprawdza, czy na ścieżce między from→to nie stoi żadna figura
+export function isPathClear(board, from, to) {
+  const dx    = to.x - from.x;
+  const dy    = to.y - from.y;
+  const steps = Math.max(Math.abs(dx), Math.abs(dy));
+  if (steps === 0) return true;
+  const stepX = dx / steps;
+  const stepY = dy / steps;
+
+  for (let i = 1; i < steps; i++) {
+    const x = from.x + stepX * i;
+    const y = from.y + stepY * i;
+    if (!Number.isInteger(x) || !Number.isInteger(y)) continue;
+    if (board[y][x] !== null) return false;
+  }
+  return true;
+}
+
+export function isValidMove(board, from, to, currentTurn) {
+  if (!isWithinBounds(to.x, to.y)) return false;
+
+  const piece = board[from.y][from.x];
+  if (!piece || piece.team !== currentTurn) return false;
+
+  const dest = board[to.y][to.x];
+  if (dest?.team === currentTurn) return false;
+
+  const dx    = to.x - from.x;
+  const dy    = to.y - from.y;
+  const absDx = Math.abs(dx);
+  const absDy = Math.abs(dy);
+
+  switch (piece.type) {
+    case "emperor":
+      if (
+        (dx === 0 && absDy <= 3) ||
+        (dy === 0 && absDx <= 3) ||
+        (absDx === absDy && absDx <= 3)
+      )
+        return isPathClear(board, from, to);
+      return false;
+
+    case "general":
+      if (dx === 0 || dy === 0 || absDx === absDy)
+        return isPathClear(board, from, to);
+      return false;
+
+    case "guard": {
+      const dir = piece.team === "white" ? 1 : -1;
+      if ([1, 2, 3].some((n) => dy === n * dir)) {
+        const n = Math.abs(dy);
+        if (dx === 0 || absDx === n)
+          return isPathClear(board, from, to);
+      }
+      return false;
+    }
+
+    /*  ŁUCZNIK:
+        – porusza się tak jak dotąd (max 2 do przodu lub po skosie do przodu),
+        – NIE WOLNO mu wchodzić na pole z przeciwnikiem (atak tylko z dystansu). */
+    case "archer": {
+      if (dest) return false; // cannot move onto a piece
+      // Archer can move 1, 2, or 3 squares in any direction, but not backwards
+      const absDx = Math.abs(dx);
+      const absDy = Math.abs(dy);
+      if ((absDx === absDy || dx === 0 || dy === 0) && (absDx <= 3 && absDy <= 3) && (absDx > 0 || absDy > 0)) {
+        // No moving backwards: white cannot move to lower y, black cannot move to higher y
+        if ((piece.team === "white" && dy < 0) || (piece.team === "black" && dy > 0)) return false;
+        return isPathClear(board, from, to);
+      }
+      return false;
+    }
+
+    case "cavalry":
+      if (
+        (dx === 0 || dy === 0 || absDx === absDy) &&
+        absDx <= 5 &&
+        absDy <= 5
+      )
+        return isPathClear(board, from, to);
+      return false;
+
+    case "infantry": {
+      const dir = piece.team === "white" ? 1 : -1;
+      return dy === dir && (dx === 0 || absDx === 1);
+    }
+
+    default:
+      return false;
+  }
+}

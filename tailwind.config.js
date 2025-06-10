@@ -1,25 +1,33 @@
-/** @type {import('tailwindcss').Config} */
 module.exports = {
-  content: [
-    "./src/**/*.{js,jsx,ts,tsx}",
-  ],
+  content: ["./src/**/*.{js,jsx,ts,tsx}", "./public/index.html"],
   theme: {
     extend: {
-      scale: {
-        '200': '2'},
+      colors: {
+        gwentBoard: '#2c2c2c',
+        gwentAccent: '#e1b873',
+        gwentCardBack: '#1f1f1f'
+      },
       keyframes: {
-        moveNeonLight: {
-          '0%, 100%': { transform: 'translateX(0%) translateY(0%)' },
-          '25%': { transform: 'translateX(100%) translateY(0%)' },
-          '50%': { transform: 'translateX(100%) translateY(100%)' },
-          '75%': { transform: 'translateX(0%) translateY(100%)' },
+        pulseGlow: {
+          '0%': { boxShadow: '0 0 0px rgba(225, 184, 115, 0.5)' },
+          '50%': { boxShadow: '0 0 15px rgba(225, 184, 115, 1)' },
+          '100%': { boxShadow: '0 0 0px rgba(225, 184, 115, 0.5)' }
+        },
+        cardEntrance: {
+          '0%': { transform: 'translateY(200px) rotate(20deg)', opacity: '0' },
+          '100%': { transform: 'translateY(0) rotate(0deg)', opacity: '1' }
+        },
+        twinkling: {
+          '0%, 100%': { opacity: '0.2' },
+          '50%': { opacity: '1' }
         }
       },
       animation: {
-        'neon-light': 'moveNeonLight 6s linear infinite',
-      },
-    },
+        pulseGlow: 'pulseGlow 2s infinite ease-in-out',
+        cardEntrance: 'cardEntrance 0.5s ease-out',
+        twinkling: 'twinkling 2s linear infinite'
+      }
+    }
   },
   plugins: [],
-  darkMode: 'class',
-}
+};

@@ -1,0 +1,64 @@
+.board-grid {
+  display: grid;
+  grid-template-columns: 60px repeat(9, 60px); /* 60px dla etykiet + 9 kolumn po 60px */
+  grid-template-rows: repeat(9, 60px) 60px; /* 9 rzędów po 60px + 60px dla etykiet na dole */
+  border: 2px solid #444;
+  /* Chess.com style background */
+  background: linear-gradient(135deg, #f0d9b5 25%, #b58863 25%, #b58863 50%, #f0d9b5 50%, #f0d9b5 75%, #b58863 75%, #b58863 100%);
+  background-size: 120px 120px;
+}
+
+.label {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  color: white;
+}
+
+.row-label {
+  /* Etykiety rzędów są pionowe */
+  writing-mode: vertical-rl;
+  transform: rotate(180deg); /* Obrót, aby tekst czytał się od góry do dołu */
+}
+
+.col-label {
+  /* Etykiety kolumn mogą być mniejsze, jeśli nazwy są długie */
+  font-size: 12px;
+}
+
+.huangjun-square {
+  width: 60px;
+  height: 60px;
+  background-color: #f0d9b5;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid #333;
+  box-sizing: border-box;
+  font-size: 30px;
+}
+
+.huangjun-square.white {
+  background-color: #f0d9b5;
+}
+
+.huangjun-square.black {
+  background-color: #b58863;
+}
+
+.huangjun-square.selected {
+  outline: 2px solid red;
+}
+
+.huangjun-square.highlighted {
+  background-color: rgba(144, 238, 144, 0.7) !important; /* light green with transparency */
+}
+
+.huangjun-square.capture-target {
+  background-color: rgba(255, 99, 71, 0.7) !important; /* tomato red with transparency */
+}
+
+.huangjun-square.archer-target {
+  background-color: rgba(255, 0, 0, 0.7) !important; /* bright red with transparency */
+}
