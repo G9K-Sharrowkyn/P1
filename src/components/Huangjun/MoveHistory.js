@@ -15,7 +15,7 @@ const MoveHistory = () => {
           </div>
         ))}
       </div>
-      <div className="flex gap-2">
+      <div className="flex gap-2">  
         <button onClick={handleUndo} className="px-2 py-1 bg-gray-700 text-white rounded">←</button>
         <button onClick={handleRedo} className="px-2 py-1 bg-gray-700 text-white rounded">→</button>
       </div>
