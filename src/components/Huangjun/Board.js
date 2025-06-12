@@ -1,6 +1,6 @@
 // Board.js
 import React, { useState, useEffect, useRef } from 'react';
-import { GameStateProvider } from './GameStateContext';
+import GameStateProvider from './GameStateProvider';
 import BoardRenderer from './BoardRenderer';
 import BoardResizeHandles from './BoardResizeHandles';
 import BoardPanel from './BoardPanel';
