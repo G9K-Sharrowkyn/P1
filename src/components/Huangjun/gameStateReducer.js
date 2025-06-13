@@ -1,13 +1,12 @@
 // gameStateReducer.js
 import { isValidMove, isWithinBounds, isPathClear } from './movementRules';
-import { archerCanSee, findArcherTargets, isArcherAlreadyTargeting } from './archerLogic';
+import { findArcherTargets, isArcherAlreadyTargeting, isTargetCurrentlyVisible } from './archerLogic';
 import { DIRS_8 } from './constants';
 import { makeNotation } from './boardUtils';
 
 const computeMoveHighlights = (piece, x, y, board, currentTurn) => {
   const moves = [];
   const captures = [];
-
   if (piece.type === 'archer') {
     // Archer movement
     for (const dir of DIRS_8) {
@@ -15,17 +14,29 @@ const computeMoveHighlights = (piece, x, y, board, currentTurn) => {
         const tx = x + dir.dx * dist, ty = y + dir.dy * dist;
         if (!isWithinBounds(tx, ty)) break;
         if (!isPathClear(board, { x, y }, { x: tx, y: ty })) break;
-        if (board[ty][tx]) break;
+        const target = board[ty][tx];
+        // Break on any piece for movement
+        if (target) break;
         moves.push({ x: tx, y: ty });
       }
     }
-  } else {
-    // Other pieces
+    
+    // Add archer attack targets
+    captures.push(...findArcherTargets({ x, y }, board, currentTurn));
+  }else {    // Other pieces
     for (let dy = -3; dy <= 3; dy++) {
       for (let dx = -3; dx <= 3; dx++) {
         const tx = x + dx, ty = y + dy;
-        if (isWithinBounds(tx, ty) && isValidMove(board, { x, y }, { x: tx, y: ty }, currentTurn)) {
+        // First check bounds
+        if (!isWithinBounds(tx, ty)) continue;
+        
+        // Check if path is clear (no pieces in the way)
+        if (!isPathClear(board, { x, y }, { x: tx, y: ty })) continue;
+        
+        // Then check if it's a valid move
+        if (isValidMove(board, { x, y }, { x: tx, y: ty }, currentTurn)) {
           const targetSquare = board[ty][tx];
+          // Only allow capturing enemy pieces
           if (targetSquare && targetSquare.team !== currentTurn) {
             captures.push({ x: tx, y: ty });
           } else if (!targetSquare) {
@@ -43,7 +54,10 @@ const updateArcherTargets = (from, to, moving, target, newBoard, currentTurn, ar
   // After archer moves, add targets
   if (moving.type === 'archer') {
     const archer = { x: to.x, y: to.y };
-    const targets = findArcherTargets(archer, newBoard, currentTurn);
+    // Only add targets that are currently visible
+    const targets = findArcherTargets(archer, newBoard, currentTurn)
+      .filter(t => isTargetCurrentlyVisible(archer, t, newBoard));
+      
     // Add targets with 1 turn wait
     for (const targetPos of targets) {
       if (!isArcherAlreadyTargeting(archerTargetsNext, archer, targetPos, currentTurn)) {
@@ -68,10 +82,11 @@ const updateArcherTargets = (from, to, moving, target, newBoard, currentTurn, ar
           maybeArcher.team !== currentTurn &&
           maybeArcher.lastMoved !== moveHistory.length
         ) {
-          if (archerCanSee({ x: xAr, y: yAr }, to, newBoard)) {
-            if (!isArcherAlreadyTargeting(archerTargetsNext, { x: xAr, y: yAr }, to, maybeArcher.team)) {
+          const archerPos = { x: xAr, y: yAr };
+          if (isTargetCurrentlyVisible(archerPos, to, newBoard)) {
+            if (!isArcherAlreadyTargeting(archerTargetsNext, archerPos, to, maybeArcher.team)) {
               archerTargetsNext.push({
-                from: { x: xAr, y: yAr },
+                from: { ...archerPos },
                 to: { ...to },
                 team: maybeArcher.team,
                 readyIn: 1

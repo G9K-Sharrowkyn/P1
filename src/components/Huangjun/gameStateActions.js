@@ -1,7 +1,7 @@
 // gameStateActions.js
 import { clearSelection, makeNotation } from './boardUtils';
 import { handleMove, handleArcherAttack, computeMoveHighlights } from './gameStateReducer';
-import { archerCanSee } from './archerLogic';
+import { archerCanSee, isTargetCurrentlyVisible } from './archerLogic';
 
 export function clearSelectionState(setSelected, setHighlighted, setCaptureTargets) {
   clearSelection(setSelected, setHighlighted, setCaptureTargets);
@@ -24,21 +24,44 @@ export function handleClickFactory({
   return (xRaw, yRaw) => {
     const x = xRaw, y = yRaw;
     const piece = board[y][x];
+    // Get only currently visible archer targets
     const globalArcherAttackTargets = archerTargets
-      .filter(t => t.team === currentTurn && t.readyIn === 0 && board[t.from.y][t.from.x]?.lastMoved !== moveHistory.length)
-      .map(t => ({ x: t.to.x, y: t.to.y }))
       .filter(t => {
-        const target = board[t.y][t.x];
-        return target && target.team !== currentTurn;
-      });
-    if (selected) {
+        // Must be ready to fire and not moved this turn
+        if (!(t.team === currentTurn && 
+              t.readyIn === 0 && 
+              board[t.from.y][t.from.x]?.lastMoved !== moveHistory.length)) {
+          return false;
+        }
+        // Target must exist and be enemy
+        const target = board[t.to.y][t.to.x];
+        if (!target || target.team === currentTurn) {
+          return false;
+        }
+        // Must have clear line of sight
+        const archer = board[t.from.y][t.from.x];
+        return archer && archer.type === 'archer' && 
+               isTargetCurrentlyVisible({ x: t.from.x, y: t.from.y }, 
+                                     { x: t.to.x, y: t.to.y }, 
+                                     board);
+      })
+      .map(t => ({ x: t.to.x, y: t.to.y }));    if (selected) {
       if (selected.x === x && selected.y === y) {
+        // Clear all highlights and selection when deselecting a piece
         clearSelectionState(setSelected, setHighlighted, setCaptureTargets);
-        setCaptureTargets(globalArcherAttackTargets);
+        // Don't show any capture targets when no piece is selected
+        setCaptureTargets([]);
         return;
       }
       const from = selected, to = { x, y };
       const moving = board[from.y][from.x];
+      const target = board[to.y][to.x];
+      
+      // Prevent attacking friendly pieces
+      if (target && target.team === currentTurn) {
+        return;
+      }
+
       const isArcherAttack = moving.type === 'archer' &&
         globalArcherAttackTargets.some(t => t.x === to.x && t.y === to.y) &&
         archerTargets.some(t =>
@@ -46,7 +69,7 @@ export function handleClickFactory({
           t.to.x === to.x && t.to.y === to.y &&
           t.readyIn === 0 && t.team === currentTurn &&
           board[from.y][from.x].lastMoved !== moveHistory.length &&
-          archerCanSee(from, to, board)
+          isTargetCurrentlyVisible(from, to, board)
         );
       if (isArcherAttack) {
         const { newBoard, archerTargetsNext, notation } = handleArcherAttack({ board, currentTurn, archerTargets }, from, to);
@@ -58,7 +81,6 @@ export function handleClickFactory({
         clearSelectionState(setSelected, setHighlighted, setCaptureTargets);
         return;
       }
-      const target = board[to.y][to.x];
       if (target?.type === 'emperor' && target.team !== currentTurn) {
         const nh = { ...emperorHits };
         nh[target.team] += 1;
@@ -73,20 +95,25 @@ export function handleClickFactory({
       setCurrentTurn(t => t === 'white' ? 'black' : 'white');
       clearSelectionState(setSelected, setHighlighted, setCaptureTargets);
       return;
-    }
-    if (piece && piece.team === currentTurn) {
+    }    if (piece && piece.team === currentTurn) {
+      // Clear previous highlights first
+      clearSelectionState(setSelected, setHighlighted, setCaptureTargets);
+      
       setSelected({ x, y });
       const { moves, captures } = computeMoveHighlights(piece, x, y, board, currentTurn);
-      const allCaptures = [
-        ...captures,
-        ...globalArcherAttackTargets.filter(t => !captures.some(c => c.x === t.x && c.y === t.y))
-      ];
+      
+      // For archers, only show their own potential shots
+      const allCaptures = piece.type === 'archer' 
+        ? captures // Only show captures calculated by computeMoveHighlights
+        : captures;
+        
       setHighlighted(moves);
       setCaptureTargets(allCaptures);
       return;
     }
+    
+    // If clicking empty square or enemy piece, clear all highlights
     clearSelectionState(setSelected, setHighlighted, setCaptureTargets);
-    setCaptureTargets(globalArcherAttackTargets);
   };
 }
 
