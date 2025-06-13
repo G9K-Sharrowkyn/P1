@@ -38,13 +38,57 @@ export function handleClickFactory({
       const target = board[to.y][to.x];
       
       // Check if this is a valid move or capture
-      const isValidDestination = 
+      const validCapture = captureTargets.find(c => c.x === x && c.y === y);
+      const isValidMove = 
         highlighted.some(h => h.x === x && h.y === y) ||
-        captureTargets.some(c => c.x === x && c.y === y);
+        validCapture;
       
-      if (!isValidDestination) {
+      if (!isValidMove) {
         clearSelectionState(setSelected, setHighlighted, setCaptureTargets);
         return;
+      }
+
+      // Handle special moves
+      let special = null;
+      if (validCapture?.special) {
+        special = validCapture.special;
+        if (special === 'swap') {
+          // Emperor-Guard swap
+          const newBoard = JSON.parse(JSON.stringify(board));
+          // Swap positions
+          newBoard[to.y][to.x] = moving;
+          newBoard[from.y][from.x] = target;
+          setBoard(newBoard);
+          setMoveHistory(prev => [...prev, { 
+            board: newBoard, 
+            turn: currentTurn, 
+            notation: `${moving.type} swaps with Guard` 
+          }]);
+          setMoveIndex(i => i + 1);
+          setCurrentTurn(t => t === 'white' ? 'black' : 'white');
+          clearSelectionState(setSelected, setHighlighted, setCaptureTargets);
+          return;
+        } else if (special === 'charge') {
+          // Cavalry charge
+          const newBoard = JSON.parse(JSON.stringify(board));
+          // Remove first target
+          if (validCapture.through) {
+            newBoard[validCapture.through.y][validCapture.through.x] = null;
+          }
+          // Move cavalry to final position (second target's position)
+          newBoard[to.y][to.x] = moving;
+          newBoard[from.y][from.x] = null;
+          setBoard(newBoard);
+          setMoveHistory(prev => [...prev, { 
+            board: newBoard, 
+            turn: currentTurn, 
+            notation: `${moving.type} charges through enemy line` 
+          }]);
+          setMoveIndex(i => i + 1);
+          setCurrentTurn(t => t === 'white' ? 'black' : 'white');
+          clearSelectionState(setSelected, setHighlighted, setCaptureTargets);
+          return;
+        }
       }
 
       // Handle emperor hits
@@ -55,7 +99,7 @@ export function handleClickFactory({
         if (nh[target.team] >= 3) setWinner(currentTurn);
       }
 
-      // Make the move
+      // Make normal move
       const { newBoard, archerTargetsNext } = handleMove({ board, currentTurn, archerTargets, moveHistory }, from, to);
       setBoard(newBoard);
       setArcherTargets(archerTargetsNext);

@@ -66,7 +66,6 @@ const computeMoveHighlights = (piece, x, y, board, currentTurn) => {
     
     case 'emperor': {
       // Emperor: moves max 3 squares in any direction
-      // Special rule: cannot be attacked if adjacent to a guard
       for (const dir of DIRS_8) {
         for (let dist = 1; dist <= 3; dist++) {
           const tx = x + dir.dx * dist;
@@ -74,9 +73,15 @@ const computeMoveHighlights = (piece, x, y, board, currentTurn) => {
           if (!isWithinBounds(tx, ty)) break;
           if (!isPathClear(board, { x, y }, { x: tx, y: ty })) break;
           const target = board[ty][tx];
-          if (!target) moves.push({ x: tx, y: ty });
-          else {
-            if (target.team !== currentTurn) captures.push({ x: tx, y: ty });
+          if (!target) {
+            moves.push({ x: tx, y: ty });
+          } else {
+            if (target.team !== currentTurn) {
+              captures.push({ x: tx, y: ty });
+            } else if (target.type === 'guard') {
+              // Allow swapping positions with friendly guards
+              captures.push({ x: tx, y: ty, special: 'swap' });
+            }
             break;
           }
         }
@@ -120,9 +125,8 @@ const computeMoveHighlights = (piece, x, y, board, currentTurn) => {
     
     case 'cavalry': {
       // Cavalry: moves max 5 squares in any direction
-      // Special ability: can attack two units in a line
+      // Special ability: can attack two units in a line, taking the place of the second unit
       for (const dir of DIRS_8) {
-        let foundFirstTarget = false;
         for (let dist = 1; dist <= 5; dist++) {
           const tx = x + dir.dx * dist;
           const ty = y + dir.dy * dist;
@@ -131,25 +135,26 @@ const computeMoveHighlights = (piece, x, y, board, currentTurn) => {
           
           const target = board[ty][tx];
           if (!target) {
-            if (!foundFirstTarget) moves.push({ x: tx, y: ty });
-          } else {
-            if (target.team !== currentTurn) {
-              if (!foundFirstTarget) {
-                // First enemy found
+            moves.push({ x: tx, y: ty });
+          } else if (target.team !== currentTurn) {
+            // Check for second enemy piece behind this one
+            const tx2 = tx + dir.dx;
+            const ty2 = ty + dir.dy;
+            if (isWithinBounds(tx2, ty2)) {
+              const target2 = board[ty2][tx2];
+              if (target2 && target2.team !== currentTurn) {
+                // Can charge through first enemy to capture both and land on second enemy's position
+                captures.push({ x: tx2, y: ty2, special: 'charge', through: { x: tx, y: ty } });
+              } else {
+                // Normal capture if no second target
                 captures.push({ x: tx, y: ty });
-                foundFirstTarget = true;
-                // Check for second target immediately behind
-                const tx2 = tx + dir.dx;
-                const ty2 = ty + dir.dy;
-                if (isWithinBounds(tx2, ty2)) {
-                  const target2 = board[ty2][tx2];
-                  if (target2 && target2.team !== currentTurn) {
-                    // Add charge attack on both targets
-                    captures.push({ x: tx, y: ty, special: 'charge', next: { x: tx2, y: ty2 } });
-                  }
-                }
               }
+            } else {
+              // Normal capture if second position is out of bounds
+              captures.push({ x: tx, y: ty });
             }
+            break;
+          } else {
             break;
           }
         }
