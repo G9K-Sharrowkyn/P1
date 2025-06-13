@@ -2,29 +2,54 @@
 import { DIRS_8, MAX_ARCHER_RANGE } from './constants';
 import { isWithinBounds, isPathClear } from './movementRules';
 
-// Czy pole (tx,ty) jest w zasięgu łucznika (od (x,y)), bez przeszkód po drodze?
+// Check if target position is in archer's range and line of sight
 export function archerCanSee(from, to, board) {
+  console.log('Checking archer vision from', from, 'to', to);
+  
+  // Basic validation
+  if (!from || !to || !board) {
+    console.log('Invalid input to archerCanSee');
+    return false;
+  }
+  
   const dx = to.x - from.x, dy = to.y - from.y;
-  if (dx === 0 && dy === 0) return false;
+  if (dx === 0 && dy === 0) {
+    console.log('Cannot target self');
+    return false;
+  }
+  
   for (const dir of DIRS_8) {
     for (let dist = 1; dist <= MAX_ARCHER_RANGE; dist++) {
-      const tx = from.x + dir.dx * dist, ty = from.y + dir.dy * dist;
+      const tx = from.x + dir.dx * dist;
+      const ty = from.y + dir.dy * dist;
       if (tx === to.x && ty === to.y) {
-        return isPathClear(board, from, to);
+        const pathClear = isPathClear(board, from, to);
+        console.log('Target found in direction', dir, 'at distance', dist, 'path clear?', pathClear);
+        return pathClear;
       }
     }
   }
+  console.log('Target not in any valid direction');
   return false;
 }
 
-// Zwraca wszystkie cele dla łucznika po ruchu (tylko te, które są przeciwnikiem)
+// Find all valid targets for archer (enemy pieces in range and line of sight)
 export function findArcherTargets(from, board, team) {
+  console.log('Finding archer targets for', from, 'team', team);
+  
+  // Input validation
+  if (!from || !board || !team) {
+    console.log('Invalid input to findArcherTargets');
+    return [];
+  }
+  
   let found = [];
+  
   // Check all squares within range
-  for (let dy = -MAX_ARCHER_RANGE; dy <= MAX_ARCHER_RANGE; dy++) {
-    for (let dx = -MAX_ARCHER_RANGE; dx <= MAX_ARCHER_RANGE; dx++) {
-      const tx = from.x + dx;
-      const ty = from.y + dy;
+  for (const dir of DIRS_8) {
+    for (let dist = 1; dist <= MAX_ARCHER_RANGE; dist++) {
+      const tx = from.x + dir.dx * dist;
+      const ty = from.y + dir.dy * dist;
       
       // Skip if out of bounds
       if (!isWithinBounds(tx, ty)) continue;
@@ -32,18 +57,26 @@ export function findArcherTargets(from, board, team) {
       const target = board[ty][tx];
       // Check if it's an enemy piece
       if (target && target.team !== team) {
-        // Verify it's in one of the 8 directions and has clear line of sight
-        if (isTargetCurrentlyVisible(from, { x: tx, y: ty }, board)) {
+        // Verify it's visible
+        if (archerCanSee(from, { x: tx, y: ty }, board)) {
+          console.log('Found valid target at', tx, ty);
           found.push({ x: tx, y: ty });
         }
       }
     }
   }
+  
+  console.log('Total targets found:', found.length);
   return found;
 }
 
-// Czy łucznik już celuje w dany cel (uniknij duplikatów pending strzałów)?
+// Check if archer is already targeting this position
 export function isArcherAlreadyTargeting(archerTargets, from, to, team) {
+  if (!archerTargets || !from || !to || !team) {
+    console.log('Invalid input to isArcherAlreadyTargeting');
+    return false;
+  }
+  
   return archerTargets.some(
     a =>
       a.from.x === from.x && a.from.y === from.y &&
@@ -54,8 +87,17 @@ export function isArcherAlreadyTargeting(archerTargets, from, to, team) {
 
 // Check if target is currently visible (not blocked by any pieces)
 export function isTargetCurrentlyVisible(archer, target, board) {
+  console.log('Checking visibility from', archer, 'to', target);
+  
+  // Input validation
+  if (!archer || !target || !board) {
+    console.log('Invalid input to isTargetCurrentlyVisible');
+    return false;
+  }
+  
   // First check if target is in bounds
   if (!isWithinBounds(target.x, target.y) || !isWithinBounds(archer.x, archer.y)) {
+    console.log('Position out of bounds');
     return false;
   }
 
@@ -66,17 +108,19 @@ export function isTargetCurrentlyVisible(archer, target, board) {
   
   // Check if within range
   if (dist > MAX_ARCHER_RANGE || dist === 0) {
+    console.log('Target out of range or same position');
     return false;
   }
 
   // Check if target is in one of the 8 directions
   let isValidDirection = false;
   for (const dir of DIRS_8) {
-    for (let d = 1; d <= dist; d++) {
+    // Check if this direction could lead to the target
+    const maxDist = Math.floor(dist);
+    for (let d = 1; d <= maxDist; d++) {
       const tx = archer.x + dir.dx * d;
       const ty = archer.y + dir.dy * d;
       
-      // Make sure we don't check out of bounds positions
       if (!isWithinBounds(tx, ty)) {
         break;
       }
@@ -90,9 +134,12 @@ export function isTargetCurrentlyVisible(archer, target, board) {
   }
 
   if (!isValidDirection) {
+    console.log('Target not in a valid direction');
     return false;
   }
 
   // Finally check if path is clear
-  return isPathClear(board, archer, target);
+  const pathClear = isPathClear(board, archer, target);
+  console.log('Path clear?', pathClear);
+  return pathClear;
 }

@@ -14,8 +14,14 @@ export const RANK_NAMES = [
 ];
 
 export const DIRS_8 = [
-  { dx: 1, dy: 0 }, { dx: -1, dy: 0 }, { dx: 0, dy: 1 }, { dx: 0, dy: -1 },
-  { dx: 1, dy: 1 }, { dx: 1, dy: -1 }, { dx: -1, dy: 1 }, { dx: -1, dy: -1 }
+  { dx: 0, dy: -1 },  // Up
+  { dx: 1, dy: -1 },  // Up-Right
+  { dx: 1, dy: 0 },   // Right
+  { dx: 1, dy: 1 },   // Down-Right
+  { dx: 0, dy: 1 },   // Down
+  { dx: -1, dy: 1 },  // Down-Left
+  { dx: -1, dy: 0 },  // Left
+  { dx: -1, dy: -1 }, // Up-Left
 ];
 
-export const MAX_ARCHER_RANGE = 3;
+export const MAX_ARCHER_RANGE = 5;

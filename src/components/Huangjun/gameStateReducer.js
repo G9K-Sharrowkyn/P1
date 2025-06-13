@@ -7,40 +7,87 @@ import { makeNotation } from './boardUtils';
 const computeMoveHighlights = (piece, x, y, board, currentTurn) => {
   const moves = [];
   const captures = [];
-  if (piece.type === 'archer') {
-    // Archer movement
-    for (const dir of DIRS_8) {
-      for (let dist = 1; dist <= 3; dist++) {
-        const tx = x + dir.dx * dist, ty = y + dir.dy * dist;
-        if (!isWithinBounds(tx, ty)) break;
-        if (!isPathClear(board, { x, y }, { x: tx, y: ty })) break;
-        const target = board[ty][tx];
-        // Break on any piece for movement
-        if (target) break;
-        moves.push({ x: tx, y: ty });
+  
+  // Get max range based on piece type
+  const maxRange = piece.type === 'cavalry' ? 5 : 3;
+  
+  // Check moves based on piece type
+  switch (piece.type) {
+    case 'infantry': {
+      // Infantry can only move forward 1 square or capture diagonally forward
+      const dir = piece.team === 'white' ? 1 : -1;
+      const possibleMoves = [
+        { x: x, y: y + dir },      // Forward
+        { x: x - 1, y: y + dir },  // Forward-left capture
+        { x: x + 1, y: y + dir }   // Forward-right capture
+      ];
+      
+      for (const move of possibleMoves) {
+        if (!isWithinBounds(move.x, move.y)) continue;
+        const target = board[move.y][move.x];
+        if (move.x === x) {
+          // Forward move must be to empty square
+          if (!target) moves.push(move);
+        } else {
+          // Diagonal moves only for capture
+          if (target && target.team !== currentTurn) captures.push(move);
+        }
       }
+      break;
     }
     
-    // Add archer attack targets
-    captures.push(...findArcherTargets({ x, y }, board, currentTurn));
-  }else {    // Other pieces
-    for (let dy = -3; dy <= 3; dy++) {
-      for (let dx = -3; dx <= 3; dx++) {
-        const tx = x + dx, ty = y + dy;
-        // First check bounds
-        if (!isWithinBounds(tx, ty)) continue;
+    case 'archer': {
+      // Archer movement (1-3 squares in straight lines, can't land on pieces)
+      for (const dir of DIRS_8) {
+        for (let dist = 1; dist <= 3; dist++) {
+          const tx = x + dir.dx * dist;
+          const ty = y + dir.dy * dist;
+          if (!isWithinBounds(tx, ty)) break;
+          if (!isPathClear(board, { x, y }, { x: tx, y: ty })) break;
+          if (board[ty][tx]) break; // Can't move onto pieces
+          moves.push({ x: tx, y: ty });
+        }
+      }
+      // Add archer attack targets separately
+      const targets = findArcherTargets({ x, y }, board, currentTurn);
+      captures.push(...targets);
+      break;
+    }
+    
+    case 'guard': {
+      // Guard moves 1-3 squares forward or forward-diagonal
+      const dir = piece.team === 'white' ? 1 : -1;
+      for (let dist = 1; dist <= 3; dist++) {
+        const possibleMoves = [
+          { x: x, y: y + (dist * dir) },       // Forward
+          { x: x - dist, y: y + (dist * dir)}, // Forward-left
+          { x: x + dist, y: y + (dist * dir)}  // Forward-right
+        ];
         
-        // Check if path is clear (no pieces in the way)
-        if (!isPathClear(board, { x, y }, { x: tx, y: ty })) continue;
-        
-        // Then check if it's a valid move
-        if (isValidMove(board, { x, y }, { x: tx, y: ty }, currentTurn)) {
-          const targetSquare = board[ty][tx];
-          // Only allow capturing enemy pieces
-          if (targetSquare && targetSquare.team !== currentTurn) {
-            captures.push({ x: tx, y: ty });
-          } else if (!targetSquare) {
-            moves.push({ x: tx, y: ty });
+        for (const move of possibleMoves) {
+          if (!isWithinBounds(move.x, move.y)) continue;
+          if (!isPathClear(board, { x, y }, move)) continue;
+          const target = board[move.y][move.x];
+          if (!target) moves.push(move);
+          else if (target.team !== currentTurn) captures.push(move);
+        }
+      }
+      break;
+    }
+    
+    default: {
+      // For emperor, general, and cavalry - check in all 8 directions up to their max range
+      for (const dir of DIRS_8) {
+        for (let dist = 1; dist <= maxRange; dist++) {
+          const tx = x + dir.dx * dist;
+          const ty = y + dir.dy * dist;
+          if (!isWithinBounds(tx, ty)) break;
+          if (!isPathClear(board, { x, y }, { x: tx, y: ty })) break;
+          const target = board[ty][tx];
+          if (!target) moves.push({ x: tx, y: ty });
+          else {
+            if (target.team !== currentTurn) captures.push({ x: tx, y: ty });
+            break; // Can't move past pieces
           }
         }
       }

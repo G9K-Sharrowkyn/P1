@@ -22,70 +22,95 @@ export function isPathClear(board, from, to) {
 }
 
 export function isValidMove(board, from, to, currentTurn) {
-  if (!isWithinBounds(to.x, to.y)) return false;
+  console.log('isValidMove check for:', board[from.y][from.x]?.type);
+  console.log('From:', from, 'To:', to, 'Team:', currentTurn);
+  
+  if (!isWithinBounds(to.x, to.y)) {
+    console.log('Target out of bounds');
+    return false;
+  }
 
   const piece = board[from.y][from.x];
-  if (!piece || piece.team !== currentTurn) return false;
+  if (!piece || piece.team !== currentTurn) {
+    console.log('No piece or wrong team');
+    return false;
+  }
 
   const dest = board[to.y][to.x];
-  if (dest?.team === currentTurn) return false;
+  if (dest?.team === currentTurn) {
+    console.log('Destination occupied by friendly piece');
+    return false;
+  }
 
   const dx    = to.x - from.x;
   const dy    = to.y - from.y;
   const absDx = Math.abs(dx);
   const absDy = Math.abs(dy);
+  
+  console.log('Move delta:', dx, dy, 'Abs delta:', absDx, absDy);
 
   switch (piece.type) {
-    case "emperor":
-      if (
+    case "emperor": {
+      const valid = (
         (dx === 0 && absDy <= 3) ||
         (dy === 0 && absDx <= 3) ||
         (absDx === absDy && absDx <= 3)
-      )
-        return isPathClear(board, from, to);
+      );
+      console.log('Emperor move valid?', valid);
+      if (valid) return isPathClear(board, from, to);
       return false;
+    }
 
-    case "general":
-      if (dx === 0 || dy === 0 || absDx === absDy)
-        return isPathClear(board, from, to);
+    case "general": {
+      const valid = dx === 0 || dy === 0 || absDx === absDy;
+      console.log('General move valid?', valid);
+      if (valid) return isPathClear(board, from, to);
       return false;
+    }
 
     case "guard": {
       const dir = piece.team === "white" ? 1 : -1;
+      console.log('Guard direction:', dir);
       if ([1, 2, 3].some((n) => dy === n * dir)) {
         const n = Math.abs(dy);
-        if (dx === 0 || absDx === n)
-          return isPathClear(board, from, to);
-      }
-      return false;
-    }    case "archer": {
-      if (dest) return false; // cannot move onto a piece
-      const absDx = Math.abs(dx);
-      const absDy = Math.abs(dy);
-      // Archer can move 1-3 squares in straight lines (orthogonal or diagonal)
-      if ((dx === 0 || dy === 0 || absDx === absDy) && // Must move in straight line
-          Math.max(absDx, absDy) <= 3 && // Up to 3 squares
-          (absDx !== 0 || absDy !== 0)) { // Must move at least 1 square
-        return isPathClear(board, from, to);
+        const valid = dx === 0 || absDx === n;
+        console.log('Guard move valid?', valid);
+        if (valid) return isPathClear(board, from, to);
       }
       return false;
     }
 
-    case "cavalry":
-      if (
-        (dx === 0 || dy === 0 || absDx === absDy) &&
-        absDx <= 5 &&
-        absDy <= 5
-      )
-        return isPathClear(board, from, to);
+    case "archer": {
+      if (dest) {
+        console.log('Archer cannot move onto piece');
+        return false;
+      }
+      const valid = (dx === 0 || dy === 0 || absDx === absDy) && // Must move in straight line
+          Math.max(absDx, absDy) <= 3 && // Up to 3 squares
+          (absDx !== 0 || absDy !== 0); // Must move at least 1 square
+      console.log('Archer move valid?', valid);
+      if (valid) return isPathClear(board, from, to);
       return false;
+    }
+
+    case "cavalry": {
+      const valid = (dx === 0 || dy === 0 || absDx === absDy) &&
+        absDx <= 5 &&
+        absDy <= 5;
+      console.log('Cavalry move valid?', valid);
+      if (valid) return isPathClear(board, from, to);
+      return false;
+    }
 
     case "infantry": {
       const dir = piece.team === "white" ? 1 : -1;
-      return dy === dir && (dx === 0 || absDx === 1);
+      const valid = dy === dir && (dx === 0 || absDx === 1);
+      console.log('Infantry move valid?', valid);
+      return valid;
     }
 
     default:
+      console.log('Unknown piece type');
       return false;
   }
 }
