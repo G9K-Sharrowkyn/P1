@@ -54,8 +54,8 @@ export function isArcherAlreadyTargeting(archerTargets, from, to, team) {
 
 // Check if target is currently visible (not blocked by any pieces)
 export function isTargetCurrentlyVisible(archer, target, board) {
-  // Check if there's a clear path to the target
-  if (!isPathClear(board, archer, target)) {
+  // First check if target is in bounds
+  if (!isWithinBounds(target.x, target.y) || !isWithinBounds(archer.x, archer.y)) {
     return false;
   }
 
@@ -65,24 +65,34 @@ export function isTargetCurrentlyVisible(archer, target, board) {
   const dist = Math.max(Math.abs(dx), Math.abs(dy));
   
   // Check if within range
-  if (dist > MAX_ARCHER_RANGE) {
+  if (dist > MAX_ARCHER_RANGE || dist === 0) {
     return false;
   }
 
-  // Target must be in one of the 8 directions
+  // Check if target is in one of the 8 directions
+  let isValidDirection = false;
   for (const dir of DIRS_8) {
     for (let d = 1; d <= dist; d++) {
       const tx = archer.x + dir.dx * d;
       const ty = archer.y + dir.dy * d;
-      if (tx === target.x && ty === target.y) {
-        return true;
+      
+      // Make sure we don't check out of bounds positions
+      if (!isWithinBounds(tx, ty)) {
+        break;
       }
-      // If we hit any piece before reaching target, path is blocked
-      if (board[ty][tx]) {
+      
+      if (tx === target.x && ty === target.y) {
+        isValidDirection = true;
         break;
       }
     }
+    if (isValidDirection) break;
   }
-  
-  return false;
+
+  if (!isValidDirection) {
+    return false;
+  }
+
+  // Finally check if path is clear
+  return isPathClear(board, archer, target);
 }
