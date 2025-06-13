@@ -8,77 +8,47 @@ const computeMoveHighlights = (piece, x, y, board, currentTurn) => {
   const moves = [];
   const captures = [];
   
-  // Get max range based on piece type
-  const maxRange = piece.type === 'cavalry' ? 5 : 3;
-  
-  // Check moves based on piece type
   switch (piece.type) {
     case 'infantry': {
-      // Infantry can only move forward 1 square or capture diagonally forward
+      // Infantry: moves and captures one square diagonally forward or forward
       const dir = piece.team === 'white' ? 1 : -1;
       const possibleMoves = [
         { x: x, y: y + dir },      // Forward
-        { x: x - 1, y: y + dir },  // Forward-left capture
-        { x: x + 1, y: y + dir }   // Forward-right capture
+        { x: x - 1, y: y + dir },  // Forward-left
+        { x: x + 1, y: y + dir }   // Forward-right
       ];
       
       for (const move of possibleMoves) {
         if (!isWithinBounds(move.x, move.y)) continue;
         const target = board[move.y][move.x];
-        if (move.x === x) {
-          // Forward move must be to empty square
-          if (!target) moves.push(move);
-        } else {
-          // Diagonal moves only for capture
-          if (target && target.team !== currentTurn) captures.push(move);
-        }
+        if (!target) moves.push(move);
+        else if (target.team !== currentTurn) captures.push(move);
       }
       break;
     }
     
     case 'archer': {
-      // Archer movement (1-3 squares in straight lines, can't land on pieces)
+      // Archer: moves max 2 squares in any direction
       for (const dir of DIRS_8) {
-        for (let dist = 1; dist <= 3; dist++) {
+        for (let dist = 1; dist <= 2; dist++) {
           const tx = x + dir.dx * dist;
           const ty = y + dir.dy * dist;
           if (!isWithinBounds(tx, ty)) break;
           if (!isPathClear(board, { x, y }, { x: tx, y: ty })) break;
-          if (board[ty][tx]) break; // Can't move onto pieces
-          moves.push({ x: tx, y: ty });
+          const target = board[ty][tx];
+          if (!target) moves.push({ x: tx, y: ty });
+          else break;
         }
       }
-      // Add archer attack targets separately
-      const targets = findArcherTargets({ x, y }, board, currentTurn);
-      captures.push(...targets);
+      // Archer attacks are handled separately through archerTargets state
+      // They can attack any unit after waiting one turn
       break;
     }
     
-    case 'guard': {
-      // Guard moves 1-3 squares forward or forward-diagonal
-      const dir = piece.team === 'white' ? 1 : -1;
-      for (let dist = 1; dist <= 3; dist++) {
-        const possibleMoves = [
-          { x: x, y: y + (dist * dir) },       // Forward
-          { x: x - dist, y: y + (dist * dir)}, // Forward-left
-          { x: x + dist, y: y + (dist * dir)}  // Forward-right
-        ];
-        
-        for (const move of possibleMoves) {
-          if (!isWithinBounds(move.x, move.y)) continue;
-          if (!isPathClear(board, { x, y }, move)) continue;
-          const target = board[move.y][move.x];
-          if (!target) moves.push(move);
-          else if (target.team !== currentTurn) captures.push(move);
-        }
-      }
-      break;
-    }
-    
-    default: {
-      // For emperor, general, and cavalry - check in all 8 directions up to their max range
+    case 'general': {
+      // General: moves like a queen, any distance (within board)
       for (const dir of DIRS_8) {
-        for (let dist = 1; dist <= maxRange; dist++) {
+        for (let dist = 1; dist <= 8; dist++) {
           const tx = x + dir.dx * dist;
           const ty = y + dir.dy * dist;
           if (!isWithinBounds(tx, ty)) break;
@@ -87,10 +57,104 @@ const computeMoveHighlights = (piece, x, y, board, currentTurn) => {
           if (!target) moves.push({ x: tx, y: ty });
           else {
             if (target.team !== currentTurn) captures.push({ x: tx, y: ty });
-            break; // Can't move past pieces
+            break;
           }
         }
       }
+      break;
+    }
+    
+    case 'emperor': {
+      // Emperor: moves max 3 squares in any direction
+      // Special rule: cannot be attacked if adjacent to a guard
+      for (const dir of DIRS_8) {
+        for (let dist = 1; dist <= 3; dist++) {
+          const tx = x + dir.dx * dist;
+          const ty = y + dir.dy * dist;
+          if (!isWithinBounds(tx, ty)) break;
+          if (!isPathClear(board, { x, y }, { x: tx, y: ty })) break;
+          const target = board[ty][tx];
+          if (!target) moves.push({ x: tx, y: ty });
+          else {
+            if (target.team !== currentTurn) captures.push({ x: tx, y: ty });
+            break;
+          }
+        }
+      }
+      
+      // Add castling moves if conditions are met
+      if (!piece.hasMoved) {
+        // Check for guards that could castle
+        for (let dx of [-2, 2]) {
+          const guardX = x + dx;
+          if (!isWithinBounds(guardX, y)) continue;
+          const possibleGuard = board[y][guardX];
+          if (possibleGuard?.type === 'guard' && possibleGuard.team === currentTurn && !possibleGuard.hasMoved) {
+            if (isPathClear(board, { x, y }, { x: guardX, y })) {
+              moves.push({ x: x + Math.sign(dx), y: y, special: 'castle' });
+            }
+          }
+        }
+      }
+      break;
+    }
+    
+    case 'guard': {
+      // Guard: moves max 2 squares in any direction
+      for (const dir of DIRS_8) {
+        for (let dist = 1; dist <= 2; dist++) {
+          const tx = x + dir.dx * dist;
+          const ty = y + dir.dy * dist;
+          if (!isWithinBounds(tx, ty)) break;
+          if (!isPathClear(board, { x, y }, { x: tx, y: ty })) break;
+          const target = board[ty][tx];
+          if (!target) moves.push({ x: tx, y: ty });
+          else {
+            if (target.team !== currentTurn) captures.push({ x: tx, y: ty });
+            break;
+          }
+        }
+      }
+      break;
+    }
+    
+    case 'cavalry': {
+      // Cavalry: moves max 5 squares in any direction
+      // Special ability: can attack two units in a line
+      for (const dir of DIRS_8) {
+        let foundFirstTarget = false;
+        for (let dist = 1; dist <= 5; dist++) {
+          const tx = x + dir.dx * dist;
+          const ty = y + dir.dy * dist;
+          if (!isWithinBounds(tx, ty)) break;
+          if (!isPathClear(board, { x, y }, { x: tx, y: ty })) break;
+          
+          const target = board[ty][tx];
+          if (!target) {
+            if (!foundFirstTarget) moves.push({ x: tx, y: ty });
+          } else {
+            if (target.team !== currentTurn) {
+              if (!foundFirstTarget) {
+                // First enemy found
+                captures.push({ x: tx, y: ty });
+                foundFirstTarget = true;
+                // Check for second target immediately behind
+                const tx2 = tx + dir.dx;
+                const ty2 = ty + dir.dy;
+                if (isWithinBounds(tx2, ty2)) {
+                  const target2 = board[ty2][tx2];
+                  if (target2 && target2.team !== currentTurn) {
+                    // Add charge attack on both targets
+                    captures.push({ x: tx, y: ty, special: 'charge', next: { x: tx2, y: ty2 } });
+                  }
+                }
+              }
+            }
+            break;
+          }
+        }
+      }
+      break;
     }
   }
 
@@ -148,26 +212,51 @@ const updateArcherTargets = (from, to, moving, target, newBoard, currentTurn, ar
   return archerTargetsNext;
 };
 
-export const handleMove = (state, from, to) => {
+export const handleMove = (state, from, to, special = null) => {
   const { board, currentTurn, archerTargets, moveHistory } = state;
   const moving = board[from.y][from.x];
   const target = board[to.y][to.x];
   let newBoard = JSON.parse(JSON.stringify(board));
   let archerTargetsNext = [...archerTargets];
 
-  // Update last moved
+  // Update last moved and clear archer targets
   if (moving) {
     moving.lastMoved = moveHistory.length;
-    // Clear any targeting from the moved piece
+    if (!moving.hasMoved) moving.hasMoved = true;
     archerTargetsNext = archerTargetsNext.filter(t =>
       !(t.from.x === from.x && t.from.y === from.y && t.team === currentTurn)
     );
   }
 
-  // Special handling for guard
-  if (target?.type === 'guard' && target.team !== currentTurn) {
-    newBoard[to.y][to.x] = null;
-    newBoard[from.y][from.x] = null;
+  // Handle special moves
+  if (special) {
+    switch (special.type) {
+      case 'castle': {
+        // Move emperor
+        newBoard[to.y][to.x] = newBoard[from.y][from.x];
+        newBoard[from.y][from.x] = null;
+        // Move guard
+        const guardX = to.x + (to.x > from.x ? 1 : -1);
+        const oldGuardX = to.x + (to.x > from.x ? 2 : -2);
+        newBoard[to.y][guardX] = newBoard[to.y][oldGuardX];
+        newBoard[to.y][oldGuardX] = null;
+        break;
+      }
+      case 'charge': {
+        // Handle cavalry charge attack on two targets
+        newBoard[to.y][to.x] = null; // Remove first target
+        if (special.next) {
+          newBoard[special.next.y][special.next.x] = null; // Remove second target
+        }
+        newBoard[to.y][to.x] = newBoard[from.y][from.x]; // Move cavalry to final position
+        newBoard[from.y][from.x] = null;
+        break;
+      }
+      default:
+        // Normal move
+        newBoard[to.y][to.x] = newBoard[from.y][from.x];
+        newBoard[from.y][from.x] = null;
+    }
   } else {
     // Normal move
     newBoard[to.y][to.x] = newBoard[from.y][from.x];
