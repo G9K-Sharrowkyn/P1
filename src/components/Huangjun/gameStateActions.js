@@ -37,13 +37,49 @@ export function handleClickFactory({
       const moving = board[from.y][from.x];
       const target = board[to.y][to.x];
       
-      // Check if this is a valid move or capture
       const validCapture = captureTargets.find(c => c.x === x && c.y === y);
       const isValidMove = 
         highlighted.some(h => h.x === x && h.y === y) ||
         validCapture;
       
       if (!isValidMove) {
+        // If the click is not a valid move, check if it's a different piece of the same team
+        // to allow for quick re-selection. Otherwise, clear selection.
+        if (piece && piece.team === currentTurn) {
+          const { moves, captures } = computeMoveHighlights(piece, x, y, board, currentTurn);
+          let finalCaptures = captures;
+          if (piece.type === 'archer') {
+            const readyArcherAttacks = archerTargets
+              .filter(t => t.from.x === x && t.from.y === y && t.team === currentTurn && t.readyIn === 0)
+              .map(t => ({ ...t.to, special: 'archer_attack' }));
+            finalCaptures = [...captures, ...readyArcherAttacks];
+          }
+          setSelected({ x, y });
+          setHighlighted(moves);
+          setCaptureTargets(finalCaptures);
+        } else {
+          clearSelectionState(setSelected, setHighlighted, setCaptureTargets);
+        }
+        return;
+      }
+      
+      // Handle Archer Attack
+      if (validCapture?.special === 'archer_attack') {
+        const { newBoard, archerTargetsNext, notation } = handleArcherAttack({ board, currentTurn, archerTargets }, from, to);
+        
+        // Check for emperor hits from archer attack
+        if (target?.type === 'emperor') {
+          const nh = { ...emperorHits };
+          nh[target.team] += 1;
+          setEmperorHits(nh);
+          if (nh[target.team] >= 3) setWinner(currentTurn);
+        }
+
+        setBoard(newBoard);
+        setArcherTargets(archerTargetsNext);
+        setMoveHistory(prev => [...prev.slice(0, moveIndex + 1), { board: newBoard, turn: currentTurn, notation }]);
+        setMoveIndex(i => i + 1);
+        setCurrentTurn(t => t === 'white' ? 'black' : 'white');
         clearSelectionState(setSelected, setHighlighted, setCaptureTargets);
         return;
       }
@@ -92,6 +128,9 @@ export function handleClickFactory({
       }
 
       // Handle emperor hits
+      const { newBoard, archerTargetsNext } = handleMove({ board, currentTurn, archerTargets, moveHistory }, from, to, special ? { type: special, ...validCapture } : null);
+      
+      // Check for emperor hits on normal move
       if (target?.type === 'emperor' && target.team !== currentTurn) {
         const nh = { ...emperorHits };
         nh[target.team] += 1;
@@ -99,24 +138,29 @@ export function handleClickFactory({
         if (nh[target.team] >= 3) setWinner(currentTurn);
       }
 
-      // Make normal move
-      const { newBoard, archerTargetsNext } = handleMove({ board, currentTurn, archerTargets, moveHistory }, from, to);
       setBoard(newBoard);
       setArcherTargets(archerTargetsNext);
-      setMoveHistory(prev => [...prev, { 
-        board: newBoard, 
-        turn: currentTurn, 
-        notation: makeNotation(moving.type, from, to, target !== null) 
-      }]);
+      setMoveHistory(prev => [...prev.slice(0, moveIndex + 1), { board: newBoard, turn: currentTurn, notation: makeNotation(moving.type, from, to, target !== null) }]);
       setMoveIndex(i => i + 1);
       setCurrentTurn(t => t === 'white' ? 'black' : 'white');
       clearSelectionState(setSelected, setHighlighted, setCaptureTargets);
+
     } else if (piece && piece.team === currentTurn) {
       // Selecting a new piece
       setSelected({ x, y });
       const { moves, captures } = computeMoveHighlights(piece, x, y, board, currentTurn);
       setHighlighted(moves);
-      setCaptureTargets(captures);
+
+      let finalCaptures = captures;
+      // If an archer is selected, find its available attack targets
+      if (piece.type === 'archer') {
+        const readyArcherAttacks = archerTargets
+          .filter(t => t.from.x === x && t.from.y === y && t.team === currentTurn && t.readyIn === 0)
+          .map(t => ({ ...t.to, special: 'archer_attack' }));
+        finalCaptures = [...captures, ...readyArcherAttacks];
+      }
+      setCaptureTargets(finalCaptures);
+      
     } else {
       // Clicking empty square or enemy piece with no piece selected
       clearSelectionState(setSelected, setHighlighted, setCaptureTargets);

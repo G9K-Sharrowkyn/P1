@@ -24,4 +24,4 @@ export const DIRS_8 = [
   { dx: -1, dy: -1 }, // Up-Left
 ];
 
-export const MAX_ARCHER_RANGE = 5;
+export const MAX_ARCHER_RANGE = 3;

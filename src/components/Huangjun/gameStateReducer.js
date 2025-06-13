@@ -166,26 +166,26 @@ const computeMoveHighlights = (piece, x, y, board, currentTurn) => {
   return { moves, captures };
 };
 
+
 const updateArcherTargets = (from, to, moving, target, newBoard, currentTurn, archerTargetsNext, moveHistory) => {
   // After archer moves, add targets
   if (moving.type === 'archer') {
     const archer = { x: to.x, y: to.y };
-    // Only add targets that are currently visible
     const targets = findArcherTargets(archer, newBoard, currentTurn)
       .filter(t => isTargetCurrentlyVisible(archer, t, newBoard));
       
-    // Add targets with 1 turn wait
     for (const targetPos of targets) {
       if (!isArcherAlreadyTargeting(archerTargetsNext, archer, targetPos, currentTurn)) {
         archerTargetsNext.push({
           from: { ...archer },
           to: { ...targetPos },
           team: currentTurn,
-          readyIn: 1
+          readyIn: 3 // Changed from 1 to 3
         });
       }
     }
   }
+
 
   // Check if enemy pieces enter archer range
   if (target && target.team !== currentTurn && target.type !== 'guard' && target.type !== 'emperor') {
@@ -205,7 +205,7 @@ const updateArcherTargets = (from, to, moving, target, newBoard, currentTurn, ar
                 from: { ...archerPos },
                 to: { ...to },
                 team: maybeArcher.team,
-                readyIn: 1
+                readyIn: 3 // Changed from 1 to 3
               });
             }
           }
