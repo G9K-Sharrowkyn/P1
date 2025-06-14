@@ -1,45 +1,59 @@
-import React, { useEffect, useState, useMemo } from 'react';
+import React, { useEffect, useRef, useMemo } from 'react';
 import './StarBackground.css';
 
-function generateBoxShadows(numberOfStars, width, height) {
-  let boxShadow = '';
-  for (let i = 0; i < numberOfStars; i++) {
-    const x = Math.round(Math.random() * width);
-    const y = Math.round(Math.random() * (height * 2));
-    // Randomize the star color slightly for more realism
-    const alpha = Math.random() * 0.3 + 0.7; // 0.7-1.0 opacity
-    const color = `rgba(255, 255, 255, ${alpha})`;
-    boxShadow += `${x}px ${y}px ${color}, `;
-  }
-  return boxShadow.slice(0, -2);
+/**
+ * Draw and animate a simple star field on a canvas for better performance
+ */
+function useStarfield(canvasRef) {
+  const animationRef = useRef();
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+
+    const handleResize = () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    };
+
+    handleResize();
+    window.addEventListener('resize', handleResize);
+
+    const starCount = Math.floor((canvas.width + canvas.height) / 10);
+    const stars = Array.from({ length: starCount }, () => ({
+      x: Math.random() * canvas.width,
+      y: Math.random() * canvas.height,
+      size: Math.random() * 1.5 + 0.5,
+      speed: Math.random() * 0.3 + 0.1,
+      alpha: Math.random() * 0.5 + 0.5
+    }));
+
+    const draw = () => {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      stars.forEach(star => {
+        star.y -= star.speed;
+        if (star.y < 0) {
+          star.y = canvas.height;
+          star.x = Math.random() * canvas.width;
+        }
+        ctx.fillStyle = `rgba(255,255,255,${star.alpha})`;
+        ctx.fillRect(star.x, star.y, star.size, star.size);
+      });
+      animationRef.current = requestAnimationFrame(draw);
+    };
+    draw();
+
+    return () => {
+      cancelAnimationFrame(animationRef.current);
+      window.removeEventListener('resize', handleResize);
+    };
+  }, [canvasRef]);
 }
 
 const StarBackground = () => {
-  const [dimensions, setDimensions] = useState({ 
-    width: window.innerWidth, 
-    height: window.innerHeight 
-  });
-
-  // Optimize performance with useMemo to prevent recalculating on every render
-  const { smallStars, mediumStars, bigStars } = useMemo(() => {
-    return {
-      smallStars: generateBoxShadows(2100, dimensions.width, dimensions.height),
-      mediumStars: generateBoxShadows(500, dimensions.width, dimensions.height),
-      bigStars: generateBoxShadows(200, dimensions.width, dimensions.height)
-    };
-  }, [dimensions.width, dimensions.height]);
-
-  useEffect(() => {
-    function handleResize() {
-      setDimensions({ 
-        width: window.innerWidth, 
-        height: window.innerHeight 
-      });
-    }
-
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
+  const canvasRef = useRef(null);
+  useStarfield(canvasRef);
 
   // Generate random positions for the nebulas to make them different on each load
   const nebulasStyle = useMemo(() => {
@@ -64,10 +78,7 @@ const StarBackground = () => {
 
   return (
     <div className="stars-background">
-      {/* Basic star layers */}
-      <div id="stars" style={{ boxShadow: smallStars }}></div>
-      <div id="stars2" style={{ boxShadow: mediumStars }}></div>
-      <div id="stars3" style={{ boxShadow: bigStars }}></div>
+      <canvas ref={canvasRef} className="stars-canvas" />
       
       {/* Colorful nebula effects */}
       <div className="nebula nebula-1" style={nebulasStyle.nebula1}></div>
