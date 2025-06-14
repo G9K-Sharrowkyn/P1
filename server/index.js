@@ -1,9 +1,12 @@
 const express = require('express');
+const cors = require('cors');
+const fs = require('fs');
 const { spawn } = require('child_process');
 const path = require('path');
 const app = express();
 const PORT = process.env.PORT || 2002;
 
+app.use(cors());
 app.use(express.json());
 
 app.post('/train', (req, res) => {
@@ -22,6 +25,21 @@ app.post('/train', (req, res) => {
   });
 
   res.json({ status: 'training started' });
+});
+
+app.get('/games', (req, res) => {
+  const file = path.join(__dirname, '../ai_data/games.json');
+  try {
+    if (fs.existsSync(file)) {
+      const data = JSON.parse(fs.readFileSync(file));
+      res.json(data);
+    } else {
+      res.json([]);
+    }
+  } catch (err) {
+    console.error('read games error', err);
+    res.status(500).json({ error: 'unable to read games' });
+  }
 });
 
 app.listen(PORT, () => {

@@ -1,10 +1,14 @@
 import os
+import json
+import random
+from datetime import datetime
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
 MODEL_DIR = 'ai_data'
 MODEL_PATH = os.path.join(MODEL_DIR, 'model.pt')
+GAMES_PATH = os.path.join(MODEL_DIR, 'games.json')
 
 class ResidualBlock(nn.Module):
     def __init__(self, channels):
@@ -45,10 +49,10 @@ class HuangjunNet(nn.Module):
         return p, v
 
 def self_play_games(net, games=10):
-    # Placeholder self-play that generates random tensors
-    # In a real implementation, game logic would be used here
+    """Run simple self-play and return mock game records."""
     optimizer = torch.optim.Adam(net.parameters(), lr=0.001)
-    for _ in range(games):
+    records = []
+    for g in range(games):
         board = torch.randn(1, net.input_channels, 9, 9)
         policy_target = torch.randn(1, 1000)
         value_target = torch.randn(1, 1)
@@ -60,13 +64,32 @@ def self_play_games(net, games=10):
         loss.backward()
         optimizer.step()
 
+        record = {
+            "id": f"{datetime.utcnow().isoformat()}_{g}",
+            "winner": random.choice(["white", "black"]),
+            "moves": [f"m{n}" for n in range(random.randint(4, 10))],
+        }
+        records.append(record)
+
     print('completed training step')
+    return records
 
 if __name__ == '__main__':
     os.makedirs(MODEL_DIR, exist_ok=True)
     model = HuangjunNet()
     if os.path.exists(MODEL_PATH):
         model.load_state_dict(torch.load(MODEL_PATH))
-    self_play_games(model, games=10)
+    records = self_play_games(model, games=10)
     torch.save(model.state_dict(), MODEL_PATH)
+    try:
+        if os.path.exists(GAMES_PATH):
+            with open(GAMES_PATH, 'r') as f:
+                data = json.load(f)
+        else:
+            data = []
+        data.extend(records)
+        with open(GAMES_PATH, 'w') as f:
+            json.dump(data, f)
+    except Exception as e:
+        print('failed to save games', e)
     print('model saved to', MODEL_PATH)

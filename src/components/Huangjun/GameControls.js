@@ -38,7 +38,7 @@ const GameControls = () => {
         </button>
         <button
           className="ml-2 px-2 py-1 bg-green-700 text-white rounded"
-          onClick={() => fetch('/train', { method: 'POST' })}
+          onClick={() => fetch('http://localhost:2002/train', { method: 'POST' })}
         >
           Train AI
         </button>

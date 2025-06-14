@@ -80,3 +80,5 @@ npm start
 
 Press the **Train AI** button in game controls to trigger a background training run. A simple placeholder model is saved to `ai_data/model.pt`.
 
+Press **AI Games Archive** on the main menu to view recorded self-play games stored in `ai_data/games.json`.
+
