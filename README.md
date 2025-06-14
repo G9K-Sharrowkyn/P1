@@ -78,7 +78,7 @@ npm run server &
 npm start
 ```
 
-Press the **Train AI** button in game controls to trigger a background training run. Console logs in both the browser and server show progress while the Python script runs. A simple placeholder model is saved to `ai_data/model.pt`.
+Press the **Train AI** button in game controls to trigger a background training run. Console logs in both the browser and server show progress while the Python script runs. A simple placeholder model is saved to `ai_data/model.json`.
 
 Press **AI Games Archive** on the main menu to view recorded self-play games stored in `ai_data/games.json`.
 
