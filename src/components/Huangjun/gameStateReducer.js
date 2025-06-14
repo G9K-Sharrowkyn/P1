@@ -142,22 +142,10 @@ const computeMoveHighlights = (piece, x, y, board, currentTurn, castlingRights =
           if (!target) {
             moves.push({ x: tx, y: ty });
           } else if (target.team !== currentTurn) {
-            // Check for second enemy piece behind this one
-            const tx2 = tx + dir.dx;
-            const ty2 = ty + dir.dy;
-            if (isWithinBounds(tx2, ty2)) {
-              const target2 = board[ty2][tx2];
-              if (target2 && target2.team !== currentTurn) {
-                // Can charge through first enemy to capture both and land on second enemy's position
-                captures.push({ x: tx2, y: ty2, special: 'charge', through: { x: tx, y: ty } });
-              } else {
-                // Normal capture if no second target
-                captures.push({ x: tx, y: ty });
-              }
-            } else {
-              // Normal capture if second position is out of bounds
-              captures.push({ x: tx, y: ty });
-            }
+            // Always allow capture of the first enemy piece
+            captures.push({ x: tx, y: ty });
+            // If there's another enemy directly behind, cavalry may charge afterwards.
+            // This information will be handled after the initial capture in gameStateActions.
             break;
           } else {
             break;

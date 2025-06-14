@@ -6,17 +6,17 @@ import { archerCanSee, isTargetCurrentlyVisible } from './archerLogic';
 /* ────────────────────────────────────────────────────────── */
 /*  POMOCNICZA FUNKCJA DO SZARŻY KAWALERII                   */
 /* ────────────────────────────────────────────────────────── */
-function cavalryChargeTarget(from, to, board) {
+function cavalryChargeTarget(from, to, board, team) {
   const dx = to.x - from.x;
   const dy = to.y - from.y;
   const next = { x: to.x + dx, y: to.y + dy };
 
   if (
-    next.x >= 0 && next.x < 8 &&
-    next.y >= 0 && next.y < 8
+    next.x >= 0 && next.x < 9 &&
+    next.y >= 0 && next.y < 9
   ) {
     const pieceBehind = board[next.y][next.x];
-    if (pieceBehind && pieceBehind.team !== board[from.y][from.x].team) {
+    if (pieceBehind && pieceBehind.team !== team) {
       return next; // jest drugi wróg
     }
   }
@@ -196,7 +196,7 @@ export function handleClickFactory({
         moving.type === 'cavalry' &&
         target && target.team !== currentTurn   // pierwsze zbicie
       ) {
-        const next = cavalryChargeTarget(from, to, newBoard);
+        const next = cavalryChargeTarget(from, to, newBoard, moving.team);
         if (next) {
           // ZOSTAWIAMY TĘ SAMĄ TURĘ
           setBoard(newBoard);
