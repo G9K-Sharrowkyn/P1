@@ -1,6 +1,7 @@
 // archerLogic.js
 import { DIRS_8, MAX_ARCHER_RANGE } from './constants';
 import { isWithinBounds, isPathClear } from './movementRules';
+import { isEmperorProtected } from './emperorLogic';
 
 // Check if target position is in archer's range and line of sight
 export function archerCanSee(from, to, board) {
@@ -57,6 +58,10 @@ export function findArcherTargets(from, board, team) {
       const target = board[ty][tx];
       // Check if it's an enemy piece
       if (target && target.team !== team) {
+                if (target.type === 'emperor' && isEmperorProtected(board, { x: tx, y: ty })) {
+          // Cannot target protected emperor
+          continue;
+        }
         // Verify it's visible
         if (archerCanSee(from, { x: tx, y: ty }, board)) {
           console.log('Found valid target at', tx, ty);

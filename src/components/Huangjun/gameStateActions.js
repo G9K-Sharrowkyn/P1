@@ -2,6 +2,7 @@
 import { clearSelection, makeNotation } from './boardUtils';
 import { handleMove, handleArcherAttack, computeMoveHighlights } from './gameStateReducer';
 import { archerCanSee, isTargetCurrentlyVisible } from './archerLogic';
+import { isEmperorProtected } from './emperorLogic';
 
 /* ────────────────────────────────────────────────────────── */
 /*  POMOCNICZA FUNKCJA DO SZARŻY KAWALERII                   */
@@ -105,16 +106,22 @@ export function handleClickFactory({
 
         /* 1c. Specjalny atak łucznika (z uwzględnieniem obrażeń cesarza) */
       if (validCapture?.special === 'archer_attack') {
+        if (target?.type === 'emperor' && isEmperorProtected(board, to)) {
+          // Cannot hit protected emperor
+          clearSelectionState(setSelected, setHighlighted, setCaptureTargets);
+          return;
+        }
+
         const { newBoard, archerTargetsNext, notation } =
           handleArcherAttack({ board, currentTurn, archerTargets }, from, to);
 
-         let finalBoard = newBoard;
-
+        let finalBoard = newBoard;
 
         if (target?.type === 'emperor') {
           const nh = { ...emperorHits };
           nh[target.team] += 1;
           setEmperorHits(nh);
+
           if (nh[target.team] >= 3) {
             setWinner(currentTurn);
           } else {
@@ -232,9 +239,15 @@ export function handleClickFactory({
 
       /* 1e-ii  Zwykłe konsekwencje ruchu */
       if (target?.type === 'emperor' && target.team !== currentTurn) {
+              if (isEmperorProtected(board, to)) {
+          // Cannot damage protected emperor
+          clearSelectionState(setSelected, setHighlighted, setCaptureTargets);
+          return;
+        }
+
         const nh = { ...emperorHits };
         nh[target.team] += 1;
-        
+
         if (nh[target.team] >= 3) {
           setEmperorHits(nh);
           setWinner(currentTurn);

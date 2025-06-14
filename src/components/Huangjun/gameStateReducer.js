@@ -3,6 +3,7 @@ import { isValidMove, isWithinBounds, isPathClear } from './movementRules';
 import { findArcherTargets, isArcherAlreadyTargeting, isTargetCurrentlyVisible } from './archerLogic';
 import { DIRS_8 } from './constants';
 import { makeNotation } from './boardUtils';
+import { isEmperorProtected } from './emperorLogic';
 
 const computeMoveHighlights = (piece, x, y, board, currentTurn, castlingRights = { white: true, black: true }) => {
   const moves = [];
@@ -22,7 +23,13 @@ const computeMoveHighlights = (piece, x, y, board, currentTurn, castlingRights =
         if (!isWithinBounds(move.x, move.y)) continue;
         const target = board[move.y][move.x];
         if (!target) moves.push(move);
-        else if (target.team !== currentTurn) captures.push(move);
+                else if (target.team !== currentTurn) {
+          if (target.type === 'emperor' && isEmperorProtected(board, move)) {
+            // Emperor shielded by a guard
+          } else {
+            captures.push(move);
+          }
+        }
       }
       break;
     }
@@ -56,8 +63,16 @@ const computeMoveHighlights = (piece, x, y, board, currentTurn, castlingRights =
           const target = board[ty][tx];
           if (!target) moves.push({ x: tx, y: ty });
           else {
-            if (target.team !== currentTurn) captures.push({ x: tx, y: ty });
-            break;
+            if (target.team !== currentTurn) {
+              if (target.type === 'emperor' && isEmperorProtected(board, { x: tx, y: ty })) {
+                // Emperor protected by guard
+              } else {
+                captures.push({ x: tx, y: ty });
+              }
+              break;
+            } else {
+              break;
+            }
           }
         }
       }
@@ -77,7 +92,11 @@ const computeMoveHighlights = (piece, x, y, board, currentTurn, castlingRights =
             moves.push({ x: tx, y: ty });
           } else {
             if (target.team !== currentTurn) {
-              captures.push({ x: tx, y: ty });
+              if (target.type === 'emperor' && isEmperorProtected(board, { x: tx, y: ty })) {
+                // Emperor protected by guard
+              } else {
+                captures.push({ x: tx, y: ty });
+              }
             } else if (
               target.type === 'guard' &&
               !piece.hasMoved &&
@@ -120,8 +139,16 @@ const computeMoveHighlights = (piece, x, y, board, currentTurn, castlingRights =
           const target = board[ty][tx];
           if (!target) moves.push({ x: tx, y: ty });
           else {
-            if (target.team !== currentTurn) captures.push({ x: tx, y: ty });
-            break;
+            if (target.team !== currentTurn) {
+              if (target.type === 'emperor' && isEmperorProtected(board, { x: tx, y: ty })) {
+                // Emperor protected by guard
+              } else {
+                captures.push({ x: tx, y: ty });
+              }
+              break;
+            } else {
+              break;
+            }
           }
         }
       }
@@ -142,8 +169,12 @@ const computeMoveHighlights = (piece, x, y, board, currentTurn, castlingRights =
           if (!target) {
             moves.push({ x: tx, y: ty });
           } else if (target.team !== currentTurn) {
-            // Always allow capture of the first enemy piece
-            captures.push({ x: tx, y: ty });
+            if (target.type === 'emperor' && isEmperorProtected(board, { x: tx, y: ty })) {
+              // Emperor protected by guard
+            } else {
+              // Always allow capture of the first enemy piece
+              captures.push({ x: tx, y: ty });
+            }
             // If there's another enemy directly behind, cavalry may charge afterwards.
             // This information will be handled after the initial capture in gameStateActions.
             break;
