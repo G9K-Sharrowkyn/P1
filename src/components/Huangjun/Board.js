@@ -10,7 +10,7 @@ import { minSize, maxSize } from './boardResize';
 const PANEL_WIDTH = 370; // px, panel + margin
 const PANEL_MIN_MARGIN = 24; // px, margin from right
 
-const Board = ({ onBackToMenu }) => {
+const Board = ({ onBackToMenu, autoPlay = false }) => {
   const [useNewBoard, setUseNewBoard] = useState(true);
   const [useNewPieces, setUseNewPieces] = useState(true);
   const [boardSize, setBoardSize] = useState(1000);
@@ -41,7 +41,7 @@ const Board = ({ onBackToMenu }) => {
   }
 
   return (
-    <GameStateProvider>
+    <GameStateProvider autoPlay={autoPlay}>
       <div className="flex w-full h-screen items-start justify-start bg-transparent relative" ref={boardContainerRef}>
         {/* Board on the left */}
         <div className="relative flex-shrink-0" style={{ width: boardSize, height: boardSize }}>

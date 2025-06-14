@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import { GameStateContext } from './GameStateContext';
 import { createInitialBoard } from './initialBoard';
 import { getBoardLabels } from './boardUtils';
@@ -10,9 +10,9 @@ import {
   toggleFlippedFactory,
   clearSelectionState
 } from './gameStateActions';
-import { useArcherReadyEffect, useBotEffect } from './gameStateEffects';
+import { useArcherReadyEffect, useBotEffect, useAutoPlayEffect } from './gameStateEffects';
 
-const GameStateProvider = ({ children }) => {
+const GameStateProvider = ({ children, autoPlay = false }) => {
   const [board, setBoard] = useState(createInitialBoard());
   const [selected, setSelected] = useState(null);
   const [currentTurn, setCurrentTurn] = useState('white');
@@ -55,6 +55,27 @@ const GameStateProvider = ({ children }) => {
 
   // Now that handleClick is defined, re-run bot effect with correct handleClick
   useBotEffect({ vsBot, currentTurn, winner, moveIndex, moveHistory, board, archerTargets, handleClick });
+  useAutoPlayEffect({ autoPlay, currentTurn, winner, moveIndex, moveHistory, board, archerTargets, handleClick });
+
+  useEffect(() => {
+    if (autoPlay && winner) {
+      const t = setTimeout(() => {
+        setBoard(createInitialBoard());
+        setSelected(null);
+        setCurrentTurn('white');
+        setEmperorHits({ white: 0, black: 0 });
+        setWinner(null);
+        setMoveHistory([]);
+        setMoveIndex(-1);
+        setHighlighted([]);
+        setCaptureTargets([]);
+        setArcherTargets([]);
+        setCastlingRights({ white: true, black: true });
+        setPendingCharge(null);
+      }, 1000);
+      return () => clearTimeout(t);
+    }
+  }, [autoPlay, winner]);
 
   const handleUndo = useCallback(
   handleUndoFactory({ moveIndex, setMoveIndex, moveHistory, setBoard, setCurrentTurn, setSelected, setHighlighted, setCaptureTargets }),
