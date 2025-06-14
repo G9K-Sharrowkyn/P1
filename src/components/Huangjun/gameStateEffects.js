@@ -26,7 +26,7 @@ export function useBotEffect({ vsBot, currentTurn, winner, moveIndex, moveHistor
 
 export function useDualBotEffect({ enabled, currentTurn, winner, moveIndex, moveHistory, board, archerTargets, handleClick }) {
   useEffect(() => {
-    if (enabled && !winner && moveIndex === moveHistory.length - 1) {
+    if (enabled && handleClick && !winner && moveIndex === moveHistory.length - 1) {
       runBotMove({ board, archerTargets, handleClick });
     }
   }, [board, currentTurn, enabled, winner, moveHistory.length, moveIndex, handleClick, archerTargets]);
