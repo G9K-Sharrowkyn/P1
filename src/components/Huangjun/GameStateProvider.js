@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import { GameStateContext } from './GameStateContext';
 import { createInitialBoard } from './initialBoard';
 import { getBoardLabels } from './boardUtils';
@@ -32,6 +32,17 @@ const GameStateProvider = ({ children, aiVsAi = false }) => {
   useArcherReadyEffect(currentTurn, setArcherTargets);
   useBotEffect({ vsBot, currentTurn, winner, moveIndex, moveHistory, board, archerTargets, handleClick: null }); // handleClick set below
   useDualBotEffect({ enabled: aiVsAi, currentTurn, winner, moveIndex, moveHistory, board, archerTargets, handleClick: null });
+
+  useEffect(() => {
+    if (aiVsAi && winner) {
+      const moves = moveHistory.slice(0, moveIndex + 1).map(m => m.notation);
+      fetch('http://localhost:2002/game', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ winner, moves })
+      }).catch(err => console.error('save game error', err));
+    }
+  }, [aiVsAi, winner, moveHistory, moveIndex]);
 
   // Handlers
   const handleClick = useCallback(
