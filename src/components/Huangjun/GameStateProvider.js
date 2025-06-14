@@ -30,8 +30,6 @@ const GameStateProvider = ({ children, aiVsAi = false }) => {
 
   // Effects
   useArcherReadyEffect(currentTurn, setArcherTargets);
-  useBotEffect({ vsBot, currentTurn, winner, moveIndex, moveHistory, board, archerTargets, handleClick: null }); // handleClick set below
-  useDualBotEffect({ enabled: aiVsAi, currentTurn, winner, moveIndex, moveHistory, board, archerTargets, handleClick: null });
 
   useEffect(() => {
     if (aiVsAi && winner) {
@@ -60,14 +58,22 @@ const GameStateProvider = ({ children, aiVsAi = false }) => {
       flipped, setFlipped,
       archerTargets, setArcherTargets,
       castlingRights, setCastlingRights,
-      pendingCharge, setPendingCharge
-    }),
+    pendingCharge, setPendingCharge
+  }),
     [board, selected, currentTurn, emperorHits, winner, vsBot, moveHistory, moveIndex, highlighted, captureTargets, flipped, archerTargets, castlingRights, pendingCharge]
   );
 
-  // Now that handleClick is defined, re-run bot effect with correct handleClick
-  useBotEffect({ vsBot, currentTurn, winner, moveIndex, moveHistory, board, archerTargets, handleClick });
-  useDualBotEffect({ enabled: aiVsAi, currentTurn, winner, moveIndex, moveHistory, board, archerTargets, handleClick });
+  const handleBoardClick = useCallback(
+    (x, y) => {
+      const ui = flipped ? getFlippedCoordinates(x, y) : { x, y };
+      handleClick(ui.x, ui.y);
+    },
+    [handleClick, flipped]
+  );
+
+  // Bot effects use board coordinates
+  useBotEffect({ vsBot, currentTurn, winner, moveIndex, moveHistory, board, archerTargets, handleClick: handleBoardClick });
+  useDualBotEffect({ enabled: aiVsAi, currentTurn, winner, moveIndex, moveHistory, board, archerTargets, handleClick: handleBoardClick });
 
   const handleUndo = useCallback(
   handleUndoFactory({ moveIndex, setMoveIndex, moveHistory, setBoard, setCurrentTurn, setSelected, setHighlighted, setCaptureTargets }),
@@ -89,8 +95,24 @@ const GameStateProvider = ({ children, aiVsAi = false }) => {
     flipped ? getFlippedCoordinates(x, y) : { x, y };
 
   const displaySelected = selected ? toDisplay(selected) : null;
-  const displayHighlighted = highlighted.map(toDisplay);
-  const displayCaptureTargets = captureTargets.map(toDisplay);
+  const uniq = (arr, keyFn) => {
+    const map = new Map();
+    arr.forEach(item => {
+      const key = keyFn(item);
+      if (!map.has(key)) map.set(key, item);
+    });
+    return Array.from(map.values());
+  };
+
+  const displayHighlighted = uniq(
+    highlighted.map(h => ({ ...toDisplay(h), special: h.special })),
+    h => `${h.x}-${h.y}-${h.special || ''}`
+  );
+
+  const displayCaptureTargets = uniq(
+    captureTargets.map(c => ({ ...toDisplay(c), special: c.special })),
+    c => `${c.x}-${c.y}-${c.special || ''}`
+  );
   const displayArcherTargets = archerTargets.map(t => ({
     ...t,
     from: toDisplay(t.from),
