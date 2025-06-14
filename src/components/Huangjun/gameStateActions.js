@@ -74,6 +74,7 @@ export function handleClickFactory({
       const target = board[to.y][to.x];
 
       const validCapture = captureTargets.find(c => c.x === x && c.y === y);
+      const specialHighlight = highlighted.find(h => h.x === x && h.y === y && h.special);
       const isValidMove =
         highlighted.some(h => h.x === x && h.y === y) ||
         validCapture;
@@ -127,7 +128,7 @@ export function handleClickFactory({
       }
 
       /* 1d. Specjalne ruchy (swap / charge) ───────────────────────────── */
-      if (validCapture?.special === 'swap') {
+      if (specialHighlight?.special === 'swap' || validCapture?.special === 'swap') {
         /* ── ROSZADA ───────────────── */
         const newBoard = JSON.parse(JSON.stringify(board));
         newBoard[to.y][to.x] = moving;

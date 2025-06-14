@@ -4,7 +4,7 @@ import { findArcherTargets, isArcherAlreadyTargeting, isTargetCurrentlyVisible }
 import { DIRS_8 } from './constants';
 import { makeNotation } from './boardUtils';
 
-const computeMoveHighlights = (piece, x, y, board, currentTurn) => {
+const computeMoveHighlights = (piece, x, y, board, currentTurn, castlingRights = { white: true, black: true }) => {
   const moves = [];
   const captures = [];
   
@@ -78,17 +78,22 @@ const computeMoveHighlights = (piece, x, y, board, currentTurn) => {
           } else {
             if (target.team !== currentTurn) {
               captures.push({ x: tx, y: ty });
-            } else if (target.type === 'guard') {
-              // Allow swapping positions with friendly guards
-              captures.push({ x: tx, y: ty, special: 'swap' });
+            } else if (
+              target.type === 'guard' &&
+              !piece.hasMoved &&
+              !target.hasMoved &&
+              castlingRights[piece.team]
+            ) {
+              // Castling by swapping with a friendly guard
+              moves.push({ x: tx, y: ty, special: 'swap' });
             }
             break;
           }
         }
       }
       
-      // Add castling moves if conditions are met
-      if (!piece.hasMoved) {
+      // Add castling moves if conditions are met (unused, legacy)
+      if (!piece.hasMoved && castlingRights[piece.team]) {
         // Check for guards that could castle
         for (let dx of [-2, 2]) {
           const guardX = x + dx;

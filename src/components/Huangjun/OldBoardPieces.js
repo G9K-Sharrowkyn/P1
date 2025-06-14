@@ -19,7 +19,8 @@ const OldBoardPieces = ({
     {renderBoard.map((row, y) =>
       row.map((piece, x) => {
         const isSelected = selected?.x === x && selected?.y === y;
-        const isHighlighted = highlighted.some(h => h.x === x && h.y === y);
+        const highlightObj = highlighted.find(h => h.x === x && h.y === y);
+        const isHighlighted = Boolean(highlightObj);
         const isCaptureTarget = captureTargets.some(h => h.x === x && h.y === y);
         let highlightColor = null;
         if (isSelected) {
@@ -27,7 +28,10 @@ const OldBoardPieces = ({
         } else if (isCaptureTarget) {
           highlightColor = 'rgba(220,38,38,0.40)';
         } else if (isHighlighted) {
-          highlightColor = 'rgba(34,197,94,0.35)';
+          highlightColor =
+            highlightObj.special === 'swap'
+              ? 'rgba(59,130,246,0.35)'
+              : 'rgba(34,197,94,0.35)';
         }
         return (
           <Square

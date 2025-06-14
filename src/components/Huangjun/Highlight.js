@@ -25,22 +25,25 @@ export const NewBoardSelectedSquare = ({ selected, offsetX, offsetY, square, gap
 
 export const NewBoardMoves = ({ highlighted, offsetX, offsetY, square, gap }) => (
   <>
-    {highlighted.map(h => (
-      <div
-        key={`highlight-${h.x}-${h.y}`}
-        style={{
-          position: 'absolute',
-          left: offsetX + h.x * (square + gap),
-          top: offsetY + h.y * (square + gap),
-          width: square,
-          height: square,
-          background: 'rgba(34,197,94,0.35)',
-          borderRadius: 8,
-          zIndex: 4,
-          pointerEvents: 'none',
-        }}
-      />
-    ))}
+    {highlighted.map(h => {
+      const bg = h.special === 'swap' ? 'rgba(59,130,246,0.35)' : 'rgba(34,197,94,0.35)';
+      return (
+        <div
+          key={`highlight-${h.x}-${h.y}`}
+          style={{
+            position: 'absolute',
+            left: offsetX + h.x * (square + gap),
+            top: offsetY + h.y * (square + gap),
+            width: square,
+            height: square,
+            background: bg,
+            borderRadius: 8,
+            zIndex: 4,
+            pointerEvents: 'none',
+          }}
+        />
+      );
+    })}
   </>
 );
 
@@ -85,22 +88,25 @@ export const OldBoardHighlights = ({ selected, highlighted, captureTargets, oldS
       />
     )}
     {/* Highlight possible moves (green) for old board */}
-    {highlighted.map(h => (
-      <div
-        key={`highlight-old-${h.x}-${h.y}`}
-        style={{
-          position: 'absolute',
-          left: h.x * (oldSquare + oldGap),
-          top: h.y * (oldSquare + oldGap),
-          width: oldSquare,
-          height: oldSquare,
-          background: 'rgba(34,197,94,0.35)',
-          borderRadius: 8,
-          zIndex: 4,
-          pointerEvents: 'none',
-        }}
-      />
-    ))}
+    {highlighted.map(h => {
+      const bg = h.special === 'swap' ? 'rgba(59,130,246,0.35)' : 'rgba(34,197,94,0.35)';
+      return (
+        <div
+          key={`highlight-old-${h.x}-${h.y}`}
+          style={{
+            position: 'absolute',
+            left: h.x * (oldSquare + oldGap),
+            top: h.y * (oldSquare + oldGap),
+            width: oldSquare,
+            height: oldSquare,
+            background: bg,
+            borderRadius: 8,
+            zIndex: 4,
+            pointerEvents: 'none',
+          }}
+        />
+      );
+    })}
     {/* Highlight possible captures (red) for old board */}
     {captureTargets.map(h => (
       <div

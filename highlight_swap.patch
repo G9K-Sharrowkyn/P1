@@ -1,0 +1,586 @@
+diff --git a/src/components/Huangjun/Highlight.js b/src/components/Huangjun/Highlight.js
+index 305b3fae93b2054c1281d00e3e5ac09b6ad3de05..5b4f53ffcfcedd9ae032f7bbc30b7b21a289af86 100644
+--- a/src/components/Huangjun/Highlight.js
++++ b/src/components/Huangjun/Highlight.js
+@@ -3,126 +3,132 @@
+ // Combines highlight logic and presentational overlays for both old and new boards
+ 
+ import React from 'react';
+ 
+ // --- Highlight overlays for new board ---
+ export const NewBoardSelectedSquare = ({ selected, offsetX, offsetY, square, gap }) => (
+   selected ? (
+     <div
+       style={{
+         position: 'absolute',
+         left: offsetX + selected.x * (square + gap),
+         top: offsetY + selected.y * (square + gap),
+         width: square,
+         height: square,
+         background: 'rgba(255,215,0,0.35)',
+         borderRadius: 8,
+         zIndex: 4,
+         pointerEvents: 'none',
+       }}
+     />
+   ) : null
+ );
+ 
+ export const NewBoardMoves = ({ highlighted, offsetX, offsetY, square, gap }) => (
+   <>
+-    {highlighted.map(h => (
+-      <div
+-        key={`highlight-${h.x}-${h.y}`}
+-        style={{
+-          position: 'absolute',
+-          left: offsetX + h.x * (square + gap),
+-          top: offsetY + h.y * (square + gap),
+-          width: square,
+-          height: square,
+-          background: 'rgba(34,197,94,0.35)',
+-          borderRadius: 8,
+-          zIndex: 4,
+-          pointerEvents: 'none',
+-        }}
+-      />
+-    ))}
++    {highlighted.map(h => {
++      const bg = h.special === 'swap' ? 'rgba(59,130,246,0.35)' : 'rgba(34,197,94,0.35)';
++      return (
++        <div
++          key={`highlight-${h.x}-${h.y}`}
++          style={{
++            position: 'absolute',
++            left: offsetX + h.x * (square + gap),
++            top: offsetY + h.y * (square + gap),
++            width: square,
++            height: square,
++            background: bg,
++            borderRadius: 8,
++            zIndex: 4,
++            pointerEvents: 'none',
++          }}
++        />
++      );
++    })}
+   </>
+ );
+ 
+ export const NewBoardCaptures = ({ captureTargets, offsetX, offsetY, square, gap }) => (
+   <>
+     {captureTargets.map(h => (
+       <div
+         key={`capture-${h.x}-${h.y}`}
+         style={{
+           position: 'absolute',
+           left: offsetX + h.x * (square + gap),
+           top: offsetY + h.y * (square + gap),
+           width: square,
+           height: square,
+           background: 'rgba(220,38,38,0.40)',
+           borderRadius: 8,
+           zIndex: 4,
+           pointerEvents: 'none',
+         }}
+       />
+     ))}
+   </>
+ );
+ 
+ // --- Highlight overlays for old board ---
+ export const OldBoardHighlights = ({ selected, highlighted, captureTargets, oldSquare, oldGap }) => (
+   <>
+     {/* Selected square overlay for old board */}
+     {selected && (
+       <div
+         style={{
+           position: 'absolute',
+           left: selected.x * (oldSquare + oldGap),
+           top: selected.y * (oldSquare + oldGap),
+           width: oldSquare,
+           height: oldSquare,
+           background: 'rgba(255,215,0,0.35)',
+           borderRadius: 8,
+           zIndex: 4,
+           pointerEvents: 'none',
+         }}
+       />
+     )}
+     {/* Highlight possible moves (green) for old board */}
+-    {highlighted.map(h => (
+-      <div
+-        key={`highlight-old-${h.x}-${h.y}`}
+-        style={{
+-          position: 'absolute',
+-          left: h.x * (oldSquare + oldGap),
+-          top: h.y * (oldSquare + oldGap),
+-          width: oldSquare,
+-          height: oldSquare,
+-          background: 'rgba(34,197,94,0.35)',
+-          borderRadius: 8,
+-          zIndex: 4,
+-          pointerEvents: 'none',
+-        }}
+-      />
+-    ))}
++    {highlighted.map(h => {
++      const bg = h.special === 'swap' ? 'rgba(59,130,246,0.35)' : 'rgba(34,197,94,0.35)';
++      return (
++        <div
++          key={`highlight-old-${h.x}-${h.y}`}
++          style={{
++            position: 'absolute',
++            left: h.x * (oldSquare + oldGap),
++            top: h.y * (oldSquare + oldGap),
++            width: oldSquare,
++            height: oldSquare,
++            background: bg,
++            borderRadius: 8,
++            zIndex: 4,
++            pointerEvents: 'none',
++          }}
++        />
++      );
++    })}
+     {/* Highlight possible captures (red) for old board */}
+     {captureTargets.map(h => (
+       <div
+         key={`capture-old-${h.x}-${h.y}`}
+         style={{
+           position: 'absolute',
+           left: h.x * (oldSquare + oldGap),
+           top: h.y * (oldSquare + oldGap),
+           width: oldSquare,
+           height: oldSquare,
+           background: 'rgba(220,38,38,0.40)',
+           borderRadius: 8,
+           zIndex: 4,
+           pointerEvents: 'none',
+         }}
+       />
+     ))}
+   </>
+ );
+ 
+ // --- Highlight logic (move/capture computation) ---
+ // Re-export computeMoveHighlights from gameStateReducer for central access
+ export { computeMoveHighlights } from './gameStateReducer';
+ 
+ // --- Utility for clearing highlights ---
+diff --git a/src/components/Huangjun/NewBoardMoves.js b/src/components/Huangjun/NewBoardMoves.js
+index 5a299d1c75684baecb98e776d5739e2735a75db4..24159a0334753811adf5f9bf4cfbf0bc7cebcc7a 100644
+--- a/src/components/Huangjun/NewBoardMoves.js
++++ b/src/components/Huangjun/NewBoardMoves.js
+@@ -1,25 +1,28 @@
+ // NewBoardMoves.js
+ import React from 'react';
+ 
+ const NewBoardMoves = ({ highlighted, offsetX, offsetY, square, gap }) => (
+   <>
+-    {highlighted.map(h => (
+-      <div
+-        key={`highlight-${h.x}-${h.y}`}
+-        style={{
+-          position: 'absolute',
+-          left: offsetX + h.x * (square + gap),
+-          top: offsetY + h.y * (square + gap),
+-          width: square,
+-          height: square,
+-          background: 'rgba(34,197,94,0.35)',
+-          borderRadius: 8,
+-          zIndex: 4,
+-          pointerEvents: 'none',
+-        }}
+-      />
+-    ))}
++    {highlighted.map(h => {
++      const bg = h.special === 'swap' ? 'rgba(59,130,246,0.35)' : 'rgba(34,197,94,0.35)';
++      return (
++        <div
++          key={`highlight-${h.x}-${h.y}`}
++          style={{
++            position: 'absolute',
++            left: offsetX + h.x * (square + gap),
++            top: offsetY + h.y * (square + gap),
++            width: square,
++            height: square,
++            background: bg,
++            borderRadius: 8,
++            zIndex: 4,
++            pointerEvents: 'none',
++          }}
++        />
++      );
++    })}
+   </>
+ );
+ 
+ export default NewBoardMoves;
+diff --git a/src/components/Huangjun/OldBoardHighlights.js b/src/components/Huangjun/OldBoardHighlights.js
+index b8c24520525c34a4794772158e5d9f0d3783de53..45fb1dcd1c94dc56be1c27a7594ce70a1b786c92 100644
+--- a/src/components/Huangjun/OldBoardHighlights.js
++++ b/src/components/Huangjun/OldBoardHighlights.js
+@@ -1,59 +1,62 @@
+ // OldBoardHighlights.js
+ import React from 'react';
+ 
+ const OldBoardHighlights = ({ selected, highlighted, captureTargets, oldSquare, oldGap }) => (
+   <>
+     {/* Selected square overlay for old board */}
+     {selected && (
+       <div
+         style={{
+           position: 'absolute',
+           left: selected.x * (oldSquare + oldGap),
+           top: selected.y * (oldSquare + oldGap),
+           width: oldSquare,
+           height: oldSquare,
+           background: 'rgba(255,215,0,0.35)',
+           borderRadius: 8,
+           zIndex: 4,
+           pointerEvents: 'none',
+         }}
+       />
+     )}
+     {/* Highlight possible moves (green) for old board */}
+-    {highlighted.map(h => (
+-      <div
+-        key={`highlight-old-${h.x}-${h.y}`}
+-        style={{
+-          position: 'absolute',
+-          left: h.x * (oldSquare + oldGap),
+-          top: h.y * (oldSquare + oldGap),
+-          width: oldSquare,
+-          height: oldSquare,
+-          background: 'rgba(34,197,94,0.35)',
+-          borderRadius: 8,
+-          zIndex: 4,
+-          pointerEvents: 'none',
+-        }}
+-      />
+-    ))}
++    {highlighted.map(h => {
++      const bg = h.special === 'swap' ? 'rgba(59,130,246,0.35)' : 'rgba(34,197,94,0.35)';
++      return (
++        <div
++          key={`highlight-old-${h.x}-${h.y}`}
++          style={{
++            position: 'absolute',
++            left: h.x * (oldSquare + oldGap),
++            top: h.y * (oldSquare + oldGap),
++            width: oldSquare,
++            height: oldSquare,
++            background: bg,
++            borderRadius: 8,
++            zIndex: 4,
++            pointerEvents: 'none',
++          }}
++        />
++      );
++    })}
+     {/* Highlight possible captures (red) for old board */}
+     {captureTargets.map(h => (
+       <div
+         key={`capture-old-${h.x}-${h.y}`}
+         style={{
+           position: 'absolute',
+           left: h.x * (oldSquare + oldGap),
+           top: h.y * (oldSquare + oldGap),
+           width: oldSquare,
+           height: oldSquare,
+           background: 'rgba(220,38,38,0.40)',
+           borderRadius: 8,
+           zIndex: 4,
+           pointerEvents: 'none',
+         }}
+       />
+     ))}
+   </>
+ );
+ 
+ export default OldBoardHighlights;
+diff --git a/src/components/Huangjun/OldBoardPieces.js b/src/components/Huangjun/OldBoardPieces.js
+index b948a0a8f5294054b20817e3235cb399bba373cd..b147ed2e14dd49d16ec961eda861529fdaa53ff1 100644
+--- a/src/components/Huangjun/OldBoardPieces.js
++++ b/src/components/Huangjun/OldBoardPieces.js
+@@ -1,55 +1,59 @@
+ // OldBoardPieces.js
+ import React from 'react';
+ import Square from './Square';
+ 
+ const OldBoardPieces = ({
+   renderBoard,
+   handleClick,
+   selected,
+   highlighted,
+   captureTargets,
+   archerTargets,
+   useNewPieces,
+   boardSizePx,
+   useNewBoard,
+   oldSquare,
+   oldGap
+ }) => (
+   <>
+     {renderBoard.map((row, y) =>
+       row.map((piece, x) => {
+         const isSelected = selected?.x === x && selected?.y === y;
+-        const isHighlighted = highlighted.some(h => h.x === x && h.y === y);
++        const highlightObj = highlighted.find(h => h.x === x && h.y === y);
++        const isHighlighted = Boolean(highlightObj);
+         const isCaptureTarget = captureTargets.some(h => h.x === x && h.y === y);
+         let highlightColor = null;
+         if (isSelected) {
+           highlightColor = 'rgba(255,215,0,0.35)';
+         } else if (isCaptureTarget) {
+           highlightColor = 'rgba(220,38,38,0.40)';
+         } else if (isHighlighted) {
+-          highlightColor = 'rgba(34,197,94,0.35)';
++          highlightColor =
++            highlightObj.special === 'swap'
++              ? 'rgba(59,130,246,0.35)'
++              : 'rgba(34,197,94,0.35)';
+         }
+         return (
+           <Square
+             key={`${x}-${y}`}
+             piece={piece}
+             onClick={() => handleClick(x, y)}
+             isSelected={isSelected}
+             isHighlighted={isHighlighted}
+             isCaptureTarget={isCaptureTarget}
+             isArcherTarget={archerTargets.some(a => a.to.x === x && a.to.y === y && a.readyIn === 0)}
+             useNewPieces={useNewPieces}
+             boardSize={boardSizePx}
+             useNewBoard={useNewBoard}
+             squareSize={oldSquare}
+             style={{
+               position: 'absolute',
+               left: x * (oldSquare + oldGap),
+               top: y * (oldSquare + oldGap),
+               width: oldSquare,
+               height: oldSquare,
+               zIndex: 5,
+               background: highlightColor,
+               borderRadius: highlightColor ? 8 : undefined,
+             }}
+           />
+diff --git a/src/components/Huangjun/gameStateActions.js b/src/components/Huangjun/gameStateActions.js
+index 8b1947e6cc618a723a81a2cfaa9f7e9f38ffb9b0..1e7ab8315464b75902f55e8180a63ffc31222c51 100644
+--- a/src/components/Huangjun/gameStateActions.js
++++ b/src/components/Huangjun/gameStateActions.js
+@@ -52,50 +52,51 @@ export function handleClickFactory({
+     /* ───────── BLOKADA: trwa szarża, nie możesz ruszać innych figur ─────── */
+     if (pendingCharge && piece && piece.team === currentTurn) {
+       // pozwalamy tylko kliknąć swoją kawalerię (by zrezygnować)
+       const cav = pendingCharge.cavalry;
+       if (!(cav.x === x && cav.y === y)) return;
+     }
+ 
+     /* 1. MAMY JUŻ COŚ ZAZNACZONEGO ─────────────────────────────────────── */
+     if (selected) {
+       /* 1a. Klik na tę samą figurę – odznacz (lub zakończ szarżę) */
+       if (selected.x === x && selected.y === y) {
+         if (pendingCharge) {
+           // gracz rezygnuje z drugiego uderzenia
+           setPendingCharge(null);
+           setCurrentTurn(t => (t === 'white' ? 'black' : 'white'));
+         }
+         clearSelectionState(setSelected, setHighlighted, setCaptureTargets);
+         return;
+       }
+ 
+       const from = selected, to = { x, y };
+       const moving = board[from.y][from.x];
+       const target = board[to.y][to.x];
+ 
+       const validCapture = captureTargets.find(c => c.x === x && c.y === y);
++      const specialHighlight = highlighted.find(h => h.x === x && h.y === y && h.special);
+       const isValidMove =
+         highlighted.some(h => h.x === x && h.y === y) ||
+         validCapture;
+ 
+       /* 1b. Klik gdzieś indziej, ale to nielegalne (albo inna własna figura) */
+       if (!isValidMove) {
+         if (piece && piece.team === currentTurn) {
+           // szybkie przełączenie zaznaczenia
+           const { moves, captures } = computeMoveHighlights(piece, x, y, board, currentTurn, castlingRights);
+           let finalCaptures = captures;
+           if (piece.type === 'archer') {
+             const readyArcherAttacks = archerTargets
+               .filter(t =>
+                 t.from.x === x && t.from.y === y &&
+                 t.team === currentTurn && t.readyIn === 0
+               )
+               .map(t => ({ ...t.to, special: 'archer_attack' }));
+             finalCaptures = [...captures, ...readyArcherAttacks];
+           }
+           setSelected({ x, y });
+           setHighlighted(moves);
+           setCaptureTargets(finalCaptures);
+         } else {
+           clearSelectionState(setSelected, setHighlighted, setCaptureTargets);
+         }
+@@ -105,51 +106,51 @@ export function handleClickFactory({
+       /* 1c. Specjalny atak łucznika (bez zmian) */
+       if (validCapture?.special === 'archer_attack') {
+         const { newBoard, archerTargetsNext, notation } =
+           handleArcherAttack({ board, currentTurn, archerTargets }, from, to);
+ 
+         if (target?.type === 'emperor') {
+           const nh = { ...emperorHits };
+           nh[target.team] += 1;
+           setEmperorHits(nh);
+           if (nh[target.team] >= 3) setWinner(currentTurn);
+         }
+ 
+         setBoard(newBoard);
+         setArcherTargets(archerTargetsNext);
+         setMoveHistory(prev => [
+           ...prev.slice(0, moveIndex + 1),
+           { board: newBoard, turn: currentTurn, notation }
+         ]);
+         setMoveIndex(i => i + 1);
+         setCurrentTurn(t => (t === 'white' ? 'black' : 'white'));
+         clearSelectionState(setSelected, setHighlighted, setCaptureTargets);
+         return;
+       }
+ 
+       /* 1d. Specjalne ruchy (swap / charge) ───────────────────────────── */
+-      if (validCapture?.special === 'swap') {
++      if (specialHighlight?.special === 'swap' || validCapture?.special === 'swap') {
+         /* ── ROSZADA ───────────────── */
+         const newBoard = JSON.parse(JSON.stringify(board));
+         newBoard[to.y][to.x] = moving;
+         newBoard[from.y][from.x] = target;
+ 
+         // wyłączamy prawo roszady dla tej strony
+         setCastlingRights(cr => ({ ...cr, [currentTurn]: false }));
+         // oznaczamy, że obie figury się ruszyły (jeśli to śledzisz gdzie indziej)
+ 
+         setBoard(newBoard);
+         setMoveHistory(prev => [
+           ...prev.slice(0, moveIndex + 1),
+           {
+             board: newBoard,
+             turn: currentTurn,
+             notation: `${moving.type} swaps with Guard`
+           }
+         ]);
+         setMoveIndex(i => i + 1);
+         setCurrentTurn(t => (t === 'white' ? 'black' : 'white'));
+         clearSelectionState(setSelected, setHighlighted, setCaptureTargets);
+         return;
+       }
+ 
+       if (validCapture?.special === 'charge') {
+diff --git a/src/components/Huangjun/gameStateReducer.js b/src/components/Huangjun/gameStateReducer.js
+index 30d3439d9c4f24affcbe5811d6816817e87b4a71..2299e076a0bc61cdfc19ab06159f2224d690a3e6 100644
+--- a/src/components/Huangjun/gameStateReducer.js
++++ b/src/components/Huangjun/gameStateReducer.js
+@@ -1,32 +1,32 @@
+ // gameStateReducer.js
+ import { isValidMove, isWithinBounds, isPathClear } from './movementRules';
+ import { findArcherTargets, isArcherAlreadyTargeting, isTargetCurrentlyVisible } from './archerLogic';
+ import { DIRS_8 } from './constants';
+ import { makeNotation } from './boardUtils';
+ 
+-const computeMoveHighlights = (piece, x, y, board, currentTurn) => {
++const computeMoveHighlights = (piece, x, y, board, currentTurn, castlingRights = { white: true, black: true }) => {
+   const moves = [];
+   const captures = [];
+   
+   switch (piece.type) {
+     case 'infantry': {
+       // Infantry: moves and captures one square diagonally forward or forward
+       const dir = piece.team === 'white' ? 1 : -1;
+       const possibleMoves = [
+         { x: x, y: y + dir },      // Forward
+         { x: x - 1, y: y + dir },  // Forward-left
+         { x: x + 1, y: y + dir }   // Forward-right
+       ];
+       
+       for (const move of possibleMoves) {
+         if (!isWithinBounds(move.x, move.y)) continue;
+         const target = board[move.y][move.x];
+         if (!target) moves.push(move);
+         else if (target.team !== currentTurn) captures.push(move);
+       }
+       break;
+     }
+     
+     case 'archer': {
+       // Archer: moves max 2 squares in any direction
+       for (const dir of DIRS_8) {
+@@ -56,61 +56,66 @@ const computeMoveHighlights = (piece, x, y, board, currentTurn) => {
+           const target = board[ty][tx];
+           if (!target) moves.push({ x: tx, y: ty });
+           else {
+             if (target.team !== currentTurn) captures.push({ x: tx, y: ty });
+             break;
+           }
+         }
+       }
+       break;
+     }
+     
+     case 'emperor': {
+       // Emperor: moves max 3 squares in any direction
+       for (const dir of DIRS_8) {
+         for (let dist = 1; dist <= 3; dist++) {
+           const tx = x + dir.dx * dist;
+           const ty = y + dir.dy * dist;
+           if (!isWithinBounds(tx, ty)) break;
+           if (!isPathClear(board, { x, y }, { x: tx, y: ty })) break;
+           const target = board[ty][tx];
+           if (!target) {
+             moves.push({ x: tx, y: ty });
+           } else {
+             if (target.team !== currentTurn) {
+               captures.push({ x: tx, y: ty });
+-            } else if (target.type === 'guard') {
+-              // Allow swapping positions with friendly guards
+-              captures.push({ x: tx, y: ty, special: 'swap' });
++            } else if (
++              target.type === 'guard' &&
++              !piece.hasMoved &&
++              !target.hasMoved &&
++              castlingRights[piece.team]
++            ) {
++              // Castling by swapping with a friendly guard
++              moves.push({ x: tx, y: ty, special: 'swap' });
+             }
+             break;
+           }
+         }
+       }
+       
+-      // Add castling moves if conditions are met
+-      if (!piece.hasMoved) {
++      // Add castling moves if conditions are met (unused, legacy)
++      if (!piece.hasMoved && castlingRights[piece.team]) {
+         // Check for guards that could castle
+         for (let dx of [-2, 2]) {
+           const guardX = x + dx;
+           if (!isWithinBounds(guardX, y)) continue;
+           const possibleGuard = board[y][guardX];
+           if (possibleGuard?.type === 'guard' && possibleGuard.team === currentTurn && !possibleGuard.hasMoved) {
+             if (isPathClear(board, { x, y }, { x: guardX, y })) {
+               moves.push({ x: x + Math.sign(dx), y: y, special: 'castle' });
+             }
+           }
+         }
+       }
+       break;
+     }
+     
+     case 'guard': {
+       // Guard: moves max 2 squares in any direction
+       for (const dir of DIRS_8) {
+         for (let dist = 1; dist <= 2; dist++) {
+           const tx = x + dir.dx * dist;
+           const ty = y + dir.dy * dist;
+           if (!isWithinBounds(tx, ty)) break;
+           if (!isPathClear(board, { x, y }, { x: tx, y: ty })) break;
+           const target = board[ty][tx];
+           if (!target) moves.push({ x: tx, y: ty });
