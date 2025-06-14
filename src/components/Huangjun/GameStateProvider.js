@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useRef, useEffect } from 'react';
 import { GameStateContext } from './GameStateContext';
 import { createInitialBoard } from './initialBoard';
 import { getBoardLabels } from './boardUtils';
@@ -29,9 +29,11 @@ const GameStateProvider = ({ children, aiVsAi = false }) => {
   const [pendingCharge, setPendingCharge] = useState(null);
 
   // Effects
+  const handleClickRef = useRef(null);
+
   useArcherReadyEffect(currentTurn, setArcherTargets);
-  useBotEffect({ vsBot, currentTurn, winner, moveIndex, moveHistory, board, archerTargets, handleClick: null }); // handleClick set below
-  useDualBotEffect({ enabled: aiVsAi, currentTurn, winner, moveIndex, moveHistory, board, archerTargets, handleClick: null });
+  useBotEffect({ vsBot, currentTurn, winner, moveIndex, moveHistory, board, archerTargets, handleClickRef });
+  useDualBotEffect({ enabled: aiVsAi, currentTurn, winner, moveIndex, moveHistory, board, archerTargets, handleClickRef });
 
   // Handlers
   const handleClick = useCallback(
@@ -54,9 +56,9 @@ const GameStateProvider = ({ children, aiVsAi = false }) => {
     [board, selected, currentTurn, emperorHits, winner, vsBot, moveHistory, moveIndex, highlighted, captureTargets, flipped, archerTargets, castlingRights, pendingCharge]
   );
 
-  // Now that handleClick is defined, re-run bot effect with correct handleClick
-  useBotEffect({ vsBot, currentTurn, winner, moveIndex, moveHistory, board, archerTargets, handleClick });
-  useDualBotEffect({ enabled: aiVsAi, currentTurn, winner, moveIndex, moveHistory, board, archerTargets, handleClick });
+  useEffect(() => {
+    handleClickRef.current = handleClick;
+  }, [handleClick]);
 
   const handleUndo = useCallback(
   handleUndoFactory({ moveIndex, setMoveIndex, moveHistory, setBoard, setCurrentTurn, setSelected, setHighlighted, setCaptureTargets }),

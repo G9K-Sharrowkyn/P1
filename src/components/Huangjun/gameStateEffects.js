@@ -16,18 +16,29 @@ export function useArcherReadyEffect(currentTurn, setArcherTargets) {
   }, [currentTurn, setArcherTargets]);
 }
 
-export function useBotEffect({ vsBot, currentTurn, winner, moveIndex, moveHistory, board, archerTargets, handleClick }) {
+export function useBotEffect({ vsBot, currentTurn, winner, moveIndex, moveHistory, board, archerTargets, handleClickRef }) {
   useEffect(() => {
-    if (vsBot && currentTurn === 'black' && !winner && moveIndex === moveHistory.length - 1) {
-      runBotMove({ board, archerTargets, handleClick });
+    if (
+      vsBot &&
+      currentTurn === 'black' &&
+      !winner &&
+      moveIndex === moveHistory.length - 1 &&
+      handleClickRef.current
+    ) {
+      runBotMove({ board, archerTargets, handleClick: handleClickRef.current });
     }
-  }, [board, currentTurn, vsBot, winner, moveHistory.length, moveIndex, handleClick, archerTargets]);
+  }, [board, currentTurn, vsBot, winner, moveHistory.length, moveIndex, archerTargets, handleClickRef]);
 }
 
-export function useDualBotEffect({ enabled, currentTurn, winner, moveIndex, moveHistory, board, archerTargets, handleClick }) {
+export function useDualBotEffect({ enabled, currentTurn, winner, moveIndex, moveHistory, board, archerTargets, handleClickRef }) {
   useEffect(() => {
-    if (enabled && handleClick && !winner && moveIndex === moveHistory.length - 1) {
-      runBotMove({ board, archerTargets, handleClick });
+    if (
+      enabled &&
+      handleClickRef.current &&
+      !winner &&
+      moveIndex === moveHistory.length - 1
+    ) {
+      runBotMove({ board, archerTargets, handleClick: handleClickRef.current });
     }
-  }, [board, currentTurn, enabled, winner, moveHistory.length, moveIndex, handleClick, archerTargets]);
+  }, [board, currentTurn, enabled, winner, moveHistory.length, moveIndex, archerTargets, handleClickRef]);
 }

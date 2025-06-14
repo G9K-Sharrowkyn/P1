@@ -74,7 +74,7 @@ export const runBotMove = ({
     setTimeout(() => {
       handleClick(flippedFrom.x, flippedFrom.y);
       setTimeout(() => handleClick(flippedTo.x, flippedTo.y), 150);
-    }, 300);
+    }, 3000);
     return;
   }
 
@@ -88,6 +88,6 @@ export const runBotMove = ({
     setTimeout(() => {
       handleClick(flippedFrom.x, flippedFrom.y);
       setTimeout(() => handleClick(flippedTo.x, flippedTo.y), 150);
-    }, 300);
+    }, 3000);
   }
 };
