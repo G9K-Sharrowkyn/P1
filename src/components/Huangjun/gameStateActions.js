@@ -3,11 +3,32 @@ import { clearSelection, makeNotation } from './boardUtils';
 import { handleMove, handleArcherAttack, computeMoveHighlights } from './gameStateReducer';
 import { archerCanSee, isTargetCurrentlyVisible } from './archerLogic';
 
+/* ────────────────────────────────────────────────────────── */
+/*  POMOCNICZA FUNKCJA DO SZARŻY KAWALERII                   */
+/* ────────────────────────────────────────────────────────── */
+function cavalryChargeTarget(from, to, board) {
+  const dx = to.x - from.x;
+  const dy = to.y - from.y;
+  const next = { x: to.x + dx, y: to.y + dy };
+
+  if (
+    next.x >= 0 && next.x < 8 &&
+    next.y >= 0 && next.y < 8
+  ) {
+    const pieceBehind = board[next.y][next.x];
+    if (pieceBehind && pieceBehind.team !== board[from.y][from.x].team) {
+      return next; // jest drugi wróg
+    }
+  }
+  return null;
+}
+
 export function clearSelectionState(setSelected, setHighlighted, setCaptureTargets) {
   clearSelection(setSelected, setHighlighted, setCaptureTargets);
 }
 
 export function handleClickFactory({
+  /*  ─── stan gry ─────────────────────── */
   board, setBoard,
   selected, setSelected,
   currentTurn, setCurrentTurn,
@@ -19,16 +40,31 @@ export function handleClickFactory({
   highlighted, setHighlighted,
   captureTargets, setCaptureTargets,
   flipped, setFlipped,
-  archerTargets, setArcherTargets
+  archerTargets, setArcherTargets,
+  /*  ─── NOWE: prawo roszady + szarża ── */
+  castlingRights, setCastlingRights,
+  pendingCharge, setPendingCharge
 }) {
   return (xRaw, yRaw) => {
     const x = xRaw, y = yRaw;
     const piece = board[y][x];
 
-    // If we already have a piece selected
+    /* ───────── BLOKADA: trwa szarża, nie możesz ruszać innych figur ─────── */
+    if (pendingCharge && piece && piece.team === currentTurn) {
+      // pozwalamy tylko kliknąć swoją kawalerię (by zrezygnować)
+      const cav = pendingCharge.cavalry;
+      if (!(cav.x === x && cav.y === y)) return;
+    }
+
+    /* 1. MAMY JUŻ COŚ ZAZNACZONEGO ─────────────────────────────────────── */
     if (selected) {
-      // Clicking the same piece again - deselect it
+      /* 1a. Klik na tę samą figurę – odznacz (lub zakończ szarżę) */
       if (selected.x === x && selected.y === y) {
+        if (pendingCharge) {
+          // gracz rezygnuje z drugiego uderzenia
+          setPendingCharge(null);
+          setCurrentTurn(t => (t === 'white' ? 'black' : 'white'));
+        }
         clearSelectionState(setSelected, setHighlighted, setCaptureTargets);
         return;
       }
@@ -36,21 +72,24 @@ export function handleClickFactory({
       const from = selected, to = { x, y };
       const moving = board[from.y][from.x];
       const target = board[to.y][to.x];
-      
+
       const validCapture = captureTargets.find(c => c.x === x && c.y === y);
-      const isValidMove = 
+      const isValidMove =
         highlighted.some(h => h.x === x && h.y === y) ||
         validCapture;
-      
+
+      /* 1b. Klik gdzieś indziej, ale to nielegalne (albo inna własna figura) */
       if (!isValidMove) {
-        // If the click is not a valid move, check if it's a different piece of the same team
-        // to allow for quick re-selection. Otherwise, clear selection.
         if (piece && piece.team === currentTurn) {
-          const { moves, captures } = computeMoveHighlights(piece, x, y, board, currentTurn);
+          // szybkie przełączenie zaznaczenia
+          const { moves, captures } = computeMoveHighlights(piece, x, y, board, currentTurn, castlingRights);
           let finalCaptures = captures;
           if (piece.type === 'archer') {
             const readyArcherAttacks = archerTargets
-              .filter(t => t.from.x === x && t.from.y === y && t.team === currentTurn && t.readyIn === 0)
+              .filter(t =>
+                t.from.x === x && t.from.y === y &&
+                t.team === currentTurn && t.readyIn === 0
+              )
               .map(t => ({ ...t.to, special: 'archer_attack' }));
             finalCaptures = [...captures, ...readyArcherAttacks];
           }
@@ -62,12 +101,12 @@ export function handleClickFactory({
         }
         return;
       }
-      
-      // Handle Archer Attack
+
+      /* 1c. Specjalny atak łucznika (bez zmian) */
       if (validCapture?.special === 'archer_attack') {
-        const { newBoard, archerTargetsNext, notation } = handleArcherAttack({ board, currentTurn, archerTargets }, from, to);
-        
-        // Check for emperor hits from archer attack
+        const { newBoard, archerTargetsNext, notation } =
+          handleArcherAttack({ board, currentTurn, archerTargets }, from, to);
+
         if (target?.type === 'emperor') {
           const nh = { ...emperorHits };
           nh[target.team] += 1;
@@ -77,60 +116,112 @@ export function handleClickFactory({
 
         setBoard(newBoard);
         setArcherTargets(archerTargetsNext);
-        setMoveHistory(prev => [...prev.slice(0, moveIndex + 1), { board: newBoard, turn: currentTurn, notation }]);
+        setMoveHistory(prev => [
+          ...prev.slice(0, moveIndex + 1),
+          { board: newBoard, turn: currentTurn, notation }
+        ]);
         setMoveIndex(i => i + 1);
-        setCurrentTurn(t => t === 'white' ? 'black' : 'white');
+        setCurrentTurn(t => (t === 'white' ? 'black' : 'white'));
         clearSelectionState(setSelected, setHighlighted, setCaptureTargets);
         return;
       }
 
-      // Handle special moves
-      let special = null;
-      if (validCapture?.special) {
-        special = validCapture.special;
-        if (special === 'swap') {
-          // Emperor-Guard swap
-          const newBoard = JSON.parse(JSON.stringify(board));
-          // Swap positions
-          newBoard[to.y][to.x] = moving;
-          newBoard[from.y][from.x] = target;
-          setBoard(newBoard);
-          setMoveHistory(prev => [...prev, { 
-            board: newBoard, 
-            turn: currentTurn, 
-            notation: `${moving.type} swaps with Guard` 
-          }]);
-          setMoveIndex(i => i + 1);
-          setCurrentTurn(t => t === 'white' ? 'black' : 'white');
-          clearSelectionState(setSelected, setHighlighted, setCaptureTargets);
-          return;
-        } else if (special === 'charge') {
-          // Cavalry charge
-          const newBoard = JSON.parse(JSON.stringify(board));
-          // Remove first target
-          if (validCapture.through) {
-            newBoard[validCapture.through.y][validCapture.through.x] = null;
+      /* 1d. Specjalne ruchy (swap / charge) ───────────────────────────── */
+      if (validCapture?.special === 'swap') {
+        /* ── ROSZADA ───────────────── */
+        const newBoard = JSON.parse(JSON.stringify(board));
+        newBoard[to.y][to.x] = moving;
+        newBoard[from.y][from.x] = target;
+
+        // wyłączamy prawo roszady dla tej strony
+        setCastlingRights(cr => ({ ...cr, [currentTurn]: false }));
+        // oznaczamy, że obie figury się ruszyły (jeśli to śledzisz gdzie indziej)
+
+        setBoard(newBoard);
+        setMoveHistory(prev => [
+          ...prev.slice(0, moveIndex + 1),
+          {
+            board: newBoard,
+            turn: currentTurn,
+            notation: `${moving.type} swaps with Guard`
           }
-          // Move cavalry to final position (second target's position)
-          newBoard[to.y][to.x] = moving;
-          newBoard[from.y][from.x] = null;
+        ]);
+        setMoveIndex(i => i + 1);
+        setCurrentTurn(t => (t === 'white' ? 'black' : 'white'));
+        clearSelectionState(setSelected, setHighlighted, setCaptureTargets);
+        return;
+      }
+
+      if (validCapture?.special === 'charge') {
+        /* ── DRUGIE UDERZENIE KAWALERII ───────────────── */
+        const newBoard = JSON.parse(JSON.stringify(board));
+        // usuwamy figurę „po drodze”
+        if (validCapture.through) {
+          newBoard[validCapture.through.y][validCapture.through.x] = null;
+        }
+        // koń wyjeżdża na drugi cel
+        newBoard[to.y][to.x] = moving;
+        newBoard[from.y][from.x] = null;
+
+        setBoard(newBoard);
+        setMoveHistory(prev => [
+          ...prev.slice(0, moveIndex + 1),
+          {
+            board: newBoard,
+            turn: currentTurn,
+            notation: `${moving.type} charges through enemy line`
+          }
+        ]);
+        setMoveIndex(i => i + 1);
+        setPendingCharge(null);               // szarża skończona
+        setCurrentTurn(t => (t === 'white' ? 'black' : 'white'));
+        clearSelectionState(setSelected, setHighlighted, setCaptureTargets);
+        return;
+      }
+
+      /* 1e. ZWYKŁY RUCH / ZBICIE ──────────────────────────────────────── */
+      const {
+        newBoard,
+        archerTargetsNext
+      } = handleMove(
+        { board, currentTurn, archerTargets, moveHistory },
+        from,
+        to,
+        null
+      );
+
+      /* 1e-i  Szarża kawalerii: sprawdzamy czy jest drugi cel */
+      if (
+        moving.type === 'cavalry' &&
+        target && target.team !== currentTurn   // pierwsze zbicie
+      ) {
+        const next = cavalryChargeTarget(from, to, newBoard);
+        if (next) {
+          // ZOSTAWIAMY TĘ SAMĄ TURĘ
           setBoard(newBoard);
-          setMoveHistory(prev => [...prev, { 
-            board: newBoard, 
-            turn: currentTurn, 
-            notation: `${moving.type} charges through enemy line` 
-          }]);
+          setArcherTargets(archerTargetsNext);
+          setSelected({ x: to.x, y: to.y });
+          setHighlighted([]); // niebieskich ruchów brak
+          setCaptureTargets([
+            { ...next, special: 'charge', through: { x: to.x, y: to.y } }
+          ]);
+          setPendingCharge({
+            cavalry: { x: to.x, y: to.y },
+            targets: [{ ...next, through: { x: to.x, y: to.y } }]
+          });
+          /*  moveHistory – zapisujemy pierwsze zbicie od razu  */
+          setMoveHistory(prev => [
+            ...prev.slice(0, moveIndex + 1),
+            { board: newBoard, turn: currentTurn,
+              notation: makeNotation(moving.type, from, to, true) }
+          ]);
           setMoveIndex(i => i + 1);
-          setCurrentTurn(t => t === 'white' ? 'black' : 'white');
-          clearSelectionState(setSelected, setHighlighted, setCaptureTargets);
+          // brak zmiany currentTurn
           return;
         }
       }
 
-      // Handle emperor hits
-      const { newBoard, archerTargetsNext } = handleMove({ board, currentTurn, archerTargets, moveHistory }, from, to, special ? { type: special, ...validCapture } : null);
-      
-      // Check for emperor hits on normal move
+      /* 1e-ii  Zwykłe konsekwencje ruchu */
       if (target?.type === 'emperor' && target.team !== currentTurn) {
         const nh = { ...emperorHits };
         nh[target.team] += 1;
@@ -138,60 +229,105 @@ export function handleClickFactory({
         if (nh[target.team] >= 3) setWinner(currentTurn);
       }
 
+      /* 1e-iii  Cesarskie ruchy wygaszają prawo roszady */
+      if (moving.type === 'emperor') {
+        setCastlingRights(cr => ({ ...cr, [currentTurn]: false }));
+      }
+
       setBoard(newBoard);
       setArcherTargets(archerTargetsNext);
-      setMoveHistory(prev => [...prev.slice(0, moveIndex + 1), { board: newBoard, turn: currentTurn, notation: makeNotation(moving.type, from, to, target !== null) }]);
+      setMoveHistory(prev => [
+        ...prev.slice(0, moveIndex + 1),
+        {
+          board: newBoard,
+          turn: currentTurn,
+          notation: makeNotation(
+            moving.type,
+            from,
+            to,
+            target !== null
+          )
+        }
+      ]);
       setMoveIndex(i => i + 1);
-      setCurrentTurn(t => t === 'white' ? 'black' : 'white');
+      setCurrentTurn(t => (t === 'white' ? 'black' : 'white'));
       clearSelectionState(setSelected, setHighlighted, setCaptureTargets);
 
+      /* ───────────────────────────────────────────────────────────────── */
+
+    /* 2. BRAK ZAZNACZENIA – klikamy figurę własną ───────────────────── */
     } else if (piece && piece.team === currentTurn) {
-      // Selecting a new piece
       setSelected({ x, y });
-      const { moves, captures } = computeMoveHighlights(piece, x, y, board, currentTurn);
+      const { moves, captures } = computeMoveHighlights(
+        piece,
+        x,
+        y,
+        board,
+        currentTurn,
+        castlingRights
+      );
       setHighlighted(moves);
 
       let finalCaptures = captures;
-      // If an archer is selected, find its available attack targets
       if (piece.type === 'archer') {
         const readyArcherAttacks = archerTargets
-          .filter(t => t.from.x === x && t.from.y === y && t.team === currentTurn && t.readyIn === 0)
+          .filter(t =>
+            t.from.x === x && t.from.y === y &&
+            t.team === currentTurn && t.readyIn === 0
+          )
           .map(t => ({ ...t.to, special: 'archer_attack' }));
         finalCaptures = [...captures, ...readyArcherAttacks];
       }
       setCaptureTargets(finalCaptures);
-      
+
+    /* 3. Klik pustego pola / wroga bez zaznaczenia ──────────────────── */
     } else {
-      // Clicking empty square or enemy piece with no piece selected
       clearSelectionState(setSelected, setHighlighted, setCaptureTargets);
     }
   };
 }
 
-export function handleUndoFactory({ moveIndex, setMoveIndex, moveHistory, setBoard, setCurrentTurn, setSelected, setHighlighted, setCaptureTargets }) {
+/* ───────── UNDO / REDO – bez zmian, tylko czyszczenie pendingCharge ─── */
+
+export function handleUndoFactory({
+  moveIndex, setMoveIndex,
+  moveHistory, setBoard,
+  setCurrentTurn,
+  setSelected, setHighlighted, setCaptureTargets,
+  setPendingCharge
+}) {
   return () => {
     if (moveIndex > 0) {
       const prev = moveHistory[moveIndex - 1];
       setBoard(prev.board);
       setMoveIndex(mi => mi - 1);
       setCurrentTurn(prev.turn);
+      setPendingCharge(null);
       clearSelectionState(setSelected, setHighlighted, setCaptureTargets);
     }
   };
 }
 
-export function handleRedoFactory({ moveIndex, setMoveIndex, moveHistory, setBoard, setCurrentTurn, setSelected, setHighlighted, setCaptureTargets }) {
+export function handleRedoFactory({
+  moveIndex, setMoveIndex,
+  moveHistory, setBoard,
+  setCurrentTurn,
+  setSelected, setHighlighted, setCaptureTargets,
+  setPendingCharge
+}) {
   return () => {
     if (moveIndex + 1 < moveHistory.length) {
       const next = moveHistory[moveIndex + 1];
       setBoard(next.board);
       setMoveIndex(mi => mi + 1);
       setCurrentTurn(next.turn === 'white' ? 'black' : 'white');
+      setPendingCharge(null);
       clearSelectionState(setSelected, setHighlighted, setCaptureTargets);
     }
   };
 }
 
+/* ───────── Pozostałe fabryki bez zmian ─────────────────────────────── */
 export function toggleVsBotFactory(setVsBot) {
   return () => setVsBot(prev => !prev);
 }

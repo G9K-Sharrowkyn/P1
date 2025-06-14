@@ -25,6 +25,8 @@ const GameStateProvider = ({ children }) => {
   const [captureTargets, setCaptureTargets] = useState([]);
   const [flipped, setFlipped] = useState(false);
   const [archerTargets, setArcherTargets] = useState([]);
+  const [castlingRights, setCastlingRights] = useState({ white: true, black: true });
+  const [pendingCharge, setPendingCharge] = useState(null);
 
   // Effects
   useArcherReadyEffect(currentTurn, setArcherTargets);
@@ -44,20 +46,22 @@ const GameStateProvider = ({ children }) => {
       highlighted, setHighlighted,
       captureTargets, setCaptureTargets,
       flipped, setFlipped,
-      archerTargets, setArcherTargets
+      archerTargets, setArcherTargets,
+      castlingRights, setCastlingRights,
+      pendingCharge, setPendingCharge
     }),
-    [board, selected, currentTurn, emperorHits, winner, vsBot, moveHistory, moveIndex, highlighted, captureTargets, flipped, archerTargets]
+    [board, selected, currentTurn, emperorHits, winner, vsBot, moveHistory, moveIndex, highlighted, captureTargets, flipped, archerTargets, castlingRights, pendingCharge]
   );
 
   // Now that handleClick is defined, re-run bot effect with correct handleClick
   useBotEffect({ vsBot, currentTurn, winner, moveIndex, moveHistory, board, archerTargets, handleClick });
 
   const handleUndo = useCallback(
-    handleUndoFactory({ moveIndex, setMoveIndex, moveHistory, setBoard, setCurrentTurn, setSelected, setHighlighted, setCaptureTargets }),
+  handleUndoFactory({ moveIndex, setMoveIndex, moveHistory, setBoard, setCurrentTurn, setSelected, setHighlighted, setCaptureTargets }),
     [moveIndex, moveHistory]
   );
   const handleRedo = useCallback(
-    handleRedoFactory({ moveIndex, setMoveIndex, moveHistory, setBoard, setCurrentTurn, setSelected, setHighlighted, setCaptureTargets }),
+  handleRedoFactory({ moveIndex, setMoveIndex, moveHistory, setBoard, setCurrentTurn, setSelected, setHighlighted, setCaptureTargets, setPendingCharge }),
     [moveIndex, moveHistory]
   );
   const toggleVsBot = useCallback(toggleVsBotFactory(setVsBot), []);
