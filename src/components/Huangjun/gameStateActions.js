@@ -1,5 +1,5 @@
 // gameStateActions.js
-import { clearSelection, makeNotation } from './boardUtils';
+import { clearSelection, makeNotation, getFlippedCoordinates } from './boardUtils';
 import { handleMove, handleArcherAttack, computeMoveHighlights } from './gameStateReducer';
 import { archerCanSee, isTargetCurrentlyVisible } from './archerLogic';
 import { isEmperorProtected } from './emperorLogic';
@@ -47,7 +47,10 @@ export function handleClickFactory({
   pendingCharge, setPendingCharge
 }) {
   return (xRaw, yRaw) => {
-    const x = xRaw, y = yRaw;
+    const toBoard = (coord) =>
+      flipped ? getFlippedCoordinates(coord.x, coord.y) : coord;
+    const fromUI = toBoard({ x: xRaw, y: yRaw });
+    const x = fromUI.x, y = fromUI.y;
     const piece = board[y][x];
 
     /* ───────── BLOKADA: trwa szarża, nie możesz ruszać innych figur ─────── */

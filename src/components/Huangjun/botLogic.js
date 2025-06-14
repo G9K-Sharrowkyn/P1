@@ -69,14 +69,12 @@ export const runBotMove = ({
   const archerAttacks = findArcherAttacks(board, archerTargets, team);
   if (archerAttacks.length) {
     const attack = archerAttacks[Math.floor(Math.random() * archerAttacks.length)];
-    const flippedFrom = team === 'black' ?
-      getFlippedCoordinates(attack.from.x, attack.from.y) : attack.from;
-    const flippedTo = team === 'black' ?
-      getFlippedCoordinates(attack.to.x, attack.to.y) : attack.to;
-    
+    const from = attack.from;
+    const to = attack.to;
+
     setTimeout(() => {
-      handleClick(flippedFrom.x, flippedFrom.y);
-      setTimeout(() => handleClick(flippedTo.x, flippedTo.y), 150);
+      handleClick(from.x, from.y);
+      setTimeout(() => handleClick(to.x, to.y), 150);
     }, 300);
     return;
   }
@@ -85,14 +83,12 @@ export const runBotMove = ({
   const moves = findValidMoves(board, team);
   if (moves.length) {
     const move = moves[Math.floor(Math.random() * moves.length)];
-    const flippedFrom = team === 'black' ?
-      getFlippedCoordinates(move.from.x, move.from.y) : move.from;
-    const flippedTo = team === 'black' ?
-      getFlippedCoordinates(move.to.x, move.to.y) : move.to;
-    
+    const from = move.from;
+    const to = move.to;
+
     setTimeout(() => {
-      handleClick(flippedFrom.x, flippedFrom.y);
-      setTimeout(() => handleClick(flippedTo.x, flippedTo.y), 150);
+      handleClick(from.x, from.y);
+      setTimeout(() => handleClick(to.x, to.y), 150);
     }, 300);
   }
 };

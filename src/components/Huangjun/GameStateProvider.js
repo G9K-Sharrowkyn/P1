@@ -1,7 +1,7 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import { GameStateContext } from './GameStateContext';
 import { createInitialBoard } from './initialBoard';
-import { getBoardLabels } from './boardUtils';
+import { getBoardLabels, getFlippedCoordinates } from './boardUtils';
 import {
   handleClickFactory,
   handleUndoFactory,
@@ -81,22 +81,36 @@ const GameStateProvider = ({ children, aiVsAi = false }) => {
   const toggleFlipped = useCallback(toggleFlippedFactory(setFlipped), []);
 
   const { rowLabels, colLabels } = getBoardLabels(flipped);
-  const renderBoard = flipped ? [...board].reverse() : board;
+  const renderBoard = flipped
+    ? board.slice().reverse().map(r => [...r].reverse())
+    : board;
+
+  const toDisplay = ({ x, y }) =>
+    flipped ? getFlippedCoordinates(x, y) : { x, y };
+
+  const displaySelected = selected ? toDisplay(selected) : null;
+  const displayHighlighted = highlighted.map(toDisplay);
+  const displayCaptureTargets = captureTargets.map(toDisplay);
+  const displayArcherTargets = archerTargets.map(t => ({
+    ...t,
+    from: toDisplay(t.from),
+    to: toDisplay(t.to)
+  }));
 
   const value = {
     board,
     renderBoard,
-    selected,
+    selected: displaySelected,
     currentTurn,
     emperorHits,
     winner,
     vsBot,
     moveHistory,
     moveIndex,
-    highlighted,
-    captureTargets,
+    highlighted: displayHighlighted,
+    captureTargets: displayCaptureTargets,
     flipped,
-    archerTargets,
+    archerTargets: displayArcherTargets,
     rowLabels,
     colLabels,
     handleClick,
