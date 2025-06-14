@@ -68,3 +68,15 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/d
 ### `npm run build` fails to minify
 
 This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+
+## Training the AI
+
+Start the express server and React app:
+
+```
+npm run server &
+npm start
+```
+
+Press the **Train AI** button in game controls to trigger a background training run. A simple placeholder model is saved to `ai_data/model.pt`.
+
