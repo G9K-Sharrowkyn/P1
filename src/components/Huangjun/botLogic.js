@@ -123,7 +123,8 @@ export const runBotMove = ({
   board,
   archerTargets,
   handleClick,
-  team
+  team,
+  onFinish
 }) => {
   const moves = [
     ...findValidMoves(board, team),
@@ -148,6 +149,9 @@ export const runBotMove = ({
 
   setTimeout(() => {
     handleClick(from.x, from.y);
-    setTimeout(() => handleClick(to.x, to.y), 150);
+    setTimeout(() => {
+      handleClick(to.x, to.y);
+      if (onFinish) onFinish();
+    }, 150);
   }, 3000);
 };
