@@ -10,9 +10,9 @@ import {
   toggleFlippedFactory,
   clearSelectionState
 } from './gameStateActions';
-import { useArcherReadyEffect, useBotEffect } from './gameStateEffects';
+import { useArcherReadyEffect, useBotEffect, useDualBotEffect } from './gameStateEffects';
 
-const GameStateProvider = ({ children }) => {
+const GameStateProvider = ({ children, aiVsAi = false }) => {
   const [board, setBoard] = useState(createInitialBoard());
   const [selected, setSelected] = useState(null);
   const [currentTurn, setCurrentTurn] = useState('white');
@@ -31,6 +31,7 @@ const GameStateProvider = ({ children }) => {
   // Effects
   useArcherReadyEffect(currentTurn, setArcherTargets);
   useBotEffect({ vsBot, currentTurn, winner, moveIndex, moveHistory, board, archerTargets, handleClick: null }); // handleClick set below
+  useDualBotEffect({ enabled: aiVsAi, currentTurn, winner, moveIndex, moveHistory, board, archerTargets, handleClick: null });
 
   // Handlers
   const handleClick = useCallback(
@@ -55,6 +56,7 @@ const GameStateProvider = ({ children }) => {
 
   // Now that handleClick is defined, re-run bot effect with correct handleClick
   useBotEffect({ vsBot, currentTurn, winner, moveIndex, moveHistory, board, archerTargets, handleClick });
+  useDualBotEffect({ enabled: aiVsAi, currentTurn, winner, moveIndex, moveHistory, board, archerTargets, handleClick });
 
   const handleUndo = useCallback(
   handleUndoFactory({ moveIndex, setMoveIndex, moveHistory, setBoard, setCurrentTurn, setSelected, setHighlighted, setCaptureTargets }),

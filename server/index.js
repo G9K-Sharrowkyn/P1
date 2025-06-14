@@ -10,10 +10,11 @@ app.use(cors());
 app.use(express.json());
 
 app.post('/train', (req, res) => {
-  console.log('POST /train received');
+  const games = parseInt(req.body.games, 10) || 1;
+  console.log('POST /train received', games);
   const script = path.join(__dirname, '../train_ai.py');
   console.log(`spawning python script ${script}`);
-  const process = spawn('python3', [script], { cwd: path.join(__dirname, '..') });
+  const process = spawn('python3', [script, games], { cwd: path.join(__dirname, '..') });
 
   process.stdout.on('data', data => {
     console.log(`train: ${data}`.trim());
