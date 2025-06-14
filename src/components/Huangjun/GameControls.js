@@ -42,7 +42,11 @@ const GameControls = () => {
           className="ml-2 px-2 py-1 bg-green-700 text-white rounded"
           onClick={() => {
             console.log('sending training request');
-            fetch('http://localhost:2002/train', { method: 'POST' })
+            fetch('http://localhost:2002/train', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ games: 1, repeats: 1 })
+            })
               .then(res => res.json())
               .then(data => console.log('train response', data))
               .catch(err => console.error('train request error', err));

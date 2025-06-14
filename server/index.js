@@ -11,10 +11,11 @@ app.use(express.json());
 
 app.post('/train', (req, res) => {
   const games = parseInt(req.body.games, 10) || 1;
-  console.log('POST /train received', games);
+  const repeats = parseInt(req.body.repeats, 10) || 1;
+  console.log('POST /train received', games, repeats);
   const script = path.join(__dirname, '../train_ai.py');
   console.log(`spawning python script ${script}`);
-  const process = spawn('python', [script, games], { cwd: path.join(__dirname, '..') });
+  const process = spawn('python', [script, games, repeats], { cwd: path.join(__dirname, '..') });
 
   process.stdout.on('data', data => {
     console.log(`train: ${data}`.trim());
@@ -43,6 +44,21 @@ app.get('/games', (req, res) => {
   } catch (err) {
     console.error('read games error', err);
     res.status(500).json({ error: 'unable to read games' });
+  }
+});
+
+app.post('/game', (req, res) => {
+  const file = path.join(__dirname, '../ai_data/games.json');
+  const game = req.body;
+  try {
+    const existing = fs.existsSync(file) ? JSON.parse(fs.readFileSync(file)) : [];
+    game.id = existing.length + 1;
+    existing.push(game);
+    fs.writeFileSync(file, JSON.stringify(existing));
+    res.json({ status: 'saved' });
+  } catch (err) {
+    console.error('write game error', err);
+    res.status(500).json({ error: 'unable to save game' });
   }
 });
 
