@@ -103,23 +103,31 @@ export function handleClickFactory({
         return;
       }
 
-      /* 1c. Specjalny atak łucznika (bez zmian) */
+        /* 1c. Specjalny atak łucznika (z uwzględnieniem obrażeń cesarza) */
       if (validCapture?.special === 'archer_attack') {
         const { newBoard, archerTargetsNext, notation } =
           handleArcherAttack({ board, currentTurn, archerTargets }, from, to);
+
+         let finalBoard = newBoard;
+
 
         if (target?.type === 'emperor') {
           const nh = { ...emperorHits };
           nh[target.team] += 1;
           setEmperorHits(nh);
-          if (nh[target.team] >= 3) setWinner(currentTurn);
+          if (nh[target.team] >= 3) {
+            setWinner(currentTurn);
+          } else {
+            // Emperor survives the hit - keep him on the board
+            finalBoard = board;
+          }
         }
 
-        setBoard(newBoard);
+        setBoard(finalBoard);
         setArcherTargets(archerTargetsNext);
         setMoveHistory(prev => [
           ...prev.slice(0, moveIndex + 1),
-          { board: newBoard, turn: currentTurn, notation }
+          { board: finalBoard, turn: currentTurn, notation }
         ]);
         setMoveIndex(i => i + 1);
         setCurrentTurn(t => (t === 'white' ? 'black' : 'white'));
@@ -226,13 +234,28 @@ export function handleClickFactory({
       if (target?.type === 'emperor' && target.team !== currentTurn) {
         const nh = { ...emperorHits };
         nh[target.team] += 1;
-        setEmperorHits(nh);
-        if (nh[target.team] >= 3) setWinner(currentTurn);
+        
+        if (nh[target.team] >= 3) {
+          setEmperorHits(nh);
+          setWinner(currentTurn);
+        } else {
+          setEmperorHits(nh);
+          // Emperor survives - cancel the move
+          setCurrentTurn(t => (t === 'white' ? 'black' : 'white'));
+          clearSelectionState(setSelected, setHighlighted, setCaptureTargets);
+          return;
+        }
       }
 
       /* 1e-iii  Cesarskie ruchy wygaszają prawo roszady */
       if (moving.type === 'emperor') {
         setCastlingRights(cr => ({ ...cr, [currentTurn]: false }));
+        if (target && target.team !== currentTurn) {
+          const nh = { ...emperorHits };
+          nh[moving.team] += 1;
+          setEmperorHits(nh);
+          if (nh[moving.team] >= 3) setWinner(target.team);
+        }
       }
 
       setBoard(newBoard);
