@@ -19,7 +19,15 @@ export function useArcherReadyEffect(currentTurn, setArcherTargets) {
 export function useBotEffect({ vsBot, currentTurn, winner, moveIndex, moveHistory, board, archerTargets, handleClick }) {
   useEffect(() => {
     if (vsBot && currentTurn === 'black' && !winner && moveIndex === moveHistory.length - 1) {
-      runBotMove({ board, archerTargets, handleClick });
+      runBotMove({ board, archerTargets, handleClick, team: 'black' });
     }
   }, [board, currentTurn, vsBot, winner, moveHistory.length, moveIndex, handleClick, archerTargets]);
+}
+
+export function useDualBotEffect({ enabled, currentTurn, winner, moveIndex, moveHistory, board, archerTargets, handleClick }) {
+  useEffect(() => {
+    if (enabled && handleClick && !winner && moveIndex === moveHistory.length - 1) {
+      runBotMove({ board, archerTargets, handleClick, team: currentTurn });
+    }
+  }, [board, currentTurn, enabled, winner, moveHistory.length, moveIndex, handleClick, archerTargets]);
 }

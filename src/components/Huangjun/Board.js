@@ -10,15 +10,16 @@ import { minSize, maxSize } from './boardResize';
 const PANEL_WIDTH = 370; // px, panel + margin
 const PANEL_MIN_MARGIN = 24; // px, margin from right
 
-const Board = ({ onBackToMenu }) => {
+const Board = ({ onBackToMenu, aiVsAi = false, showPanel = true }) => {
   const [useNewBoard, setUseNewBoard] = useState(true);
   const [useNewPieces, setUseNewPieces] = useState(true);
   const [boardSize, setBoardSize] = useState(1000);
-  const [panelVisible, setPanelVisible] = useState(true);
+  const [panelVisible, setPanelVisible] = useState(showPanel);
   const boardContainerRef = useRef(null);
 
   // Responsive: hide panel if board + panel > window width
   useEffect(() => {
+    if (!showPanel) return;
     function checkPanelVisibility() {
       const windowWidth = window.innerWidth;
       if (boardSize + PANEL_WIDTH + PANEL_MIN_MARGIN > windowWidth) {
@@ -30,10 +31,11 @@ const Board = ({ onBackToMenu }) => {
     checkPanelVisibility();
     window.addEventListener('resize', checkPanelVisibility);
     return () => window.removeEventListener('resize', checkPanelVisibility);
-  }, [boardSize]);
+  }, [boardSize, showPanel]);
 
   // When menu button is clicked, show panel and shrink board if needed
   function handleShowPanel() {
+    if (!showPanel) return;
     const windowWidth = window.innerWidth;
     const maxBoard = windowWidth - PANEL_WIDTH - PANEL_MIN_MARGIN;
     if (boardSize > maxBoard) setBoardSize(maxBoard);
@@ -41,7 +43,7 @@ const Board = ({ onBackToMenu }) => {
   }
 
   return (
-    <GameStateProvider>
+    <GameStateProvider aiVsAi={aiVsAi}>
       <div className="flex w-full h-screen items-start justify-start bg-transparent relative" ref={boardContainerRef}>
         {/* Board on the left */}
         <div className="relative flex-shrink-0" style={{ width: boardSize, height: boardSize }}>
@@ -54,7 +56,7 @@ const Board = ({ onBackToMenu }) => {
           <BoardResizeHandles boardSize={boardSize} setBoardSize={setBoardSize} />
         </div>
         {/* Right panel for controls and move history */}
-        {panelVisible && (
+        {showPanel && panelVisible && (
           <BoardPanel
             onBackToMenu={onBackToMenu}
             useNewBoard={useNewBoard}
@@ -64,7 +66,7 @@ const Board = ({ onBackToMenu }) => {
           />
         )}
         {/* Floating menu button if panel is hidden */}
-        {!panelVisible && (
+        {showPanel && !panelVisible && (
           <FloatingMenuButton onClick={handleShowPanel} />
         )}
       </div>
