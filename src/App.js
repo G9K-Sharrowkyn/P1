@@ -4,11 +4,13 @@ import './assets/css/CardGame.css';
 import React, { useState, useEffect } from "react";
 import StarBackground from './components/Background/StarBackground.js';
 import HuangjunGame from './components/Huangjun/HuangjunGame';
+import AIGamesArchive from './components/Huangjun/AIGamesArchive';
 import { connect } from 'react-redux';
 import { incrementCounter } from './actions/counter.actions.js'
 
 function App({ incrementCounter }) {
   const [showGame, setShowGame] = useState(false);
+  const [showArchive, setShowArchive] = useState(false);
 
   useEffect(() => {
     const clickHandler = e => {
@@ -25,7 +27,7 @@ function App({ incrementCounter }) {
   return (
     <div className="relative min-h-screen w-full bg-black">
       <StarBackground/>
-      {!showGame ? (
+      {!showGame && !showArchive ? (
         <div className="absolute inset-0 flex flex-col items-center justify-center z-10">
           <div className="bg-gray-900 bg-opacity-80 rounded-2xl shadow-2xl p-10 flex flex-col items-center gap-8 border border-gray-700">
             <h1 className="text-4xl font-bold text-white mb-2 tracking-wide">Proteus Nebule</h1>
@@ -36,11 +38,18 @@ function App({ incrementCounter }) {
             >
               Play Huangjun
             </button>
-            {/* Add more menu options here if needed */}
+            <button
+              className="px-8 py-4 bg-green-600 hover:bg-green-700 text-white text-xl font-semibold rounded-lg shadow transition-colors duration-150"
+              onClick={() => setShowArchive(true)}
+            >
+              AI Games Archive
+            </button>
           </div>
         </div>
-      ) : (
+      ) : showGame ? (
         <HuangjunGame onBackToMenu={() => setShowGame(false)} />
+      ) : (
+        <AIGamesArchive onBack={() => setShowArchive(false)} />
       )}
     </div>
   );

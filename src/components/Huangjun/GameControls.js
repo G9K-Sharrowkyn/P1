@@ -36,6 +36,12 @@ const GameControls = () => {
         >
           Obróć planszę
         </button>
+        <button
+          className="ml-2 px-2 py-1 bg-green-700 text-white rounded"
+          onClick={() => fetch('http://localhost:2002/train', { method: 'POST' })}
+        >
+          Train AI
+        </button>
       </div>
       
       {winner && (
